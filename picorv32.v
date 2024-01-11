@@ -117,10 +117,10 @@ module picorv32 #(
 	input             pcpi_ready,
 
 	// IRQ Interface
-	input      [31:0] irq,
-	output reg [31:0] eoi,
+	input      [31:0] irq, //中断请求信号
+	output reg [31:0] eoi, //中断结束信号
 
-`ifdef RISCV_FORMAL
+`ifdef RISCV_FORMAL //条件编译
 	output reg        rvfi_valid,
 	output reg [63:0] rvfi_order,
 	output reg [31:0] rvfi_insn,
@@ -158,14 +158,14 @@ module picorv32 #(
 	output reg        trace_valid,
 	output reg [35:0] trace_data
 );
-	localparam integer irq_timer = 0;
-	localparam integer irq_ebreak = 1;
-	localparam integer irq_buserror = 2;
-
+	localparam integer irq_timer = 0; //计时器中断
+	localparam integer irq_ebreak = 1; //ebreak指令中断
+	localparam integer irq_buserror = 2; //总线错误中断
+    //根据ENABLE_REGS_16_31进行设置
 	localparam integer irqregs_offset = ENABLE_REGS_16_31 ? 32 : 16;
 	localparam integer regfile_size = (ENABLE_REGS_16_31 ? 32 : 16) + 4*ENABLE_IRQ*ENABLE_IRQ_QREGS;
 	localparam integer regindex_bits = (ENABLE_REGS_16_31 ? 5 : 4) + ENABLE_IRQ*ENABLE_IRQ_QREGS;
-
+    //协处理器相关
 	localparam WITH_PCPI = ENABLE_PCPI || ENABLE_MUL || ENABLE_FAST_MUL || ENABLE_DIV;
 
 	localparam [35:0] TRACE_BRANCH = {4'b 0001, 32'b 0};
@@ -198,7 +198,7 @@ module picorv32 #(
 	reg [31:0] irq_mask;
 	reg [31:0] irq_pending;
 	reg [31:0] timer;
-
+//PICORV32_REGS 可自行定义(defualt not)
 `ifndef PICORV32_REGS
 	reg [31:0] cpuregs [0:regfile_size-1];
 
@@ -253,22 +253,22 @@ module picorv32 #(
 `endif
 
 	// Internal PCPI Cores
-
+    //乘法
 	wire        pcpi_mul_wr;
 	wire [31:0] pcpi_mul_rd;
 	wire        pcpi_mul_wait;
 	wire        pcpi_mul_ready;
-
+    //除法
 	wire        pcpi_div_wr;
 	wire [31:0] pcpi_div_rd;
 	wire        pcpi_div_wait;
 	wire        pcpi_div_ready;
-
+    //整数计算？
 	reg        pcpi_int_wr;
 	reg [31:0] pcpi_int_rd;
 	reg        pcpi_int_wait;
 	reg        pcpi_int_ready;
-
+    //协处理器乘法部分
 	generate if (ENABLE_FAST_MUL) begin
 		picorv32_pcpi_fast_mul pcpi_mul (
 			.clk       (clk            ),
@@ -2214,7 +2214,7 @@ module picorv32_pcpi_mul #(
 	wire instr_rs1_signed = |{instr_mulh, instr_mulhsu};
 	wire instr_rs2_signed = |{instr_mulh};
 
-	reg pcpi_wait_q;
+	reg pcpi_wait_q; //寄存器存储上一时钟的pcpi_wait信号
 	wire mul_start = pcpi_wait && !pcpi_wait_q;
 
 	always @(posedge clk) begin
@@ -2222,7 +2222,12 @@ module picorv32_pcpi_mul #(
 		instr_mulh <= 0;
 		instr_mulhsu <= 0;
 		instr_mulhu <= 0;
-
+        """
+        在复位信号、pcpi_valid信号、pcpi指令匹配乘法格式时:
+        根据信号指令设置寄存器(instr_mul, instr_mulh, instr_mulhsu, instr_mulhu)
+        设置pcpi_wait信号,是否需要等待pcpi操作
+        将 pcpi_wait 的值同步到 pcpi_wait_q 寄存器中
+        """
 		if (resetn && pcpi_valid && pcpi_insn[6:0] == 7'b0110011 && pcpi_insn[31:25] == 7'b0000001) begin
 			case (pcpi_insn[14:12])
 				3'b000: instr_mul <= 1;
@@ -2245,6 +2250,7 @@ module picorv32_pcpi_mul #(
 	integer i, j;
 
 	// carry save accumulator
+    //CSA进位保存累加器，rd <- rs1+rs2
 	always @* begin
 		next_rd = rd;
 		next_rdx = rdx;
@@ -2268,13 +2274,14 @@ module picorv32_pcpi_mul #(
 			next_rs2 = next_rs2 << 1;
 		end
 	end
-
+    //控制了乘法器执行功能  
 	always @(posedge clk) begin
 		mul_finish <= 0;
 		if (!resetn) begin
-			mul_waiting <= 1;
+			mul_waiting <= 1;  //如果在复位时，将 mul_waiting 设置为 1，表示等待开始乘法操作。
 		end else
-		if (mul_waiting) begin
+        // 根据指令，对rs1、rs2进行有符号或无符号扩展
+		if (mul_waiting) begin  
 			if (instr_rs1_signed)
 				rs1 <= $signed(pcpi_rs1);
 			else
@@ -2287,7 +2294,7 @@ module picorv32_pcpi_mul #(
 
 			rd <= 0;
 			rdx <= 0;
-			mul_counter <= (instr_any_mulh ? 63 - STEPS_AT_ONCE : 31 - STEPS_AT_ONCE);
+			mul_counter <= (instr_any_mulh ? 63 - STEPS_AT_ONCE : 31 - STEPS_AT_ONCE); //乘法计数器
 			mul_waiting <= !mul_start;
 		end else begin
 			rd <= next_rd;
@@ -2302,11 +2309,11 @@ module picorv32_pcpi_mul #(
 			end
 		end
 	end
-
+    //pcpi控制逻辑
 	always @(posedge clk) begin
 		pcpi_wr <= 0;
 		pcpi_ready <= 0;
-		if (mul_finish && resetn) begin
+		if (mul_finish && resetn) begin //乘法操作完成
 			pcpi_wr <= 1;
 			pcpi_ready <= 1;
 			pcpi_rd <= instr_any_mulh ? rd >> 32 : rd;
@@ -2330,11 +2337,18 @@ module picorv32_pcpi_fast_mul #(
 	output            pcpi_wait,
 	output            pcpi_ready
 );
-	reg instr_mul, instr_mulh, instr_mulhsu, instr_mulhu;
-	wire instr_any_mul = |{instr_mul, instr_mulh, instr_mulhsu, instr_mulhu};
-	wire instr_any_mulh = |{instr_mulh, instr_mulhsu, instr_mulhu};
-	wire instr_rs1_signed = |{instr_mulh, instr_mulhsu};
-	wire instr_rs2_signed = |{instr_mulh};
+	reg instr_mul, instr_mulh, instr_mulhsu, instr_mulhu; 
+    """
+    instr_mul: n位Xn位，低n位存入目的寄存器中
+    下三者返回高n位
+    instr_mulh: 有符号X有符号
+    instr_mulhsu: 有符号X无符号
+    instr_mulhu: 无符号X无符号
+    """
+	wire instr_any_mul = |{instr_mul, instr_mulh, instr_mulhsu, instr_mulhu}; //是否存在任何一种乘法指令
+	wire instr_any_mulh = |{instr_mulh, instr_mulhsu, instr_mulhu}; //有符号乘法乘法高位指令
+	wire instr_rs1_signed = |{instr_mulh, instr_mulhsu}; //rs1有符号
+	wire instr_rs2_signed = |{instr_mulh}; //rs2有符号
 
 	reg shift_out;
 	reg [3:0] active;
@@ -2343,7 +2357,7 @@ module picorv32_pcpi_fast_mul #(
 
 	wire pcpi_insn_valid = pcpi_valid && pcpi_insn[6:0] == 7'b0110011 && pcpi_insn[31:25] == 7'b0000001;
 	reg pcpi_insn_valid_q;
-
+    //根据输入设置字段
 	always @* begin
 		instr_mul = 0;
 		instr_mulh = 0;
@@ -2373,7 +2387,7 @@ module picorv32_pcpi_fast_mul #(
 			rd_q <= rd;
 		end
 	end
-
+    //设置rs1、rs2
 	always @(posedge clk) begin
 		if (instr_any_mul && !(EXTRA_MUL_FFS ? active[3:0] : active[1:0])) begin
 			if (instr_rs1_signed)
@@ -2400,6 +2414,7 @@ module picorv32_pcpi_fast_mul #(
 	assign pcpi_wr = active[EXTRA_MUL_FFS ? 3 : 1];
 	assign pcpi_wait = 0;
 	assign pcpi_ready = active[EXTRA_MUL_FFS ? 3 : 1];
+// 设置pcpi_rd
 `ifdef RISCV_FORMAL_ALTOPS
 	assign pcpi_rd =
 			instr_mul    ? (pcpi_rs1 + pcpi_rs2) ^ 32'h5876063e :
@@ -2453,13 +2468,13 @@ module picorv32_pcpi_div (
 		pcpi_wait_q <= pcpi_wait && resetn;
 	end
 
-	reg [31:0] dividend;
-	reg [62:0] divisor;
-	reg [31:0] quotient;
-	reg [31:0] quotient_msk;
-	reg running;
+	reg [31:0] dividend; //被除数
+	reg [62:0] divisor; //除数，被左移 31 位
+	reg [31:0] quotient; //存储商
+	reg [31:0] quotient_msk; 
+	reg running; 
 	reg outsign;
-
+    //处理除法操作
 	always @(posedge clk) begin
 		pcpi_ready <= 0;
 		pcpi_wr <= 0;
@@ -2725,6 +2740,10 @@ endmodule
 
 /***************************************************************
  * picorv32_axi_adapter
+ A separate core picorv32_axi_adapter is provided to bridge between the native memory interface and AXI4
+ 是用来在本地内存接口和 AXI4 之间建立桥梁的核心。这个核心的作用是允许用户创建自定义的核心，
+ 其中包括一个或多个 PicoRV32 核心，以及本地 RAM、ROM 和内存映射的外设。
+ 这些核心可以通过本地接口相互通信，同时通过 AXI4 接口与外部世界进行通信。
  ***************************************************************/
 
 module picorv32_axi_adapter (
@@ -2768,7 +2787,7 @@ module picorv32_axi_adapter (
 	reg ack_arvalid;
 	reg ack_wvalid;
 	reg xfer_done;
-
+    //将本地内存接口转化为AXI4-Lite 接口
 	assign mem_axi_awvalid = mem_valid && |mem_wstrb && !ack_awvalid;
 	assign mem_axi_awaddr = mem_addr;
 	assign mem_axi_awprot = 0;
