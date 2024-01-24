@@ -111,6 +111,7 @@ module picorv32 #(
 	output reg [31:0] pcpi_insn,
 	output     [31:0] pcpi_rs1,
 	output     [31:0] pcpi_rs2,
+    //-----------------------------
 	input             pcpi_wr,
 	input      [31:0] pcpi_rd,
 	input             pcpi_wait,
@@ -357,22 +358,23 @@ module picorv32 #(
 	reg mem_do_rdata;
 	reg mem_do_wdata;
 
-	wire mem_xfer;
+	wire mem_xfer; //传输
 	reg mem_la_secondword, mem_la_firstword_reg, last_mem_valid;
+    //压缩指令集
 	wire mem_la_firstword = COMPRESSED_ISA && (mem_do_prefetch || mem_do_rinst) && next_pc[1] && !mem_la_secondword;
 	wire mem_la_firstword_xfer = COMPRESSED_ISA && mem_xfer && (!last_mem_valid ? mem_la_firstword : mem_la_firstword_reg);
-
+    //高字（高 16 位）的预取
 	reg prefetched_high_word;
 	reg clear_prefetched_high_word;
 	reg [15:0] mem_16bit_buffer;
-
+    
 	wire [31:0] mem_rdata_latched_noshuffle;
 	wire [31:0] mem_rdata_latched;
 
-	wire mem_la_use_prefetched_high_word = COMPRESSED_ISA && mem_la_firstword && prefetched_high_word && !clear_prefetched_high_word;
-	assign mem_xfer = (mem_valid && mem_ready) || (mem_la_use_prefetched_high_word && mem_do_rinst);
+	wire mem_la_use_prefetched_high_word = COMPRESSED_ISA && mem_la_firstword && prefetched_high_word && !clear_prefetched_high_word;//预取高位
+	assign mem_xfer = (mem_valid && mem_ready) || (mem_la_use_prefetched_high_word && mem_do_rinst); //内存传输
 
-	wire mem_busy = |{mem_do_prefetch, mem_do_rinst, mem_do_rdata, mem_do_wdata};
+	wire mem_busy = |{mem_do_prefetch, mem_do_rinst, mem_do_rdata, mem_do_wdata}; 
 	wire mem_done = resetn && ((mem_xfer && |mem_state && (mem_do_rinst || mem_do_rdata || mem_do_wdata)) || (&mem_state && mem_do_rinst)) &&
 			(!mem_la_firstword || (~&mem_rdata_latched[1:0] && mem_xfer));
 
@@ -381,23 +383,25 @@ module picorv32 #(
 			(COMPRESSED_ISA && mem_xfer && (!last_mem_valid ? mem_la_firstword : mem_la_firstword_reg) && !mem_la_secondword && &mem_rdata_latched[1:0]));
 	assign mem_la_addr = (mem_do_prefetch || mem_do_rinst) ? {next_pc[31:2] + mem_la_firstword_xfer, 2'b00} : {reg_op1[31:2], 2'b00};
 
-	assign mem_rdata_latched_noshuffle = (mem_xfer || LATCHED_MEM_RDATA) ? mem_rdata : mem_rdata_q;
-
+	assign mem_rdata_latched_noshuffle = (mem_xfer || LATCHED_MEM_RDATA) ? mem_rdata : mem_rdata_q; //选择当前or上周期数据存储
+    //判断是否压缩指令集，生成最终用于存储的读取数据
 	assign mem_rdata_latched = COMPRESSED_ISA && mem_la_use_prefetched_high_word ? {16'bx, mem_16bit_buffer} :
 			COMPRESSED_ISA && mem_la_secondword ? {mem_rdata_latched_noshuffle[15:0], mem_16bit_buffer} :
 			COMPRESSED_ISA && mem_la_firstword ? {16'bx, mem_rdata_latched_noshuffle[31:16]} : mem_rdata_latched_noshuffle;
 
 	always @(posedge clk) begin
-		if (!resetn) begin
+		if (!resetn) begin 
+            // identify which instrction we are about to execute
 			mem_la_firstword_reg <= 0;
 			last_mem_valid <= 0;
 		end else begin
 			if (!last_mem_valid)
+            // identify the exact executing instruciton 
 				mem_la_firstword_reg <= mem_la_firstword;
 			last_mem_valid <= mem_valid && !mem_ready;
 		end
 	end
-
+    // 基于 mem_wordsize 变量的值进行分支选择及设置
 	always @* begin
 		(* full_case *)
 		case (mem_wordsize)
@@ -426,7 +430,7 @@ module picorv32 #(
 			end
 		endcase
 	end
-
+    //压缩指令集的格式进行解析
 	always @(posedge clk) begin
 		if (mem_xfer) begin
 			mem_rdata_q <= COMPRESSED_ISA ? mem_rdata_latched : mem_rdata;
@@ -542,7 +546,7 @@ module picorv32 #(
 			endcase
 		end
 	end
-
+    //状态检查
 	always @(posedge clk) begin
 		if (resetn && !trap) begin
 			if (mem_do_prefetch || mem_do_rinst || mem_do_rdata)
@@ -561,7 +565,7 @@ module picorv32 #(
 				`assert(mem_valid || mem_do_prefetch);
 		end
 	end
-
+    //通过状态机的方式管理了存储器的读写操作
 	always @(posedge clk) begin
 		if (!resetn || trap) begin
 			if (!resetn)
@@ -570,7 +574,7 @@ module picorv32 #(
 				mem_valid <= 0;
 			mem_la_secondword <= 0;
 			prefetched_high_word <= 0;
-		end else begin
+		end else begin //处理存储器的读写操作
 			if (mem_la_read || mem_la_write) begin
 				mem_addr <= mem_la_addr;
 				mem_wstrb <= mem_la_wstrb & {4{mem_la_write}};
@@ -644,22 +648,23 @@ module picorv32 #(
 	// Instruction Decoder
 
 	reg instr_lui, instr_auipc, instr_jal, instr_jalr;
-	reg instr_beq, instr_bne, instr_blt, instr_bge, instr_bltu, instr_bgeu;
-	reg instr_lb, instr_lh, instr_lw, instr_lbu, instr_lhu, instr_sb, instr_sh, instr_sw;
-	reg instr_addi, instr_slti, instr_sltiu, instr_xori, instr_ori, instr_andi, instr_slli, instr_srli, instr_srai;
-	reg instr_add, instr_sub, instr_sll, instr_slt, instr_sltu, instr_xor, instr_srl, instr_sra, instr_or, instr_and;
-	reg instr_rdcycle, instr_rdcycleh, instr_rdinstr, instr_rdinstrh, instr_ecall_ebreak, instr_fence;
-	reg instr_getq, instr_setq, instr_retirq, instr_maskirq, instr_waitirq, instr_timer;
-	wire instr_trap;
+	reg instr_beq, instr_bne, instr_blt, instr_bge, instr_bltu, instr_bgeu; //分支
+	reg instr_lb, instr_lh, instr_lw, instr_lbu, instr_lhu, instr_sb, instr_sh, instr_sw; //load & store
+	reg instr_addi, instr_slti, instr_sltiu, instr_xori, instr_ori, instr_andi, instr_slli, instr_srli, instr_srai; //立即数
+	reg instr_add, instr_sub, instr_sll, instr_slt, instr_sltu, instr_xor, instr_srl, instr_sra, instr_or, instr_and; //运算
+	reg instr_rdcycle, instr_rdcycleh, instr_rdinstr, instr_rdinstrh, instr_ecall_ebreak, instr_fence; //系统调用
+	reg instr_getq, instr_setq, instr_retirq, instr_maskirq, instr_waitirq, instr_timer; //中断/异常相关
+	wire instr_trap; 
 
 	reg [regindex_bits-1:0] decoded_rd, decoded_rs1, decoded_rs2;
-	reg [31:0] decoded_imm, decoded_imm_j;
-	reg decoder_trigger;
+	reg [31:0] decoded_imm, decoded_imm_j; //存立即数
+	//触发解码信号
+    reg decoder_trigger; 
 	reg decoder_trigger_q;
 	reg decoder_pseudo_trigger;
 	reg decoder_pseudo_trigger_q;
 	reg compressed_instr;
-
+    //判断当前指令属于哪一类
 	reg is_lui_auipc_jal;
 	reg is_lb_lh_lw_lbu_lhu;
 	reg is_slli_srli_srai;
@@ -773,7 +778,7 @@ module picorv32 #(
 	reg [4:0] cached_insn_rs1;
 	reg [4:0] cached_insn_rs2;
 	reg [4:0] cached_insn_rd;
-
+    //寄存器更新
 	always @(posedge clk) begin
 		q_ascii_instr <= dbg_ascii_instr;
 		q_insn_imm <= dbg_insn_imm;
@@ -855,6 +860,7 @@ module picorv32 #(
 `endif
 
 	always @(posedge clk) begin
+        //指令分析
 		is_lui_auipc_jal <= |{instr_lui, instr_auipc, instr_jal};
 		is_lui_auipc_jal_jalr_addi_add_sub <= |{instr_lui, instr_auipc, instr_jal, instr_jalr, instr_addi, instr_add, instr_sub};
 		is_slti_blt_slt <= |{instr_slti, instr_blt, instr_slt};
@@ -862,7 +868,7 @@ module picorv32 #(
 		is_lbu_lhu_lw <= |{instr_lbu, instr_lhu, instr_lw};
 		is_compare <= |{is_beq_bne_blt_bge_bltu_bgeu, instr_slti, instr_slt, instr_sltiu, instr_sltu};
 
-		if (mem_do_rinst && mem_done) begin
+		if (mem_do_rinst && mem_done) begin 
 			instr_lui     <= mem_rdata_latched[6:0] == 7'b0110111;
 			instr_auipc   <= mem_rdata_latched[6:0] == 7'b0010111;
 			instr_jal     <= mem_rdata_latched[6:0] == 7'b1101111;
@@ -889,7 +895,7 @@ module picorv32 #(
 				decoded_rs1 <= ENABLE_IRQ_QREGS ? irqregs_offset : 3; // instr_retirq
 
 			compressed_instr <= 0;
-			if (COMPRESSED_ISA && mem_rdata_latched[1:0] != 2'b11) begin
+			if (COMPRESSED_ISA && mem_rdata_latched[1:0] != 2'b11) begin //分析压缩指令
 				compressed_instr <= 1;
 				decoded_rd <= 0;
 				decoded_rs1 <= 0;
@@ -981,7 +987,7 @@ module picorv32 #(
 							end
 						endcase
 					end
-					2'b10: begin // Quadrant 2
+					2'b10: begin // Quadrant 2 更具结果更新reg
 						case (mem_rdata_latched[15:13])
 							3'b000: begin // C.SLLI
 								if (!mem_rdata_latched[12]) begin
@@ -1034,32 +1040,33 @@ module picorv32 #(
 		end
 
 		if (decoder_trigger && !decoder_pseudo_trigger) begin
+            //pcpi指令处理
 			pcpi_insn <= WITH_PCPI ? mem_rdata_q : 'bx;
-
+            //分支指令
 			instr_beq   <= is_beq_bne_blt_bge_bltu_bgeu && mem_rdata_q[14:12] == 3'b000;
 			instr_bne   <= is_beq_bne_blt_bge_bltu_bgeu && mem_rdata_q[14:12] == 3'b001;
 			instr_blt   <= is_beq_bne_blt_bge_bltu_bgeu && mem_rdata_q[14:12] == 3'b100;
 			instr_bge   <= is_beq_bne_blt_bge_bltu_bgeu && mem_rdata_q[14:12] == 3'b101;
 			instr_bltu  <= is_beq_bne_blt_bge_bltu_bgeu && mem_rdata_q[14:12] == 3'b110;
 			instr_bgeu  <= is_beq_bne_blt_bge_bltu_bgeu && mem_rdata_q[14:12] == 3'b111;
-
+            //Load 指令处理
 			instr_lb    <= is_lb_lh_lw_lbu_lhu && mem_rdata_q[14:12] == 3'b000;
 			instr_lh    <= is_lb_lh_lw_lbu_lhu && mem_rdata_q[14:12] == 3'b001;
 			instr_lw    <= is_lb_lh_lw_lbu_lhu && mem_rdata_q[14:12] == 3'b010;
 			instr_lbu   <= is_lb_lh_lw_lbu_lhu && mem_rdata_q[14:12] == 3'b100;
 			instr_lhu   <= is_lb_lh_lw_lbu_lhu && mem_rdata_q[14:12] == 3'b101;
-
+            //Store 指令处理
 			instr_sb    <= is_sb_sh_sw && mem_rdata_q[14:12] == 3'b000;
 			instr_sh    <= is_sb_sh_sw && mem_rdata_q[14:12] == 3'b001;
 			instr_sw    <= is_sb_sh_sw && mem_rdata_q[14:12] == 3'b010;
-
+            //ALU 指令处理
 			instr_addi  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b000;
 			instr_slti  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b010;
 			instr_sltiu <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b011;
 			instr_xori  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b100;
 			instr_ori   <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b110;
 			instr_andi  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b111;
-
+            
 			instr_slli  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b001 && mem_rdata_q[31:25] == 7'b0000000;
 			instr_srli  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b101 && mem_rdata_q[31:25] == 7'b0000000;
 			instr_srai  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b101 && mem_rdata_q[31:25] == 7'b0100000;
@@ -1132,7 +1139,7 @@ module picorv32 #(
 			endcase
 		end
 
-		if (!resetn) begin
+		if (!resetn) begin 
 			is_beq_bne_blt_bge_bltu_bgeu <= 0;
 			is_compare <= 0;
 
@@ -1246,7 +1253,7 @@ module picorv32 #(
 	end endgenerate
 
 	always @* begin
-		alu_out_0 = 'bx;
+		alu_out_0 = 'bx; //分支比较类
 		(* parallel_case, full_case *)
 		case (1'b1)
 			instr_beq:
@@ -1263,7 +1270,7 @@ module picorv32 #(
 				alu_out_0 = alu_ltu;
 		endcase
 
-		alu_out = 'bx;
+		alu_out = 'bx; //确认跳转位置
 		(* parallel_case, full_case *)
 		case (1'b1)
 			is_lui_auipc_jal_jalr_addi_add_sub:
@@ -1443,6 +1450,7 @@ module picorv32 #(
 		end
 
 		decoder_trigger <= mem_do_rinst && mem_done;
+        //memeory start read instruction(memomem_do_rinst) and the memory read is done(mem_done)
 		decoder_trigger_q <= decoder_trigger;
 		decoder_pseudo_trigger <= 0;
 		decoder_pseudo_trigger_q <= decoder_pseudo_trigger;
@@ -2222,12 +2230,12 @@ module picorv32_pcpi_mul #(
 		instr_mulh <= 0;
 		instr_mulhsu <= 0;
 		instr_mulhu <= 0;
-        """
+        /*
         在复位信号、pcpi_valid信号、pcpi指令匹配乘法格式时:
         根据信号指令设置寄存器(instr_mul, instr_mulh, instr_mulhsu, instr_mulhu)
         设置pcpi_wait信号,是否需要等待pcpi操作
         将 pcpi_wait 的值同步到 pcpi_wait_q 寄存器中
-        """
+        */
 		if (resetn && pcpi_valid && pcpi_insn[6:0] == 7'b0110011 && pcpi_insn[31:25] == 7'b0000001) begin
 			case (pcpi_insn[14:12])
 				3'b000: instr_mul <= 1;
@@ -2338,13 +2346,13 @@ module picorv32_pcpi_fast_mul #(
 	output            pcpi_ready
 );
 	reg instr_mul, instr_mulh, instr_mulhsu, instr_mulhu; 
-    """
+    /*
     instr_mul: n位Xn位，低n位存入目的寄存器中
     下三者返回高n位
     instr_mulh: 有符号X有符号
     instr_mulhsu: 有符号X无符号
     instr_mulhu: 无符号X无符号
-    """
+    */
 	wire instr_any_mul = |{instr_mul, instr_mulh, instr_mulhsu, instr_mulhu}; //是否存在任何一种乘法指令
 	wire instr_any_mulh = |{instr_mulh, instr_mulhsu, instr_mulhu}; //有符号乘法乘法高位指令
 	wire instr_rs1_signed = |{instr_mulh, instr_mulhsu}; //rs1有符号
@@ -2755,24 +2763,24 @@ module picorv32_axi_adapter (
 	input         mem_axi_awready,
 	output [31:0] mem_axi_awaddr,
 	output [ 2:0] mem_axi_awprot,
-
+//
 	output        mem_axi_wvalid,
 	input         mem_axi_wready,
 	output [31:0] mem_axi_wdata,
 	output [ 3:0] mem_axi_wstrb,
-
+//
 	input         mem_axi_bvalid,
 	output        mem_axi_bready,
-
+//
 	output        mem_axi_arvalid,
 	input         mem_axi_arready,
 	output [31:0] mem_axi_araddr,
 	output [ 2:0] mem_axi_arprot,
-
+//
 	input         mem_axi_rvalid,
 	output        mem_axi_rready,
 	input  [31:0] mem_axi_rdata,
-
+//
 	// Native PicoRV32 memory interface
 
 	input         mem_valid,
