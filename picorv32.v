@@ -385,9 +385,10 @@ module picorv32 #(
 
 	assign mem_rdata_latched_noshuffle = (mem_xfer || LATCHED_MEM_RDATA) ? mem_rdata : mem_rdata_q; //选择当前or上周期数据存储
     //判断是否压缩指令集，生成最终用于存储的读取数据
-	assign mem_rdata_latched = COMPRESSED_ISA && mem_la_use_prefetched_high_word ? {16'bx, mem_16bit_buffer} :
-			COMPRESSED_ISA && mem_la_secondword ? {mem_rdata_latched_noshuffle[15:0], mem_16bit_buffer} :
-			COMPRESSED_ISA && mem_la_firstword ? {16'bx, mem_rdata_latched_noshuffle[31:16]} : mem_rdata_latched_noshuffle;
+    //COMPRESSED_ISA (default = 0)
+	assign mem_rdata_latched = COMPRESSED_ISA && mem_la_use_prefetched_high_word ? {16'bx, mem_16bit_buffer} : //mem_la_use_prefetched_high_word = 0
+			COMPRESSED_ISA && mem_la_secondword ? {mem_rdata_latched_noshuffle[15:0], mem_16bit_buffer} : //mem_la_secondword <= 0;
+			COMPRESSED_ISA && mem_la_firstword ? {16'bx, mem_rdata_latched_noshuffle[31:16]} : mem_rdata_latched_noshuffle; //mem_rdata_latched = 0
 
 	always @(posedge clk) begin
 		if (!resetn) begin 
@@ -1448,10 +1449,17 @@ module picorv32 #(
 		if (ENABLE_IRQ && ENABLE_IRQ_TIMER && timer) begin
 			timer <= timer - 1;
 		end
-
+        /*
+        There is a D flip-flop and the input is decoder_trigger the output is 
+        decoder_trigger_q ,it means decoder_trigger_q will get the last state
+        decoder_trigger, and the decoder_trigger will be set to 1 when the
+        memeory start read instruction(memomem_do_rinst) and the memory 
+        read is done(mem_done).
+        */
 		decoder_trigger <= mem_do_rinst && mem_done;
         //memeory start read instruction(memomem_do_rinst) and the memory read is done(mem_done)
 		decoder_trigger_q <= decoder_trigger;
+    
 		decoder_pseudo_trigger <= 0;
 		decoder_pseudo_trigger_q <= decoder_pseudo_trigger;
 		do_waitirq <= 0;
@@ -1464,7 +1472,7 @@ module picorv32 #(
 		if (!resetn) begin
 			reg_pc <= PROGADDR_RESET;
 			reg_next_pc <= PROGADDR_RESET;
-			if (ENABLE_COUNTERS)
+			if (ENABLE_COUNTERS) //ENABLE_COUNTERS (default = 1)
 				count_instr <= 0;
 			latched_store <= 0;
 			latched_stalu <= 0;
@@ -1565,9 +1573,9 @@ module picorv32 #(
 					`debug($display("-- %-0t", $time);)
 					irq_delay <= irq_active;
 					reg_next_pc <= current_pc + (compressed_instr ? 2 : 4);
-					if (ENABLE_TRACE)
+					if (ENABLE_TRACE) //ENABLE_TRACE (default = 0)
 						latched_trace <= 1;
-					if (ENABLE_COUNTERS) begin
+					if (ENABLE_COUNTERS) begin //ENABLE_COUNTERS (default = 1)
 						count_instr <= count_instr + 1;
 						if (!ENABLE_COUNTERS64) count_instr[63:32] <= 0;
 					end
