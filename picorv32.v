@@ -372,6 +372,7 @@ module picorv32 #(
 	wire [31:0] mem_rdata_latched;
 
 	wire mem_la_use_prefetched_high_word = COMPRESSED_ISA && mem_la_firstword && prefetched_high_word && !clear_prefetched_high_word;//预取高位
+    //mem_la_use_prefetched_high_word = 0
 	assign mem_xfer = (mem_valid && mem_ready) || (mem_la_use_prefetched_high_word && mem_do_rinst); //内存传输
 
 	wire mem_busy = |{mem_do_prefetch, mem_do_rinst, mem_do_rdata, mem_do_wdata}; 
@@ -384,6 +385,7 @@ module picorv32 #(
 	assign mem_la_addr = (mem_do_prefetch || mem_do_rinst) ? {next_pc[31:2] + mem_la_firstword_xfer, 2'b00} : {reg_op1[31:2], 2'b00};
 
 	assign mem_rdata_latched_noshuffle = (mem_xfer || LATCHED_MEM_RDATA) ? mem_rdata : mem_rdata_q; //选择当前or上周期数据存储
+    //LATCHED_MEM_RDATA (default = 0)
     //判断是否压缩指令集，生成最终用于存储的读取数据
     //COMPRESSED_ISA (default = 0)
 	assign mem_rdata_latched = COMPRESSED_ISA && mem_la_use_prefetched_high_word ? {16'bx, mem_16bit_buffer} : //mem_la_use_prefetched_high_word = 0
@@ -431,7 +433,7 @@ module picorv32 #(
 			end
 		endcase
 	end
-    //压缩指令集的格式进行解析
+    //压缩指令集的格式进行解析 
 	always @(posedge clk) begin
 		if (mem_xfer) begin
 			mem_rdata_q <= COMPRESSED_ISA ? mem_rdata_latched : mem_rdata;
@@ -819,7 +821,7 @@ module picorv32 #(
 		dbg_insn_rs2 = q_insn_rs2;
 		dbg_insn_rd = q_insn_rd;
 
-		if (dbg_next) begin
+		if (dbg_next) 
 			if (decoder_pseudo_trigger_q) begin
 				dbg_ascii_instr = cached_ascii_instr;
 				dbg_insn_imm = cached_insn_imm;
@@ -838,8 +840,8 @@ module picorv32 #(
 				dbg_insn_rs2 = decoded_rs2;
 				dbg_insn_rd = decoded_rd;
 			end
-		end
 	end
+    
 
 `ifdef DEBUGASM
 	always @(posedge clk) begin
@@ -870,8 +872,8 @@ module picorv32 #(
 		is_compare <= |{is_beq_bne_blt_bge_bltu_bgeu, instr_slti, instr_slt, instr_sltiu, instr_sltu};
 
 		if (mem_do_rinst && mem_done) begin 
-			instr_lui     <= mem_rdata_latched[6:0] == 7'b0110111;
-			instr_auipc   <= mem_rdata_latched[6:0] == 7'b0010111;
+			instr_lui     <= mem_rdata_latched[6:0] == 7'b0110111; //Load Upper Immediate
+			instr_auipc   <= mem_rdata_latched[6:0] == 7'b0010111;//Add Upper Immediate to PC
 			instr_jal     <= mem_rdata_latched[6:0] == 7'b1101111;
 			instr_jalr    <= mem_rdata_latched[6:0] == 7'b1100111 && mem_rdata_latched[14:12] == 3'b000;
 			instr_retirq  <= mem_rdata_latched[6:0] == 7'b0001011 && mem_rdata_latched[31:25] == 7'b0000010 && ENABLE_IRQ;
@@ -896,6 +898,7 @@ module picorv32 #(
 				decoded_rs1 <= ENABLE_IRQ_QREGS ? irqregs_offset : 3; // instr_retirq
 
 			compressed_instr <= 0;
+            //COMPRESSED_ISA(defaut = 0)
 			if (COMPRESSED_ISA && mem_rdata_latched[1:0] != 2'b11) begin //分析压缩指令
 				compressed_instr <= 1;
 				decoded_rd <= 0;
@@ -1393,7 +1396,7 @@ module picorv32 #(
 
 	always @* begin
 		decoded_rs = 'bx;
-		if (ENABLE_REGS_DUALPORT) begin
+		if (ENABLE_REGS_DUALPORT) begin //ENABLE_REGS_DUALPORT (default = 1)
 			cpuregs_rs1 = decoded_rs1 ? cpuregs_rdata1 : 0;
 			cpuregs_rs2 = decoded_rs2 ? cpuregs_rdata2 : 0;
 		end else begin
@@ -1470,7 +1473,7 @@ module picorv32 #(
 			trace_data <= 'bx;
 
 		if (!resetn) begin
-			reg_pc <= PROGADDR_RESET;
+			reg_pc <= PROGADDR_RESET; //PROGADDR_RESET (default = 32'h 0000_0000)
 			reg_next_pc <= PROGADDR_RESET;
 			if (ENABLE_COUNTERS) //ENABLE_COUNTERS (default = 1)
 				count_instr <= 0;
@@ -1490,7 +1493,7 @@ module picorv32 #(
 			irq_state <= 0;
 			eoi <= 0;
 			timer <= 0;
-			if (~STACKADDR) begin
+			if (~STACKADDR) begin //STACKADDR (default = 32'h ffff_ffff)
 				latched_store <= 1;
 				latched_rd <= 2;
 				reg_out <= STACKADDR;
@@ -1597,7 +1600,7 @@ module picorv32 #(
 
 				(* parallel_case *)
 				case (1'b1)
-					(CATCH_ILLINSN || WITH_PCPI) && instr_trap: begin
+					(CATCH_ILLINSN || WITH_PCPI) && instr_trap: begin //CATCH_ILLINSN (default = 1)
 						if (WITH_PCPI) begin
 							`debug($display("LD_RS1: %2d 0x%08x", decoded_rs1, cpuregs_rs1);)
 							reg_op1 <= cpuregs_rs1;
@@ -1638,12 +1641,12 @@ module picorv32 #(
 								cpu_state <= cpu_state_trap;
 						end
 					end
-					ENABLE_COUNTERS && is_rdcycle_rdcycleh_rdinstr_rdinstrh: begin
+					ENABLE_COUNTERS && is_rdcycle_rdcycleh_rdinstr_rdinstrh: begin //ENABLE_COUNTERS (default = 1)
 						(* parallel_case, full_case *)
-						case (1'b1)
+						case (1'b1) 
 							instr_rdcycle:
 								reg_out <= count_cycle[31:0];
-							instr_rdcycleh && ENABLE_COUNTERS64:
+							instr_rdcycleh && ENABLE_COUNTERS64: //ENABLE_COUNTERS64 (default = 1)
 								reg_out <= count_cycle[63:32];
 							instr_rdinstr:
 								reg_out <= count_instr[31:0];
@@ -1656,7 +1659,7 @@ module picorv32 #(
 					is_lui_auipc_jal: begin
 						reg_op1 <= instr_lui ? 0 : reg_pc;
 						reg_op2 <= decoded_imm;
-						if (TWO_CYCLE_ALU)
+						if (TWO_CYCLE_ALU) //TWO_CYCLE_ALU (default = 0)
 							alu_wait <= 1;
 						else
 							mem_do_rinst <= mem_do_prefetch;
@@ -1977,7 +1980,7 @@ module picorv32 #(
 
 		irq_pending <= next_irq_pending & ~MASKED_IRQ;
 
-		if (!CATCH_MISALIGN) begin
+		if (!CATCH_MISALIGN) begin //CATCH_MISALIGN = 1
 			if (COMPRESSED_ISA) begin
 				reg_pc[0] <= 0;
 				reg_next_pc[0] <= 0;
