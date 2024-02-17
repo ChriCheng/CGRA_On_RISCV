@@ -659,7 +659,7 @@ module picorv32 #(
 	reg instr_getq, instr_setq, instr_retirq, instr_maskirq, instr_waitirq, instr_timer; //中断/异常相关
 	wire instr_trap; 
 
-	reg [regindex_bits-1:0] decoded_rd, decoded_rs1, decoded_rs2;
+	reg [regindex_bits-1:0] decoded_rd, decoded_rs1, decoded_rs2; //regindex_bits = 5
 	reg [31:0] decoded_imm, decoded_imm_j; //存立即数
 	//触发解码信号
     reg decoder_trigger; 
@@ -1850,7 +1850,7 @@ module picorv32 #(
 					reg_out <= reg_op1;
 					mem_do_rinst <= mem_do_prefetch;
 					cpu_state <= cpu_state_fetch;
-				end else if (TWO_STAGE_SHIFT && reg_sh >= 4) begin
+				end else if (TWO_STAGE_SHIFT && reg_sh >= 4) begin //TWO_STAGE_SHIFT (default = 1)
 					(* parallel_case, full_case *)
 					case (1'b1)
 						instr_slli || instr_sll: reg_op1 <= reg_op1 << 4;
