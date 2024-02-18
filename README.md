@@ -7,3 +7,4 @@ Design of master controller for Reconfigurable computing Architecture based on R
 2. 把pc一条线接上，综合来看先串通在考虑时序
 ### 2.18:
 早上梳理了cpureg部分，开始着手研究alu输入，下午把alu接起。
+中午alu接好，看看PCP，或者把alu继续接好

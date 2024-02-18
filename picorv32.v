@@ -1257,7 +1257,7 @@ module picorv32 #(
 	end endgenerate
 
 	always @* begin
-		alu_out_0 = 'bx; //分支比较类
+		alu_out_0 = 'bx; 
 		(* parallel_case, full_case *)
 		case (1'b1)
 			instr_beq:
@@ -1274,7 +1274,7 @@ module picorv32 #(
 				alu_out_0 = alu_ltu;
 		endcase
 
-		alu_out = 'bx; //确认跳转位置
+		alu_out = 'bx; 
 		(* parallel_case, full_case *)
 		case (1'b1)
 			is_lui_auipc_jal_jalr_addi_add_sub:
