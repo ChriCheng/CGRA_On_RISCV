@@ -1236,7 +1236,7 @@ module picorv32 #(
 	reg [31:0] alu_shl, alu_shr;
 	reg alu_eq, alu_ltu, alu_lts;
 
-	generate if (TWO_CYCLE_ALU) begin
+	generate if (TWO_CYCLE_ALU) begin //TWO_CYCLE_ALU default = 0
 		always @(posedge clk) begin
 			alu_add_sub <= instr_sub ? reg_op1 - reg_op2 : reg_op1 + reg_op2;
 			alu_eq <= reg_op1 == reg_op2;
@@ -1249,8 +1249,8 @@ module picorv32 #(
 		always @* begin
 			alu_add_sub = instr_sub ? reg_op1 - reg_op2 : reg_op1 + reg_op2;
 			alu_eq = reg_op1 == reg_op2;
-			alu_lts = $signed(reg_op1) < $signed(reg_op2);
-			alu_ltu = reg_op1 < reg_op2;
+			alu_lts = $signed(reg_op1) < $signed(reg_op2); //有符号比较，判断第一个操作数是否小于第二个操作数
+			alu_ltu = reg_op1 < reg_op2; //无符号比较，判断第一个操作数是否小于第二个操作数。
 			alu_shl = reg_op1 << reg_op2[4:0];
 			alu_shr = $signed({instr_sra || instr_srai ? reg_op1[31] : 1'b0, reg_op1}) >>> reg_op2[4:0];
 		end
@@ -1282,12 +1282,12 @@ module picorv32 #(
 			is_compare:
 				alu_out = alu_out_0;
 			instr_xori || instr_xor:
-				alu_out = reg_op1 ^ reg_op2;
+				alu_out = reg_op1 ^ reg_op2; 
 			instr_ori || instr_or:
 				alu_out = reg_op1 | reg_op2;
 			instr_andi || instr_and:
 				alu_out = reg_op1 & reg_op2;
-			BARREL_SHIFTER && (instr_sll || instr_slli):
+			BARREL_SHIFTER && (instr_sll || instr_slli): //BARREL_SHIFTER (default = 0)
 				alu_out = alu_shl;
 			BARREL_SHIFTER && (instr_srl || instr_srli || instr_sra || instr_srai):
 				alu_out = alu_shr;
@@ -1820,7 +1820,7 @@ module picorv32 #(
 				endcase
 			end
 
-			cpu_state_exec: begin
+			cpu_state_exec: begin //TWO_CYCLE_COMPARE (default = 0)
 				reg_out <= reg_pc + decoded_imm;
 				if ((TWO_CYCLE_ALU || TWO_CYCLE_COMPARE) && (alu_wait || alu_wait_2)) begin
 					mem_do_rinst <= mem_do_prefetch && !alu_wait_2;
