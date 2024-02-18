@@ -8,3 +8,5 @@ Design of master controller for Reconfigurable computing Architecture based on R
 ### 2.18:
 早上梳理了cpureg部分，开始着手研究alu输入，下午把alu接起。
 中午alu接好，看看PCP，或者把alu继续接好
+晚上基本完成了alu的俩西，开了CPURegs的连线  
+明日任务：reg_out查清，其是接通pc的关键信号！（next_pc之中有其备选）
