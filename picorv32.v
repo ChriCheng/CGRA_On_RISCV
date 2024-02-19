@@ -72,8 +72,8 @@ module picorv32 #(
 	parameter [ 0:0] COMPRESSED_ISA = 0,
 	parameter [ 0:0] CATCH_MISALIGN = 1,
 	parameter [ 0:0] CATCH_ILLINSN = 1,
-	parameter [ 0:0] ENABLE_PCPI = 0,
-	parameter [ 0:0] ENABLE_MUL = 0,
+	parameter [ 0:0] ENABLE_PCPI = 1,
+	parameter [ 0:0] ENABLE_MUL = 1,
 	parameter [ 0:0] ENABLE_FAST_MUL = 0,
 	parameter [ 0:0] ENABLE_DIV = 0,
 	parameter [ 0:0] ENABLE_IRQ = 0,
@@ -159,7 +159,7 @@ module picorv32 #(
 	output reg        trace_valid,
 	output reg [35:0] trace_data
 );
-	localparam integer irq_timer = 0; //计时器中断
+	localparam integer irq_timer = 0; //计时器中�?
 	localparam integer irq_ebreak = 1; //ebreak指令中断
 	localparam integer irq_buserror = 2; //总线错误中断
     //根据ENABLE_REGS_16_31进行设置
@@ -199,7 +199,7 @@ module picorv32 #(
 	reg [31:0] irq_mask;
 	reg [31:0] irq_pending;
 	reg [31:0] timer;
-//PICORV32_REGS 可自行定义(defualt not)
+//PICORV32_REGS 可自行定�?(defualt not)
 `ifndef PICORV32_REGS
 	reg [31:0] cpuregs [0:regfile_size-1];
 
@@ -264,7 +264,7 @@ module picorv32 #(
 	wire [31:0] pcpi_div_rd;
 	wire        pcpi_div_wait;
 	wire        pcpi_div_ready;
-    //整数计算？
+    //整数计算�?
 	reg        pcpi_int_wr;
 	reg [31:0] pcpi_int_rd;
 	reg        pcpi_int_wait;
@@ -360,10 +360,10 @@ module picorv32 #(
 
 	wire mem_xfer; //传输
 	reg mem_la_secondword, mem_la_firstword_reg, last_mem_valid;
-    //压缩指令集
+    //压缩指令�?
 	wire mem_la_firstword = COMPRESSED_ISA && (mem_do_prefetch || mem_do_rinst) && next_pc[1] && !mem_la_secondword;
 	wire mem_la_firstword_xfer = COMPRESSED_ISA && mem_xfer && (!last_mem_valid ? mem_la_firstword : mem_la_firstword_reg);
-    //高字（高 16 位）的预取
+    //高字（高 16 位）的预�?
 	reg prefetched_high_word;
 	reg clear_prefetched_high_word;
 	reg [15:0] mem_16bit_buffer;
@@ -384,9 +384,9 @@ module picorv32 #(
 			(COMPRESSED_ISA && mem_xfer && (!last_mem_valid ? mem_la_firstword : mem_la_firstword_reg) && !mem_la_secondword && &mem_rdata_latched[1:0]));
 	assign mem_la_addr = (mem_do_prefetch || mem_do_rinst) ? {next_pc[31:2] + mem_la_firstword_xfer, 2'b00} : {reg_op1[31:2], 2'b00};
 
-	assign mem_rdata_latched_noshuffle = (mem_xfer || LATCHED_MEM_RDATA) ? mem_rdata : mem_rdata_q; //选择当前or上周期数据存储
+	assign mem_rdata_latched_noshuffle = (mem_xfer || LATCHED_MEM_RDATA) ? mem_rdata : mem_rdata_q; //选择当前or上周期数据存�?
     //LATCHED_MEM_RDATA (default = 0)
-    //判断是否压缩指令集，生成最终用于存储的读取数据
+    //判断是否压缩指令集，生成�?终用于存储的读取数据
     //COMPRESSED_ISA (default = 0)
 	assign mem_rdata_latched = COMPRESSED_ISA && mem_la_use_prefetched_high_word ? {16'bx, mem_16bit_buffer} : //mem_la_use_prefetched_high_word = 0
 			COMPRESSED_ISA && mem_la_secondword ? {mem_rdata_latched_noshuffle[15:0], mem_16bit_buffer} : //mem_la_secondword <= 0;
@@ -404,7 +404,7 @@ module picorv32 #(
 			last_mem_valid <= mem_valid && !mem_ready;
 		end
 	end
-    // 基于 mem_wordsize 变量的值进行分支选择及设置
+    // 基于 mem_wordsize 变量的�?�进行分支�?�择及设�?
 	always @* begin
 		(* full_case *)
 		case (mem_wordsize)
@@ -549,7 +549,7 @@ module picorv32 #(
 			endcase
 		end
 	end
-    //状态检查
+    //状�?�检�?
 	always @(posedge clk) begin
 		if (resetn && !trap) begin
 			if (mem_do_prefetch || mem_do_rinst || mem_do_rdata)
@@ -568,7 +568,7 @@ module picorv32 #(
 				`assert(mem_valid || mem_do_prefetch);
 		end
 	end
-    //通过状态机的方式管理了存储器的读写操作
+    //通过状�?�机的方式管理了存储器的读写操作
 	always @(posedge clk) begin
 		if (!resetn || trap) begin
 			if (!resetn)
@@ -653,7 +653,7 @@ module picorv32 #(
 	reg instr_lui, instr_auipc, instr_jal, instr_jalr;
 	reg instr_beq, instr_bne, instr_blt, instr_bge, instr_bltu, instr_bgeu; //分支
 	reg instr_lb, instr_lh, instr_lw, instr_lbu, instr_lhu, instr_sb, instr_sh, instr_sw; //load & store
-	reg instr_addi, instr_slti, instr_sltiu, instr_xori, instr_ori, instr_andi, instr_slli, instr_srli, instr_srai; //立即数
+	reg instr_addi, instr_slti, instr_sltiu, instr_xori, instr_ori, instr_andi, instr_slli, instr_srli, instr_srai; //立即�?
 	reg instr_add, instr_sub, instr_sll, instr_slt, instr_sltu, instr_xor, instr_srl, instr_sra, instr_or, instr_and; //运算
 	reg instr_rdcycle, instr_rdcycleh, instr_rdinstr, instr_rdinstrh, instr_ecall_ebreak, instr_fence; //系统调用
 	reg instr_getq, instr_setq, instr_retirq, instr_maskirq, instr_waitirq, instr_timer; //中断/异常相关
@@ -667,7 +667,7 @@ module picorv32 #(
 	reg decoder_pseudo_trigger;
 	reg decoder_pseudo_trigger_q;
 	reg compressed_instr;
-    //判断当前指令属于哪一类
+    //判断当前指令属于哪一�?
 	reg is_lui_auipc_jal;
 	reg is_lb_lh_lw_lbu_lhu;
 	reg is_slli_srli_srai;
@@ -781,7 +781,7 @@ module picorv32 #(
 	reg [4:0] cached_insn_rs1;
 	reg [4:0] cached_insn_rs2;
 	reg [4:0] cached_insn_rd;
-    //寄存器更新
+    //寄存器更�?
 	always @(posedge clk) begin
 		q_ascii_instr <= dbg_ascii_instr;
 		q_insn_imm <= dbg_insn_imm;
@@ -1217,7 +1217,7 @@ module picorv32 #(
 	reg latched_is_lu;
 	reg latched_is_lh;
 	reg latched_is_lb;
-	reg [regindex_bits-1:0] latched_rd;
+	reg [regindex_bits-1:0] latched_rd; //regindex_bits = 5
 
 	reg [31:0] current_pc;
 	assign next_pc = latched_store && latched_branch ? reg_out & ~1 : reg_next_pc;
@@ -1250,7 +1250,7 @@ module picorv32 #(
 			alu_add_sub = instr_sub ? reg_op1 - reg_op2 : reg_op1 + reg_op2;
 			alu_eq = reg_op1 == reg_op2;
 			alu_lts = $signed(reg_op1) < $signed(reg_op2); //有符号比较，判断第一个操作数是否小于第二个操作数
-			alu_ltu = reg_op1 < reg_op2; //无符号比较，判断第一个操作数是否小于第二个操作数。
+			alu_ltu = reg_op1 < reg_op2; //无符号比较，判断第一个操作数是否小于第二个操作数�?
 			alu_shl = reg_op1 << reg_op2[4:0];
 			alu_shr = $signed({instr_sra || instr_srai ? reg_op1[31] : 1'b0, reg_op1}) >>> reg_op2[4:0];
 		end
@@ -2233,7 +2233,7 @@ module picorv32_pcpi_mul #(
 	wire instr_rs1_signed = |{instr_mulh, instr_mulhsu};
 	wire instr_rs2_signed = |{instr_mulh};
 
-	reg pcpi_wait_q; //寄存器存储上一时钟的pcpi_wait信号
+	reg pcpi_wait_q; //寄存器存储上�?时钟的pcpi_wait信号
 	wire mul_start = pcpi_wait && !pcpi_wait_q;
 
 	always @(posedge clk) begin
@@ -2242,10 +2242,10 @@ module picorv32_pcpi_mul #(
 		instr_mulhsu <= 0;
 		instr_mulhu <= 0;
         /*
-        在复位信号、pcpi_valid信号、pcpi指令匹配乘法格式时:
-        根据信号指令设置寄存器(instr_mul, instr_mulh, instr_mulhsu, instr_mulhu)
-        设置pcpi_wait信号,是否需要等待pcpi操作
-        将 pcpi_wait 的值同步到 pcpi_wait_q 寄存器中
+        在复位信号�?�pcpi_valid信号、pcpi指令匹配乘法格式�?:
+        根据信号指令设置寄存�?(instr_mul, instr_mulh, instr_mulhsu, instr_mulhu)
+        设置pcpi_wait信号,是否�?要等待pcpi操作
+        �? pcpi_wait 的�?�同步到 pcpi_wait_q 寄存器中
         */
 		if (resetn && pcpi_valid && pcpi_insn[6:0] == 7'b0110011 && pcpi_insn[31:25] == 7'b0000001) begin
 			case (pcpi_insn[14:12])
@@ -2297,9 +2297,9 @@ module picorv32_pcpi_mul #(
 	always @(posedge clk) begin
 		mul_finish <= 0;
 		if (!resetn) begin
-			mul_waiting <= 1;  //如果在复位时，将 mul_waiting 设置为 1，表示等待开始乘法操作。
+			mul_waiting <= 1;  //如果在复位时，将 mul_waiting 设置�? 1，表示等待开始乘法操作�??
 		end else
-        // 根据指令，对rs1、rs2进行有符号或无符号扩展
+        // 根据指令，对rs1、rs2进行有符号或无符号扩�?
 		if (mul_waiting) begin  
 			if (instr_rs1_signed)
 				rs1 <= $signed(pcpi_rs1);
@@ -2313,7 +2313,7 @@ module picorv32_pcpi_mul #(
 
 			rd <= 0;
 			rdx <= 0;
-			mul_counter <= (instr_any_mulh ? 63 - STEPS_AT_ONCE : 31 - STEPS_AT_ONCE); //乘法计数器
+			mul_counter <= (instr_any_mulh ? 63 - STEPS_AT_ONCE : 31 - STEPS_AT_ONCE); //乘法计数�?
 			mul_waiting <= !mul_start;
 		end else begin
 			rd <= next_rd;
@@ -2358,16 +2358,16 @@ module picorv32_pcpi_fast_mul #(
 );
 	reg instr_mul, instr_mulh, instr_mulhsu, instr_mulhu; 
     /*
-    instr_mul: n位Xn位，低n位存入目的寄存器中
-    下三者返回高n位
-    instr_mulh: 有符号X有符号
-    instr_mulhsu: 有符号X无符号
-    instr_mulhu: 无符号X无符号
+    instr_mul: n位Xn位，低n位存入目的寄存器�?
+    下三者返回高n�?
+    instr_mulh: 有符号X有符�?
+    instr_mulhsu: 有符号X无符�?
+    instr_mulhu: 无符号X无符�?
     */
-	wire instr_any_mul = |{instr_mul, instr_mulh, instr_mulhsu, instr_mulhu}; //是否存在任何一种乘法指令
-	wire instr_any_mulh = |{instr_mulh, instr_mulhsu, instr_mulhu}; //有符号乘法乘法高位指令
-	wire instr_rs1_signed = |{instr_mulh, instr_mulhsu}; //rs1有符号
-	wire instr_rs2_signed = |{instr_mulh}; //rs2有符号
+	wire instr_any_mul = |{instr_mul, instr_mulh, instr_mulhsu, instr_mulhu}; //是否存在任何�?种乘法指�?
+	wire instr_any_mulh = |{instr_mulh, instr_mulhsu, instr_mulhu}; //有符号乘法乘法高位指�?
+	wire instr_rs1_signed = |{instr_mulh, instr_mulhsu}; //rs1有符�?
+	wire instr_rs2_signed = |{instr_mulh}; //rs2有符�?
 
 	reg shift_out;
 	reg [3:0] active;
@@ -2487,9 +2487,9 @@ module picorv32_pcpi_div (
 		pcpi_wait_q <= pcpi_wait && resetn;
 	end
 
-	reg [31:0] dividend; //被除数
-	reg [62:0] divisor; //除数，被左移 31 位
-	reg [31:0] quotient; //存储商
+	reg [31:0] dividend; //被除�?
+	reg [62:0] divisor; //除数，被左移 31 �?
+	reg [31:0] quotient; //存储�?
 	reg [31:0] quotient_msk; 
 	reg running; 
 	reg outsign;
@@ -2760,9 +2760,9 @@ endmodule
 /***************************************************************
  * picorv32_axi_adapter
  A separate core picorv32_axi_adapter is provided to bridge between the native memory interface and AXI4
- 是用来在本地内存接口和 AXI4 之间建立桥梁的核心。这个核心的作用是允许用户创建自定义的核心，
- 其中包括一个或多个 PicoRV32 核心，以及本地 RAM、ROM 和内存映射的外设。
- 这些核心可以通过本地接口相互通信，同时通过 AXI4 接口与外部世界进行通信。
+ 是用来在本地内存接口�? AXI4 之间建立桥梁的核心�?�这个核心的作用是允许用户创建自定义的核心，
+ 其中包括�?个或多个 PicoRV32 核心，以及本�? RAM、ROM 和内存映射的外设�?
+ 这些核心可以通过本地接口相互通信，同时�?�过 AXI4 接口与外部世界进行�?�信�?
  ***************************************************************/
 
 module picorv32_axi_adapter (

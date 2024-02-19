@@ -1,0 +1,97 @@
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
+| Date         : Mon Feb 19 11:33:57 2024
+| Host         : Chris running 64-bit major release  (build 9200)
+| Command      : report_control_sets -verbose -file picorv32_axi_control_sets_placed.rpt
+| Design       : picorv32_axi
+| Device       : xc7vx485t
+-----------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |    19 |
+|    Minimum number of control sets                        |    19 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |     0 |
+| Unused register locations in slices containing registers |    50 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |    19 |
+| >= 0 to < 4        |     1 |
+| >= 4 to < 6        |     3 |
+| >= 6 to < 8        |     1 |
+| >= 8 to < 10       |     0 |
+| >= 10 to < 12      |     0 |
+| >= 12 to < 14      |     1 |
+| >= 14 to < 16      |     0 |
+| >= 16              |    13 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |              94 |           60 |
+| No           | No                    | Yes                    |               0 |            0 |
+| No           | Yes                   | No                     |              76 |           23 |
+| Yes          | No                    | No                     |             294 |          105 |
+| Yes          | No                    | Yes                    |               0 |            0 |
+| Yes          | Yes                   | No                     |             182 |           55 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++----------------+---------------------------------------------------+---------------------------------------+------------------+----------------+
+|  Clock Signal  |                   Enable Signal                   |            Set/Reset Signal           | Slice Load Count | Bel Load Count |
++----------------+---------------------------------------------------+---------------------------------------+------------------+----------------+
+|  clk_IBUF_BUFG | picorv32_core/mem_instr3_out                      |                                       |                1 |              1 |
+|  clk_IBUF_BUFG | picorv32_core/instr_lui0                          | picorv32_core/is_sb_sh_sw_i_1_n_0     |                1 |              4 |
+|  clk_IBUF_BUFG | picorv32_core/is_lui_auipc_jal_jalr_addi_add_sub0 | picorv32_core/instr_lhu_i_1_n_0       |                1 |              5 |
+|  clk_IBUF_BUFG | picorv32_core/latched_rd[4]_i_2_n_0               | picorv32_core/latched_rd[4]_i_1_n_0   |                1 |              5 |
+|  clk_IBUF_BUFG | picorv32_core/cpu_state[7]_i_2_n_0                | picorv32_core/cpu_state[7]_i_1_n_0    |                5 |              7 |
+|  clk_IBUF_BUFG | picorv32_core/is_lui_auipc_jal_jalr_addi_add_sub0 | picorv32_core/decoded_imm[31]_i_1_n_0 |                2 |             12 |
+|  clk_IBUF_BUFG | picorv32_core/is_lui_auipc_jal_jalr_addi_add_sub0 | picorv32_core/instr_fence_i_1_n_0     |                7 |             23 |
+|  clk_IBUF_BUFG | picorv32_core/axi_adapter/xfer_done0              |                                       |                7 |             25 |
+|  clk_IBUF_BUFG | picorv32_core/mem_wdata[31]_i_1_n_0               |                                       |                6 |             32 |
+|  clk_IBUF_BUFG | picorv32_core/reg_op1[31]_i_1_n_0                 |                                       |               19 |             32 |
+|  clk_IBUF_BUFG | picorv32_core/is_lui_auipc_jal_jalr_addi_add_sub0 |                                       |               12 |             33 |
+|  clk_IBUF_BUFG | picorv32_core/instr_lui0                          |                                       |               12 |             39 |
+|  clk_IBUF_BUFG | picorv32_core/reg_next_pc                         | picorv32_core/instr_fence_i_1_n_0     |               22 |             62 |
+|  clk_IBUF_BUFG | picorv32_core/count_instr                         | picorv32_core/instr_fence_i_1_n_0     |               16 |             64 |
+|  clk_IBUF_BUFG | picorv32_core/reg_op2[31]_i_1_n_0                 |                                       |               18 |             64 |
+|  clk_IBUF_BUFG | picorv32_core/mem_addr[31]_i_1_n_0                |                                       |               30 |             68 |
+|  clk_IBUF_BUFG |                                                   | picorv32_core/instr_fence_i_1_n_0     |               23 |             76 |
+|  clk_IBUF_BUFG |                                                   |                                       |               60 |             94 |
+|  clk_IBUF_BUFG | picorv32_core/cpuregs_reg_r1_0_31_0_5_i_1_n_0     |                                       |               12 |             96 |
++----------------+---------------------------------------------------+---------------------------------------+------------------+----------------+
+
+
