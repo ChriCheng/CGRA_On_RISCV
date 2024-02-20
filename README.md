@@ -13,3 +13,6 @@ Design of master controller for Reconfigurable computing Architecture based on R
 ### 2.19:
 reg_out搞了大半，pcpi接上了还没完全弄完。  
 明日任务：reg_out over + cpuregs_wrdata over 
+### 2.20
+pcpi部分没接完，仅接了pcpi_int_rd
+早：reg_out解决输入，剩下输出
