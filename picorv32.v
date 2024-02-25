@@ -1880,7 +1880,7 @@ module picorv32 #(
 							instr_sh: mem_wordsize <= 1;
 							instr_sw: mem_wordsize <= 0;
 						endcase
-						if (ENABLE_TRACE) begin
+						if (ENABLE_TRACE) begin //ENABLE_TRACE (default = 0)
 							trace_valid <= 1;
 							trace_data <= (irq_active ? TRACE_IRQ : 0) | TRACE_ADDR | ((reg_op1 + decoded_imm) & 32'hffffffff);
 						end

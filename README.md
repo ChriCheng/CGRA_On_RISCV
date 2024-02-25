@@ -12,7 +12,10 @@ Design of master controller for Reconfigurable computing Architecture based on R
 明日任务：reg_out查清，其是接通pc的关键信号！（next_pc之中有其备选）
 ### 2.19:
 reg_out搞了大半，pcpi接上了还没完全弄完。  
-明日任务：reg_out over + cpuregs_wrdata over 
+**明日任务：reg_out over + cpuregs_wrdata over** 
 ### 2.20
-pcpi部分没接完，仅接了pcpi_int_rd
-早：reg_out解决输入，剩下输出
+**pcpi部分没接完，仅接了pcpi_int_rd**  
+早：reg_out解决输入，剩下输出  
+午: reg_out输出解决
+### 2.25
+晚：重新看代码，看到shilfter，op1要重新画。
