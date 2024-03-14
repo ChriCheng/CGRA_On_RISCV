@@ -1,21 +1,7 @@
 # Graduation-project
 Design of master controller for Reconfigurable computing Architecture based on RISC-V
-# 日志
-### 2.17：
-工程量还是大，必须每天写一些日志来记录所做所写，以免兜圈子。今天重新理了一遍状态机，就春节前部分进行绘制。在pc逻辑纠结半天。明天任务有二：  
-1. 搞清楚cpureg部分是否需要额外绘制（是否可看作中间变量）  
-2. 把pc一条线接上，综合来看先串通在考虑时序
-### 2.18:
-早上梳理了cpureg部分，开始着手研究alu输入，下午把alu接起。
-中午alu接好，看看PCP，或者把alu继续接好
-晚上基本完成了alu的俩西，开了CPURegs的连线  
-明日任务：reg_out查清，其是接通pc的关键信号！（next_pc之中有其备选）
-### 2.19:
-reg_out搞了大半，pcpi接上了还没完全弄完。  
-**明日任务：reg_out over + cpuregs_wrdata over** 
-### 2.20
-**pcpi部分没接完，仅接了pcpi_int_rd**  
-早：reg_out解决输入，剩下输出  
-午: reg_out输出解决
-### 2.25
-晚：重新看代码，看到shilfter，op1要重新画。
+## Acknowledgments
+
+This project is based on [RISC-V-CPU](https://github.com/jasonlin316/RISC-V-CPU) by [Yi-Chien Lin](https://github.com/jasonlin316). Which is a 32-bit 5-stage pipelined RISC-V CPU that supports basic instructions and some vector arithmetic.
+
+
