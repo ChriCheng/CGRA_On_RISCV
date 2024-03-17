@@ -90,8 +90,9 @@ module VALU (v1_i, v2_i, VALUCtrl_i, v_o,over);
                 s2  = a3 * a4 ;
                 s3  = a5 * a6 ;
                 s4  = a7 * a8 ;//16bits
-             
-                v_o = (s1+s2+s3+s4);
+                v_o = {{16{s1[15]}}, s1} + {{16{s2[15]}}, s2} + {{16{s3[15]}}, s3} + {{16{s4[15]}}, s4};
+
+                // v_o = (s1+s2+s3+s4);
 
             end
 
