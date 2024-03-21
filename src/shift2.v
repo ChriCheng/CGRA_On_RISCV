@@ -1,3 +1,4 @@
+`timescale 1ns/10ps
 module Shift1 (
   input [31:0] data_i,
   output [31:0] data_o

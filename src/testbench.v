@@ -5,7 +5,7 @@
 `define End_CYCLE  300             // Modify cycle times once your design need more cycle times!
 
 
-module testfixture;
+module testbench;
 
 `ifdef SDF
 	initial $sdf_annotate(`SDFFILE, CPU);
@@ -57,7 +57,13 @@ initial begin
     $readmemb("../dat/instruction2.txt", instr_store);
     $readmemh("../dat/golden.dat",golden);
     // Open output file
-    outfile = $fopen("../dat/output.txt") | 1;
+    outfile = $fopen("../dat/output.txt");
+    if (outfile == 0) begin
+    // Handle error, e.g., print an error message
+    $display("Error: failed to open output file.");
+    // Optionally, set outfile to a default value or terminate the simulation
+    // $finish;
+end
     
     Clk = 1;
 
@@ -68,9 +74,11 @@ initial begin
 end
 
 initial begin
-	$fsdbDumpfile("CPU.fsdb");
-	$fsdbDumpvars;
-    $fsdbDumpMDA;
+    $dumpfile("CPU.vcd");
+    $dumpvars(0, testbench);
+	// $fsdbDumpfile("CPU.fsdb");
+	// $fsdbDumpvars;
+    // $fsdbDumpMDA;
    //$dumpfile("CPU.vcd");
    //$dumpvars; 
 end
@@ -102,7 +110,7 @@ initial begin
         end
         #(`CYCLE_TIME*2); 
      $display("--------------------------- Simulation Stops !!---------------------------");
-     if (err) begin 
+     if (err!=0) begin 
      	$display("============================================================================");
 		$display("             ▄▄▄▄▄▄▄ "); 
 		$display("         ▄▀▀▀       ▀▄"); 

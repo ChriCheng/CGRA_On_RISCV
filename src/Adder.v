@@ -1,3 +1,4 @@
+`timescale 1ns/10ps
 module Adder
 (
     data1_in,

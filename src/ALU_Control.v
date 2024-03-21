@@ -1,3 +1,4 @@
+`timescale 1ns/10ps
 module ALU_Control(
     funct_i    ,
     ALUOp_i    ,

@@ -1,3 +1,4 @@
+`timescale 1ns/10ps
 module ALU (data1_i, data2_i, ALUCtrl_i, data_o,Zero_o);
 
 input [31:0] data1_i, data2_i;
@@ -15,7 +16,8 @@ parameter MUL = 3'b110;
 
 /* implement here */
 always@(*)begin
-Zero_o   = (data1_i - data2_i)?0:1;
+Zero_o = (data1_i == data2_i) ? 1'b1 : 1'b0;
+
 case(ALUCtrl_i)
 
   SUM : begin
