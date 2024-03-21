@@ -1,0 +1,717 @@
+#-----------------------------------------------------------
+# Vivado v2019.2 (64-bit)
+# SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
+# IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
+# Start of session at: Wed Mar 20 15:52:22 2024
+# Process ID: 31524
+# Current directory: C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.runs/synth_1
+# Command line: vivado.exe -log CPU.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source CPU.tcl
+# Log file: C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.runs/synth_1/CPU.vds
+# Journal file: C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source CPU.tcl -notrace
+Command: synth_design -top CPU -part xc7vx485tffg1157-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7vx485t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7vx485t'
+INFO: [Device 21-403] Loading part xc7vx485tffg1157-1
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 30844 
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/HazardDetect.v:6]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/IF_ID.v:11]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/MUX_Control.v:16]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/PC.v:7]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/VEX_MEM.v:23]
+WARNING: [Synth 8-2490] overwriting previous definition of module Control [C:/Code/Vivado/CGRA_On_RISCV/src/Control.v:1]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/EX_MEM.v:25]
+WARNING: [Synth 8-2490] overwriting previous definition of module EX_MEM [C:/Code/Vivado/CGRA_On_RISCV/src/EX_MEM.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module MUX32 [C:/Code/Vivado/CGRA_On_RISCV/src/MUX32.v:1]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/PC.v:7]
+WARNING: [Synth 8-2490] overwriting previous definition of module PC [C:/Code/Vivado/CGRA_On_RISCV/src/PC.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module Adder [C:/Code/Vivado/CGRA_On_RISCV/src/Adder.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module Instruction_Memory [C:/Code/Vivado/CGRA_On_RISCV/src/Instruction_Memory.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module ALU [C:/Code/Vivado/CGRA_On_RISCV/src/ALU.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module Shift1 [C:/Code/Vivado/CGRA_On_RISCV/src/shift2.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module Sign_Extend [C:/Code/Vivado/CGRA_On_RISCV/src/Sign_Extend.v:1]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/IF_ID.v:11]
+WARNING: [Synth 8-2490] overwriting previous definition of module IF_ID [C:/Code/Vivado/CGRA_On_RISCV/src/IF_ID.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module Control [C:/Code/Vivado/CGRA_On_RISCV/src/Control.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module Registers [C:/Code/Vivado/CGRA_On_RISCV/src/Registers.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module ID_EX [C:/Code/Vivado/CGRA_On_RISCV/src/ID_EX.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module ALU_Control [C:/Code/Vivado/CGRA_On_RISCV/src/ALU_Control.v:1]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/HazardDetect.v:6]
+WARNING: [Synth 8-2490] overwriting previous definition of module HazradDetect [C:/Code/Vivado/CGRA_On_RISCV/src/HazardDetect.v:1]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/MUX_Control.v:16]
+WARNING: [Synth 8-2490] overwriting previous definition of module MUX_Control [C:/Code/Vivado/CGRA_On_RISCV/src/MUX_Control.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module ForwardingUnit [C:/Code/Vivado/CGRA_On_RISCV/src/ForwardingUnit.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module ForwardingMUX [C:/Code/Vivado/CGRA_On_RISCV/src/ForwardingMUX.v:1]
+WARNING: [Synth 8-1935] empty port in module declaration [C:/Code/Vivado/CGRA_On_RISCV/src/EX_MEM.v:25]
+WARNING: [Synth 8-2490] overwriting previous definition of module EX_MEM [C:/Code/Vivado/CGRA_On_RISCV/src/EX_MEM.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module Data_Memory [C:/Code/Vivado/CGRA_On_RISCV/src/DataMemory.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module MEM_WB [C:/Code/Vivado/CGRA_On_RISCV/src/MEM_WB.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module VALU [C:/Code/Vivado/CGRA_On_RISCV/src/VALU.v:1]
+WARNING: [Synth 8-2490] overwriting previous definition of module VALU_ctrl [C:/Code/Vivado/CGRA_On_RISCV/src/VALU_ctrl.v:1]
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:01 ; elapsed = 00:00:02 . Memory (MB): peak = 1140.805 ; gain = 238.898
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'CPU' [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:24]
+INFO: [Synth 8-6157] synthesizing module 'MUX32' [C:/Code/Vivado/CGRA_On_RISCV/src/MUX32.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'MUX32' (1#1) [C:/Code/Vivado/CGRA_On_RISCV/src/MUX32.v:1]
+INFO: [Synth 8-6157] synthesizing module 'PC' [C:/Code/Vivado/CGRA_On_RISCV/src/PC.v:1]
+WARNING: [Synth 8-308] ignoring empty port [C:/Code/Vivado/CGRA_On_RISCV/src/PC.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'PC' (2#1) [C:/Code/Vivado/CGRA_On_RISCV/src/PC.v:1]
+WARNING: [Synth 8-7023] instance 'PC' of module 'PC' has 6 connections declared, but only 5 given [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:234]
+INFO: [Synth 8-6157] synthesizing module 'Adder' [C:/Code/Vivado/CGRA_On_RISCV/src/Adder.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'Adder' (3#1) [C:/Code/Vivado/CGRA_On_RISCV/src/Adder.v:1]
+INFO: [Synth 8-6157] synthesizing module 'Instruction_Memory' [C:/Code/Vivado/CGRA_On_RISCV/src/Instruction_Memory.v:1]
+INFO: [Synth 8-226] default block is never used [C:/Code/Vivado/CGRA_On_RISCV/src/Instruction_Memory.v:63]
+WARNING: [Synth 8-6014] Unused sequential element quad_d1_reg was removed.  [C:/Code/Vivado/CGRA_On_RISCV/src/Instruction_Memory.v:56]
+WARNING: [Synth 8-5788] Register memory_reg[63] in module Instruction_Memory is has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Code/Vivado/CGRA_On_RISCV/src/Instruction_Memory.v:26]
+INFO: [Synth 8-6155] done synthesizing module 'Instruction_Memory' (4#1) [C:/Code/Vivado/CGRA_On_RISCV/src/Instruction_Memory.v:1]
+INFO: [Synth 8-6157] synthesizing module 'ALU' [C:/Code/Vivado/CGRA_On_RISCV/src/ALU.v:1]
+	Parameter SUM bound to: 3'b001 
+	Parameter SUB bound to: 3'b010 
+	Parameter AND bound to: 3'b011 
+	Parameter OR bound to: 3'b100 
+	Parameter XOR bound to: 3'b101 
+	Parameter MUL bound to: 3'b110 
+INFO: [Synth 8-6155] done synthesizing module 'ALU' (5#1) [C:/Code/Vivado/CGRA_On_RISCV/src/ALU.v:1]
+INFO: [Synth 8-6157] synthesizing module 'Shift1' [C:/Code/Vivado/CGRA_On_RISCV/src/shift2.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'Shift1' (6#1) [C:/Code/Vivado/CGRA_On_RISCV/src/shift2.v:1]
+INFO: [Synth 8-6157] synthesizing module 'Sign_Extend' [C:/Code/Vivado/CGRA_On_RISCV/src/Sign_Extend.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'Sign_Extend' (7#1) [C:/Code/Vivado/CGRA_On_RISCV/src/Sign_Extend.v:1]
+INFO: [Synth 8-6157] synthesizing module 'IF_ID' [C:/Code/Vivado/CGRA_On_RISCV/src/IF_ID.v:1]
+WARNING: [Synth 8-308] ignoring empty port [C:/Code/Vivado/CGRA_On_RISCV/src/IF_ID.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'IF_ID' (8#1) [C:/Code/Vivado/CGRA_On_RISCV/src/IF_ID.v:1]
+WARNING: [Synth 8-7023] instance 'IF_ID' of module 'IF_ID' has 11 connections declared, but only 10 given [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:280]
+INFO: [Synth 8-6157] synthesizing module 'Control' [C:/Code/Vivado/CGRA_On_RISCV/src/Control.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'Control' (9#1) [C:/Code/Vivado/CGRA_On_RISCV/src/Control.v:1]
+INFO: [Synth 8-6157] synthesizing module 'Registers' [C:/Code/Vivado/CGRA_On_RISCV/src/Registers.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'Registers' (10#1) [C:/Code/Vivado/CGRA_On_RISCV/src/Registers.v:1]
+INFO: [Synth 8-6157] synthesizing module 'ID_EX' [C:/Code/Vivado/CGRA_On_RISCV/src/ID_EX.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'ID_EX' (11#1) [C:/Code/Vivado/CGRA_On_RISCV/src/ID_EX.v:1]
+INFO: [Synth 8-6157] synthesizing module 'ALU_Control' [C:/Code/Vivado/CGRA_On_RISCV/src/ALU_Control.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'ALU_Control' (12#1) [C:/Code/Vivado/CGRA_On_RISCV/src/ALU_Control.v:1]
+INFO: [Synth 8-6157] synthesizing module 'HazradDetect' [C:/Code/Vivado/CGRA_On_RISCV/src/HazardDetect.v:1]
+WARNING: [Synth 8-308] ignoring empty port [C:/Code/Vivado/CGRA_On_RISCV/src/HazardDetect.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'HazradDetect' (13#1) [C:/Code/Vivado/CGRA_On_RISCV/src/HazardDetect.v:1]
+WARNING: [Synth 8-7023] instance 'HazradDetect' of module 'HazradDetect' has 6 connections declared, but only 5 given [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:386]
+INFO: [Synth 8-6157] synthesizing module 'MUX_Control' [C:/Code/Vivado/CGRA_On_RISCV/src/MUX_Control.v:1]
+INFO: [Synth 8-226] default block is never used [C:/Code/Vivado/CGRA_On_RISCV/src/MUX_Control.v:28]
+WARNING: [Synth 8-308] ignoring empty port [C:/Code/Vivado/CGRA_On_RISCV/src/MUX_Control.v:17]
+INFO: [Synth 8-6155] done synthesizing module 'MUX_Control' (14#1) [C:/Code/Vivado/CGRA_On_RISCV/src/MUX_Control.v:1]
+WARNING: [Synth 8-7023] instance 'MUX_Control' of module 'MUX_Control' has 16 connections declared, but only 15 given [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:394]
+INFO: [Synth 8-6157] synthesizing module 'ForwardingUnit' [C:/Code/Vivado/CGRA_On_RISCV/src/ForwardingUnit.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'ForwardingUnit' (15#1) [C:/Code/Vivado/CGRA_On_RISCV/src/ForwardingUnit.v:1]
+INFO: [Synth 8-6157] synthesizing module 'ForwardingMUX' [C:/Code/Vivado/CGRA_On_RISCV/src/ForwardingMUX.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'ForwardingMUX' (16#1) [C:/Code/Vivado/CGRA_On_RISCV/src/ForwardingMUX.v:1]
+INFO: [Synth 8-6157] synthesizing module 'EX_MEM' [C:/Code/Vivado/CGRA_On_RISCV/src/EX_MEM.v:1]
+WARNING: [Synth 8-308] ignoring empty port [C:/Code/Vivado/CGRA_On_RISCV/src/EX_MEM.v:26]
+INFO: [Synth 8-6155] done synthesizing module 'EX_MEM' (17#1) [C:/Code/Vivado/CGRA_On_RISCV/src/EX_MEM.v:1]
+WARNING: [Synth 8-7023] instance 'EX_MEM' of module 'EX_MEM' has 25 connections declared, but only 24 given [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:439]
+INFO: [Synth 8-6157] synthesizing module 'Data_Memory' [C:/Code/Vivado/CGRA_On_RISCV/src/DataMemory.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'Data_Memory' (18#1) [C:/Code/Vivado/CGRA_On_RISCV/src/DataMemory.v:1]
+INFO: [Synth 8-6157] synthesizing module 'MEM_WB' [C:/Code/Vivado/CGRA_On_RISCV/src/MEM_WB.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'MEM_WB' (19#1) [C:/Code/Vivado/CGRA_On_RISCV/src/MEM_WB.v:1]
+INFO: [Synth 8-6157] synthesizing module 'VALU' [C:/Code/Vivado/CGRA_On_RISCV/src/VALU.v:1]
+	Parameter VSUM bound to: 3'b010 
+	Parameter VSUB bound to: 3'b110 
+	Parameter VDP bound to: 3'b001 
+INFO: [Synth 8-6155] done synthesizing module 'VALU' (20#1) [C:/Code/Vivado/CGRA_On_RISCV/src/VALU.v:1]
+INFO: [Synth 8-6157] synthesizing module 'VALU_ctrl' [C:/Code/Vivado/CGRA_On_RISCV/src/VALU_ctrl.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'VALU_ctrl' (21#1) [C:/Code/Vivado/CGRA_On_RISCV/src/VALU_ctrl.v:1]
+WARNING: [Synth 8-5788] Register easter_egg_reg in module CPU is has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:194]
+INFO: [Synth 8-6155] done synthesizing module 'CPU' (22#1) [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:24]
+WARNING: [Synth 8-3331] design Shift1 has unconnected port data_i[31]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:01 ; elapsed = 00:00:03 . Memory (MB): peak = 1219.625 ; gain = 317.719
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:01 ; elapsed = 00:00:03 . Memory (MB): peak = 1219.625 ; gain = 317.719
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:01 ; elapsed = 00:00:03 . Memory (MB): peak = 1219.625 ; gain = 317.719
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.063 . Memory (MB): peak = 1219.625 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.srcs/constrs_1/new/Frequency.xdc]
+Finished Parsing XDC File [C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.srcs/constrs_1/new/Frequency.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1357.520 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.037 . Memory (MB): peak = 1357.520 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:03 ; elapsed = 00:00:08 . Memory (MB): peak = 1357.520 ; gain = 455.613
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7vx485tffg1157-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:03 ; elapsed = 00:00:08 . Memory (MB): peak = 1357.520 ; gain = 455.613
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:03 ; elapsed = 00:00:08 . Memory (MB): peak = 1357.520 ; gain = 455.613
+---------------------------------------------------------------------------------
+INFO: [Synth 8-5818] HDL ADVISOR - The operator resource <adder> is shared. To prevent sharing consider applying a KEEP on the output of the operator [C:/Code/Vivado/CGRA_On_RISCV/src/ALU.v:19]
+INFO: [Synth 8-5546] ROM "ALUOp_o" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "ALUCtrl_o" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "VALUCtrl_o" won't be mapped to RAM because it is too sparse
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:09 . Memory (MB): peak = 1357.520 ; gain = 455.613
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+	   3 Input     32 Bit       Adders := 2     
+	   4 Input     32 Bit       Adders := 1     
+	   2 Input      8 Bit       Adders := 4     
+	   3 Input      8 Bit       Adders := 4     
+	   2 Input      6 Bit       Adders := 1     
+	   2 Input      3 Bit       Adders := 1     
+	   2 Input      2 Bit       Adders := 1     
++---XORs : 
+	   2 Input     32 Bit         XORs := 2     
++---Registers : 
+	               32 Bit    Registers := 113   
+	               12 Bit    Registers := 1     
+	                8 Bit    Registers := 36    
+	                6 Bit    Registers := 2     
+	                5 Bit    Registers := 5     
+	                4 Bit    Registers := 34    
+	                3 Bit    Registers := 2     
+	                2 Bit    Registers := 2     
+	                1 Bit    Registers := 18    
++---Multipliers : 
+	                32x32  Multipliers := 2     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 73    
+	   4 Input     32 Bit        Muxes := 67    
+	   7 Input     32 Bit        Muxes := 2     
+	   2 Input      8 Bit        Muxes := 99    
+	   4 Input      8 Bit        Muxes := 19    
+	   2 Input      5 Bit        Muxes := 1     
+	   4 Input      4 Bit        Muxes := 1     
+	   9 Input      3 Bit        Muxes := 1     
+	   4 Input      3 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 2     
+	   7 Input      2 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 3     
+	   4 Input      2 Bit        Muxes := 3     
+	   5 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 78    
+	   7 Input      1 Bit        Muxes := 4     
+	   5 Input      1 Bit        Muxes := 24    
+	   4 Input      1 Bit        Muxes := 8     
+	   3 Input      1 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module CPU 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      3 Bit       Adders := 1     
++---Registers : 
+	                8 Bit    Registers := 3     
+	                4 Bit    Registers := 2     
+	                3 Bit    Registers := 2     
+	                1 Bit    Registers := 3     
++---Muxes : 
+	   4 Input      8 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 4     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 7     
+	   3 Input      1 Bit        Muxes := 1     
+Module MUX32 
+Detailed RTL Component Info : 
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 1     
+Module PC 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 1     
+Module Adder 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+Module Instruction_Memory 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      6 Bit       Adders := 1     
+	   2 Input      2 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 64    
+	                8 Bit    Registers := 1     
+	                6 Bit    Registers := 2     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   4 Input     32 Bit        Muxes := 64    
+	   2 Input     32 Bit        Muxes := 65    
+	   2 Input      8 Bit        Muxes := 65    
+	   2 Input      1 Bit        Muxes := 4     
+Module ALU 
+Detailed RTL Component Info : 
++---Adders : 
+	   3 Input     32 Bit       Adders := 1     
++---XORs : 
+	   2 Input     32 Bit         XORs := 1     
++---Multipliers : 
+	                32x32  Multipliers := 1     
++---Muxes : 
+	   7 Input     32 Bit        Muxes := 1     
+Module Sign_Extend 
+Detailed RTL Component Info : 
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 1     
+Module IF_ID 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 2     
+	               12 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 1     
+Module Control 
+Detailed RTL Component Info : 
++---Muxes : 
+	   7 Input      2 Bit        Muxes := 1     
+	   7 Input      1 Bit        Muxes := 4     
+Module Registers 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 32    
+	                4 Bit    Registers := 32    
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 32    
+Module ID_EX 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 6     
+	                5 Bit    Registers := 3     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 6     
+Module ALU_Control 
+Detailed RTL Component Info : 
++---Muxes : 
+	   9 Input      3 Bit        Muxes := 1     
+Module MUX_Control 
+Detailed RTL Component Info : 
++---Muxes : 
+	   2 Input      5 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 5     
+Module ForwardingUnit 
+Detailed RTL Component Info : 
++---Muxes : 
+	   2 Input      2 Bit        Muxes := 2     
+Module ForwardingMUX 
+Detailed RTL Component Info : 
++---Muxes : 
+	   4 Input     32 Bit        Muxes := 1     
+Module EX_MEM 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 5     
+	                5 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
+Module Data_Memory 
+Detailed RTL Component Info : 
++---Registers : 
+	                8 Bit    Registers := 32    
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 1     
+	   4 Input      8 Bit        Muxes := 18    
+	   2 Input      8 Bit        Muxes := 30    
+	   4 Input      2 Bit        Muxes := 2     
+	   5 Input      1 Bit        Muxes := 24    
+	   2 Input      1 Bit        Muxes := 29    
+	   4 Input      1 Bit        Muxes := 8     
+Module MEM_WB 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 3     
+	                5 Bit    Registers := 1     
+	                1 Bit    Registers := 2     
+Module VALU 
+Detailed RTL Component Info : 
++---Adders : 
+	   4 Input     32 Bit       Adders := 1     
+	   2 Input      8 Bit       Adders := 4     
+	   3 Input      8 Bit       Adders := 4     
++---Muxes : 
+	   4 Input     32 Bit        Muxes := 1     
+	   4 Input      4 Bit        Muxes := 1     
+	   4 Input      2 Bit        Muxes := 1     
+Module VALU_ctrl 
+Detailed RTL Component Info : 
++---Muxes : 
+	   4 Input      3 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 1     
+	   5 Input      2 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 2800 (col length:140)
+BRAMs: 2060 (col length: RAMB18 140 RAMB36 70)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+Warning: Parallel synthesis criteria is not met 
+INFO: [Synth 8-5845] Not enough pipeline registers after wide multiplier. Recommended levels of pipeline registers is 4 [C:/Code/Vivado/CGRA_On_RISCV/src/ALU.v:37]
+DSP Report: Generating DSP data_o0, operation Mode is: A*B.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: Generating DSP data_o0, operation Mode is: (PCIN>>17)+A*B.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: Generating DSP data_o0, operation Mode is: A*B.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: Generating DSP data_o0, operation Mode is: (PCIN>>17)+A*B.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: Generating DSP data_o0, operation Mode is: A*B.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: Generating DSP data_o0, operation Mode is: A*B.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: Generating DSP data_o0, operation Mode is: (PCIN>>17)+A*B.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: operator data_o0 is absorbed into DSP data_o0.
+DSP Report: Generating DSP v_o3, operation Mode is: A*B.
+DSP Report: operator v_o3 is absorbed into DSP v_o3.
+DSP Report: Generating DSP v_o2, operation Mode is: A*B.
+DSP Report: operator v_o2 is absorbed into DSP v_o2.
+DSP Report: Generating DSP v_o1, operation Mode is: A*B.
+DSP Report: operator v_o1 is absorbed into DSP v_o1.
+DSP Report: Generating DSP v_o3, operation Mode is: A*B.
+DSP Report: operator v_o3 is absorbed into DSP v_o3.
+INFO: [Synth 8-5546] ROM "Control/ALUOp_o" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "VALU_Control/VALUCtrl_o" won't be mapped to RAM because it is too sparse
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[31]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[30]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[29]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[28]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[27]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[26]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[25]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[24]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[23]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[22]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[21]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[20]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[19]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[18]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[17]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[16]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[15]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[14]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[13]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[12]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[11]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[10]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[9]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[8]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[1]
+WARNING: [Synth 8-3331] design Instruction_Memory has unconnected port addr_i[0]
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[11]' (FDC) to 'ID_EX/SignExtended_o_reg[12]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[12]' (FDC) to 'ID_EX/SignExtended_o_reg[13]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[13]' (FDC) to 'ID_EX/SignExtended_o_reg[14]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[14]' (FDC) to 'ID_EX/SignExtended_o_reg[15]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[15]' (FDC) to 'ID_EX/SignExtended_o_reg[16]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[16]' (FDC) to 'ID_EX/SignExtended_o_reg[17]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[17]' (FDC) to 'ID_EX/SignExtended_o_reg[18]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[18]' (FDC) to 'ID_EX/SignExtended_o_reg[19]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[19]' (FDC) to 'ID_EX/SignExtended_o_reg[20]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[20]' (FDC) to 'ID_EX/SignExtended_o_reg[21]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[21]' (FDC) to 'ID_EX/SignExtended_o_reg[22]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[22]' (FDC) to 'ID_EX/SignExtended_o_reg[23]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[23]' (FDC) to 'ID_EX/SignExtended_o_reg[24]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[24]' (FDC) to 'ID_EX/SignExtended_o_reg[25]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[25]' (FDC) to 'ID_EX/SignExtended_o_reg[26]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[26]' (FDC) to 'ID_EX/SignExtended_o_reg[27]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[27]' (FDC) to 'ID_EX/SignExtended_o_reg[28]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[28]' (FDC) to 'ID_EX/SignExtended_o_reg[29]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[29]' (FDC) to 'ID_EX/SignExtended_o_reg[30]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[30]' (FDC) to 'ID_EX/SignExtended_o_reg[31]'
+INFO: [Synth 8-3886] merging instance 'egg1_reg[7]' (FDC) to 'egg3_reg[6]'
+INFO: [Synth 8-3886] merging instance 'egg1_reg[6]' (FDC) to 'egg3_reg[6]'
+INFO: [Synth 8-3886] merging instance 'egg1_reg[5]' (FDC) to 'egg3_reg[6]'
+INFO: [Synth 8-3886] merging instance 'egg1_reg[4]' (FDC) to 'egg3_reg[6]'
+INFO: [Synth 8-3886] merging instance 'egg1_reg[3]' (FDP) to 'egg3_reg[7]'
+INFO: [Synth 8-3886] merging instance 'egg1_reg[2]' (FDP) to 'egg3_reg[7]'
+INFO: [Synth 8-3886] merging instance 'egg1_reg[1]' (FDC) to 'egg3_reg[6]'
+INFO: [Synth 8-3886] merging instance 'egg1_reg[0]' (FDP) to 'egg3_reg[7]'
+INFO: [Synth 8-3886] merging instance 'egg2_reg[7]' (FDC) to 'egg3_reg[6]'
+INFO: [Synth 8-3886] merging instance 'egg2_reg[6]' (FDC) to 'egg3_reg[6]'
+INFO: [Synth 8-3886] merging instance 'egg2_reg[5]' (FDP) to 'egg3_reg[7]'
+INFO: [Synth 8-3886] merging instance 'egg2_reg[4]' (FDP) to 'egg3_reg[7]'
+INFO: [Synth 8-3886] merging instance 'egg2_reg[3]' (FDC) to 'egg3_reg[6]'
+INFO: [Synth 8-3886] merging instance 'egg2_reg[2]' (FDP) to 'egg3_reg[7]'
+INFO: [Synth 8-3886] merging instance 'egg2_reg[1]' (FDP) to 'egg3_reg[7]'
+INFO: [Synth 8-3886] merging instance 'egg2_reg[0]' (FDC) to 'egg3_reg[6]'
+INFO: [Synth 8-3886] merging instance 'egg3_reg[7]' (FDP) to 'egg3_reg[4]'
+INFO: [Synth 8-3886] merging instance 'egg3_reg[6]' (FDC) to 'egg3_reg[5]'
+INFO: [Synth 8-3886] merging instance 'egg3_reg[5]' (FDC) to 'egg3_reg[2]'
+INFO: [Synth 8-3886] merging instance 'egg3_reg[4]' (FDP) to 'egg3_reg[3]'
+INFO: [Synth 8-3886] merging instance 'egg3_reg[3]' (FDP) to 'egg3_reg[1]'
+INFO: [Synth 8-3886] merging instance 'egg3_reg[2]' (FDC) to 'egg3_reg[0]'
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (\egg3_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\egg3_reg[0] )
+INFO: [Synth 8-3886] merging instance 'ID_EX/MemToReg_o_reg' (FDC) to 'ID_EX/MemRead_o_reg'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[31]' (FDC) to 'ID_EX/inst_o_reg[31]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[10]' (FDC) to 'ID_EX/inst_o_reg[30]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[9]' (FDC) to 'ID_EX/inst_o_reg[29]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[8]' (FDC) to 'ID_EX/inst_o_reg[28]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[7]' (FDC) to 'ID_EX/inst_o_reg[27]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[6]' (FDC) to 'ID_EX/inst_o_reg[26]'
+INFO: [Synth 8-3886] merging instance 'ID_EX/SignExtended_o_reg[5]' (FDC) to 'ID_EX/inst_o_reg[25]'
+INFO: [Synth 8-3886] merging instance 'EX_MEM/MemRead_o_reg' (FDC) to 'EX_MEM/MemToReg_o_reg'
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:05 ; elapsed = 00:00:18 . Memory (MB): peak = 1357.520 ; gain = 455.613
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+DSP: Preliminary Mapping	Report (see note below)
++------------+----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name | DSP Mapping    | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++------------+----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|ALU         | A*B            | 18     | 16     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|ALU         | (PCIN>>17)+A*B | 16     | 16     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|ALU         | A*B            | 18     | 18     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|ALU         | (PCIN>>17)+A*B | 18     | 16     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|ALU         | A*B            | 18     | 16     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|ALU         | A*B            | 18     | 18     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|ALU         | (PCIN>>17)+A*B | 15     | 15     | -      | -      | 15     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|VALU        | A*B            | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|VALU        | A*B            | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|VALU        | A*B            | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|VALU        | A*B            | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
++------------+----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:07 ; elapsed = 00:00:24 . Memory (MB): peak = 1357.520 ; gain = 455.613
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:07 ; elapsed = 00:00:25 . Memory (MB): peak = 1384.328 ; gain = 482.422
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:08 ; elapsed = 00:00:27 . Memory (MB): peak = 1474.172 ; gain = 572.266
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:08 ; elapsed = 00:00:29 . Memory (MB): peak = 1478.555 ; gain = 576.648
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:08 ; elapsed = 00:00:29 . Memory (MB): peak = 1478.555 ; gain = 576.648
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:08 ; elapsed = 00:00:30 . Memory (MB): peak = 1478.555 ; gain = 576.648
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:08 ; elapsed = 00:00:30 . Memory (MB): peak = 1478.555 ; gain = 576.648
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:08 ; elapsed = 00:00:30 . Memory (MB): peak = 1478.555 ; gain = 576.648
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:08 ; elapsed = 00:00:30 . Memory (MB): peak = 1478.555 ; gain = 576.648
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+--------+------+
+|      |Cell    |Count |
++------+--------+------+
+|1     |BUFG    |     1|
+|2     |CARRY4  |    52|
+|3     |DSP48E1 |     7|
+|4     |LUT1    |     6|
+|5     |LUT2    |    66|
+|6     |LUT3    |   212|
+|7     |LUT4    |   160|
+|8     |LUT5    |   528|
+|9     |LUT6    |  2454|
+|10    |MUXF7   |   950|
+|11    |MUXF8   |   304|
+|12    |FDCE    |  3805|
+|13    |FDRE    |   110|
+|14    |IBUF    |    18|
+|15    |OBUF    |    12|
++------+--------+------+
+
+Report Instance Areas: 
++------+---------------------+-------------------+------+
+|      |Instance             |Module             |Cells |
++------+---------------------+-------------------+------+
+|1     |top                  |                   |  8685|
+|2     |  ALU                |ALU                |    22|
+|3     |  Data_Memory        |Data_Memory        |  1120|
+|4     |  Add_PC             |Adder              |     8|
+|5     |  EX_MEM             |EX_MEM             |   608|
+|6     |  ID_EX              |ID_EX              |   373|
+|7     |  IF_ID              |IF_ID              |   186|
+|8     |  Instruction_Memory |Instruction_Memory |  3325|
+|9     |  MEM_WB             |MEM_WB             |   218|
+|10    |  MUX_ALUSrc         |MUX32              |    33|
+|11    |  PC                 |PC                 |    41|
+|12    |  Registers          |Registers          |  2561|
+|13    |  Sign_Extend        |Sign_Extend        |     5|
+|14    |  VALU               |VALU               |    57|
+|15    |  aluToDM            |MUX32_0            |    33|
+|16    |  memToReg           |MUX32_1            |    32|
+|17    |  pcSelect           |MUX32_2            |     2|
++------+---------------------+-------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:08 ; elapsed = 00:00:30 . Memory (MB): peak = 1478.555 ; gain = 576.648
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 26 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:06 ; elapsed = 00:00:28 . Memory (MB): peak = 1478.555 ; gain = 438.754
+Synthesis Optimization Complete : Time (s): cpu = 00:00:08 ; elapsed = 00:00:30 . Memory (MB): peak = 1478.555 ; gain = 576.648
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.054 . Memory (MB): peak = 1490.590 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 1313 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1494.094 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+117 Infos, 74 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:10 ; elapsed = 00:00:36 . Memory (MB): peak = 1494.094 ; gain = 1053.387
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1494.094 ; gain = 0.000
+WARNING: [Constraints 18-5210] No constraints selected for write.
+Resolution: This message can indicate that there are no constraints for the design, or it can indicate that the used_in flags are set such that the constraints are ignored. This later case is used when running synth_design to not write synthesis constraints to the resulting checkpoint. Instead, project constraints are read when the synthesized design is opened.
+WARNING: [Runs 36-115] Could not delete directory 'C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.runs/synth_1/.Xil/Vivado-31524-Chris/dcp0'.
+INFO: [Common 17-1381] The checkpoint 'C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.runs/synth_1/CPU.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file CPU_utilization_synth.rpt -pb CPU_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Mar 20 15:53:02 2024...

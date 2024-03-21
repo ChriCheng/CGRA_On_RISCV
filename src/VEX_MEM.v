@@ -28,7 +28,8 @@ input	[31:0]	pc_i, ALUResult_i, RDData_i, VALUResult_i; //NEW
 input	[4:0] RDaddr_i;
 
 output	zero_o, RegWrite_o, MemToReg_o, MemRead_o, MemWrite_o;
-output	[31:0]	pc_o, ALUResult_o, RDData_o, VALUResult_o; //NEW
+output	[31:0]	pc_o, ALUResult_o, RDData_o; //NEW
+output  reg[31:0] VALUResult_o;
 output reg[4:0] RDaddr_o;
 reg	 zero_o, RegWrite_o, MemToReg_o, MemRead_o, MemWrite_o;
 reg	[31:0]	pc_o, ALUResult_o, RDData_o;

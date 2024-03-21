@@ -1,0 +1,31 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../ALU.v" \
+"../../../../../ALU_Control.v" \
+"../../../../../Adder.v" \
+"../../../../../CPU.v" \
+"../../../../../DataMemory.v" \
+"../../../../../ForwardingMUX.v" \
+"../../../../../ForwardingUnit.v" \
+"../../../../../HazardDetect.v" \
+"../../../../../ID_EX.v" \
+"../../../../../IF_ID.v" \
+"../../../../../Instruction_Memory.v" \
+"../../../../../MEM_WB.v" \
+"../../../../../MUX32.v" \
+"../../../../../MUX_Control.v" \
+"../../../../../PC.v" \
+"../../../../../Registers.v" \
+"../../../../../Sign_Extend.v" \
+"../../../../../VALU.v" \
+"../../../../../VALU_ctrl.v" \
+"../../../../../VControl.v" \
+"../../../../../VEX_MEM.v" \
+"../../../../../shift2.v" \
+"../../../../../testbench.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

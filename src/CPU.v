@@ -20,6 +20,7 @@
 `include "VALU.v" //NEW
 `include "VALU_ctrl.v" //NEW
 
+
 module CPU
 (
     clk_i, 
@@ -221,6 +222,7 @@ always@(*)begin
         2'b11:value_o   = (DataOrReg)? reg_o[31:24] : data_mem_o[31:24];
     endcase
 end
+
 
 MUX32 pcSelect(
     .data1_i    (addPC),
