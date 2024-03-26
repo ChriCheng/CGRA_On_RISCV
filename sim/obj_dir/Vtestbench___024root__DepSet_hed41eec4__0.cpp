@@ -545,7 +545,7 @@ VL_INLINE_OPT void Vtestbench___024root___nba_sequent__TOP__2(Vtestbench___024ro
     vlSelf->__Vdly__testbench__DOT__CPU__DOT__IF_ID_inst_o 
         = vlSelf->testbench__DOT__CPU__DOT__IF_ID_inst_o;
     if (VL_UNLIKELY((0x12cU == vlSelf->testbench__DOT__counter))) {
-        VL_FINISH_MT("../src/../src/testbench.v", 156, "");
+        VL_FINISH_MT("../src/../src/testbench.v", 177, "");
     }
     vlSelf->testbench__DOT__counter = ((IData)(1U) 
                                        + vlSelf->testbench__DOT__counter);
