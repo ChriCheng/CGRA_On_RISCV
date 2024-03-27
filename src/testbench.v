@@ -67,9 +67,9 @@ end
     
     Clk = 1;
 
-    reset = 0;
-    reset = 1;
-    #(`CYCLE_TIME)
+    // reset = 0;
+    // reset = 1;
+    // #(`CYCLE_TIME)
     reset = 0; 
 end
 
@@ -92,7 +92,7 @@ always@(posedge Clk) begin
 end
 //8'b1111_1110 = start
 //8'b1111_1111 = end
-initial begin
+/* initial begin
     j =0 ;
      $display("--------------------------- [ Simulation Starts !! ] ---------------------------");
         #(`CYCLE_TIME*234);
@@ -132,35 +132,48 @@ initial begin
         $display("============================================================================");
 	end
      else begin 
+
         $display("============================================================================");
-        $display("/ \033[1;33m##########\                                  #########\033[m");
-        $display("//\033[1;33m############/                           #############\033[m");
-        $display("  \033[1;33m  (#############       /            ##################\033[m");
-        $display("  \033[1;33m  ################################################ \033[m ");
-        $display("  \033[1;33m     /###########################################  \033[m   ");
-        $display(" \033[1;33m         //(#####################################(  \033[m    ");
-        $display("   \033[1;33m        (##################################(/     \033[m    ");
-		$display("   \033[1;33m     /####################################(     \033[m    ");
-		$display("   \033[1;33m   #####(   /###############(    ########(   \033[m     ");
-		$display("   \033[1;33m (#####       ##############     (########  \033[m	   ");
-		$display(".  \033[1;33m  #######(  (################   (#########( \033[m	   ");
-		$display(".   \033[1;33m/###############/  (######################/	\033[m   ");
-		$display("\033[1;35m    . /////\033[m\033[1;33m############################\033[m\033[1;35m/ ///(\033\033[1;33m###( \033[m	   ");
-		$display("\033[1;35m  .//////(\033[m\033[1;33m##########################\033[m\033[1;35m///////\033\033[1;33m######  \033[m	   ");
-		$display("\033[1;35m   . /////\033[m \033[1;33m#########(       /#########\033[m\033[1;35m(//////\033\033[1;33m####( \033[m    ");
-		$display("\033[1;35m   (#((\033[m\033[1;33m###########(        (#########\033[m\033[1;35m(((((\033\033[1;33m######/  \033[m  ");
-		$display("  \033[1;33m /###############(      /(####################( \033[m   ");
-		$display("   \033[1;33m/#################(  (#######################  \033[m  ");
-		$display("\033[1;33m   (###########################################(  \033[m ");
-		$display("\033[1;36m	^o^		WOOOOOW  YOU  PASSED!!!\033[m");
-        $display("\n");
+        $display("\033[1;36mrrrrrrrr\033[m    \033[38;5;208mRCCCCCCCCC\033[0m                                                                                      \033[38;5;208mrrrr           riscv\033[0m      ");
+        $display("\033[1;36mrsssssssir\033[m  \033[38;5;208mrCCCCCCCCR\033[0m        \033[1;36mrrsssssssssssssssssir   ssi   iisssssssssssssssss    riisssssssssssssss\033[m        \033[38;5;208mvCSc          iSCI\033[0m       ");
+        $display("\033[1;36mrssssssssr\033[m  \033[38;5;208mrCCCCCCCr\033[0m         \033[1;36mrrssr             rssr  ssi  issr                  risi\033[m                         \033[38;5;208mrCCR        cSCi\033[0m        ");
+        $display("\033[1;36mrsr\033[m         \033[38;5;208mICCCCCs\033[0m           \033[1;36mrrssiiiiiiiiiiiiiiisr   ssi   ssiiiiiiiiiiiiiirr   iss\033[m                   \033[38;5;208mvvvvvv   ICSr     RCC\033[0m          ");
+        $display("\033[1;36mrsi\033[m     \033[38;5;208mrivSCCCCS\033[0m    \033[1;36mri        rssr         isss      ssi                   isi  rssr\033[m                            \033[38;5;208mcCSc  rSCI\033[0m           ");
+        $display("\033[1;36mrssir\033[m    \033[38;5;208mvCCCCCi\033[0m   \033[1;36mrris        rss            ssir    ssi  rrrrrrrrrrrrrrrrriss   rssirrrrrrrrrrrrrrr\033[m             \033[38;5;208mrCCRcSCc\033[0m            ");
+        $display("\033[1;36mrssssir\033[m    \033[38;5;208mSCc\033[0m   \033[1;36mrrisss        rss             rssr   ssi  issssssssssssssssi         sssssssssssssss\033[m               \033[38;5;208mRCCC\033[0m              ");
+        $display("\033[1;36mrssssssir\033[m       \033[1;36mrisssss\033[m                                                                                                               ");
+        $display("\033[1;36mrssssssssi\033[m     \033[1;36mrissssss\033[m   ");
         $display("============================================================================");
         $finish;
+                                                                                   
 	end
-$finish;
+$finish; 
  
+end */
+
+initial begin
+    j =0 ;
+     $display("--------------------------- [ Simulation Starts !! ] ---------------------------");
+        // #(`CYCLE_TIME*234);
+        for(j=0;j<264;j=j+1)begin
+            if((j%4==0)&&(j!=0))address = address + 5'd1;
+            @(posedge Clk);
+            vout_addr = vout_addr - 2'b1;
+            $display("%d instruction is %h, correct instruction is %h , address is %h , value_o is %h , correct pattern is %h, vout_addr is %h, counter is %d,",j,instr_i,instr_store[j],address,value_o,golden[j],vout_addr,counter);
+            // $display("%d address is %h , value_o is %h , correct pattern is %h, vout_addr is %h, counter is %d,",j,address,value_o,golden[j],vout_addr,counter);
+            // $display("goden[%d] is %h",j,golden[j]);
+            // if(value_o !== golden[j])begin
+            //      err = err + 1;
+            //      $display("pattern%d is wrong:output %h != expected %h",j,value_o,golden[j]);
+            // end
+            // else begin
+            //      $display("pattern%d is correct:output %h == expected %h",j,value_o,golden[j]);
+            // end
+        end
+        #(`CYCLE_TIME*2); 
+     $display("--------------------------- Simulation Stops !!---------------------------");
 end
-  
+
 always@(posedge Clk) begin
     if(counter == 300)    // stop after 240 cycles
         $finish;

@@ -182,7 +182,7 @@ class Vtestbench___024root final : public VerilatedModule {
         VlUnpacked<IData/*31:0*/, 32> testbench__DOT__CPU__DOT__Registers__DOT__register;
         VlUnpacked<CData/*3:0*/, 32> testbench__DOT__CPU__DOT__Registers__DOT__pos;
         VlUnpacked<CData/*7:0*/, 32> testbench__DOT__CPU__DOT__Data_Memory__DOT__memory;
-        VlUnpacked<CData/*0:0*/, 12> __Vm_traceActivity;
+        VlUnpacked<CData/*0:0*/, 11> __Vm_traceActivity;
     };
     VlDelayScheduler __VdlySched;
     VlTriggerScheduler __VtrigSched_hb77428d3__0;
