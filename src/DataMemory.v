@@ -1,13 +1,13 @@
 module Data_Memory
 (   
-    clk_i,
-    reset,
+    clk_i, //clka
+    reset, //rsta
     op_addr,
     addr_i,
-    data_i,
+    data_i, 
     MemWrite_i,
     MemRead_i,
-    data_o,
+    data_o, //douta
     data_mem_o
 );
 
