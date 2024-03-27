@@ -67,9 +67,9 @@ end
     
     Clk = 1;
 
-    reset = 0;
-    reset = 1;
-    #(`CYCLE_TIME)
+    // reset = 0;
+    // reset = 1;
+    // #(`CYCLE_TIME)
     reset = 0; 
 end
 
@@ -92,7 +92,7 @@ always@(posedge Clk) begin
 end
 //8'b1111_1110 = start
 //8'b1111_1111 = end
-initial begin
+/* initial begin
     j =0 ;
      $display("--------------------------- [ Simulation Starts !! ] ---------------------------");
         #(`CYCLE_TIME*234);
@@ -147,10 +147,33 @@ initial begin
         $finish;
                                                                                    
 	end
-$finish;
+$finish; 
  
+end */
+
+initial begin
+    j =0 ;
+     $display("--------------------------- [ Simulation Starts !! ] ---------------------------");
+        // #(`CYCLE_TIME*234);
+        for(j=0;j<264;j=j+1)begin
+            if((j%4==0)&&(j!=0))address = address + 5'd1;
+            @(posedge Clk);
+            vout_addr = vout_addr - 2'b1;
+            $display("%d instruction is %h, correct instruction is %h , address is %h , value_o is %h , correct pattern is %h, vout_addr is %h, counter is %d,",j,instr_i,instr_store[j],address,value_o,golden[j],vout_addr,counter);
+            // $display("%d address is %h , value_o is %h , correct pattern is %h, vout_addr is %h, counter is %d,",j,address,value_o,golden[j],vout_addr,counter);
+            // $display("goden[%d] is %h",j,golden[j]);
+            // if(value_o !== golden[j])begin
+            //      err = err + 1;
+            //      $display("pattern%d is wrong:output %h != expected %h",j,value_o,golden[j]);
+            // end
+            // else begin
+            //      $display("pattern%d is correct:output %h == expected %h",j,value_o,golden[j]);
+            // end
+        end
+        #(`CYCLE_TIME*2); 
+     $display("--------------------------- Simulation Stops !!---------------------------");
 end
-  
+
 always@(posedge Clk) begin
     if(counter == 300)    // stop after 240 cycles
         $finish;

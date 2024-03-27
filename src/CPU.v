@@ -229,7 +229,8 @@ MUX32 pcSelect(
     .data_o     (pcSelect_data_o)
 );
 
-PC PC(
+
+PC  PC(
     .clk_i      (clk_i),
     .start_i    (start_i),
     .pc_i       (pcSelect_data_o),
