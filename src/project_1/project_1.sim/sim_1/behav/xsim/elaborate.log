@@ -4,6 +4,6 @@ Running: C:/Xilinx/Vivado/2019.2/bin/unwrapped/win64.o/xelab.exe -wto 47d17b62c1
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-ERROR: [VRFC 10-3180] cannot find port 'instr_i' on this module [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:452]
-ERROR: [VRFC 10-3180] cannot find port 'instr_o' on this module [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:453]
+ERROR: [VRFC 10-3180] cannot find port 'instr_i' on this module [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:453]
+ERROR: [VRFC 10-3180] cannot find port 'instr_o' on this module [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:454]
 ERROR: [XSIM 43-3322] Static elaboration of top level Verilog design unit(s) in library work failed.

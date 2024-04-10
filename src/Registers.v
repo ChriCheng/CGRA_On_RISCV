@@ -18,7 +18,7 @@ integer i;
 // Ports
 input               clk_i;
 input               reset;
-input   [4:0]       op_address;
+input   [9:0]       op_address;
 input   [4:0]       RSaddr_i;
 input   [4:0]       RTaddr_i;
 input   [4:0]       RDaddr_i;

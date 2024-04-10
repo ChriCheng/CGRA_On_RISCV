@@ -1,0 +1,72 @@
+module Top(
+    input               clk,
+    input               DataOrReg,
+    input [4:0]         address,
+    input  [7:0]        instr_i,
+    input               reset,
+    input [1:0]        vout_addr,//00:ouput 8,i.e. [7:0] LSB; 01: [15:8] 
+    output reg[7:0]        value_o,
+    output  is_positive,
+    output  reg[2:0] easter_egg
+);
+
+CPU CPU
+(
+    .clk_i(clk) ,
+    .DataOrReg(),
+    .address(),
+    .instr_i(),
+    .reset(),
+    .vout_addr(),
+    .value_o(),
+    .is_positive(),
+    .easter_egg()
+    
+);
+
+// IMemory InstructionMemory (
+//   .rsta_busy(rsta_busy),          // output wire rsta_busy
+//   .rstb_busy(rstb_busy),          // output wire rstb_busy
+//   .s_aclk(clk),                // input wire s_aclk
+//   .s_aresetn(reset),          // input wire s_aresetn
+//   /* ------Write Address Channel Interface Signals-------*/
+//   .s_axi_awaddr(s_axi_awaddr),    // input wire [31 : 0] s_axi_awaddr
+//   .s_axi_awvalid(s_axi_awvalid),  // input wire s_axi_awvalid master
+//   .s_axi_awready(s_axi_awready),  // output wire s_axi_awready slave
+//   /* ------Write Data Channel Interface Signals--------- */ 
+//   .s_axi_wdata(s_axi_wdata),      // input wire [31 : 0] s_axi_wdata
+//   .s_axi_wstrb(s_axi_wstrb),      // input wire [3 : 0] s_axi_wstrb
+//   .s_axi_wvalid(s_axi_wvalid),    // input wire s_axi_wvalid master
+//   .s_axi_wready(s_axi_wready),    // output wire s_axi_wready slave
+//   .s_axi_bresp(s_axi_bresp),      // output wire [1 : 0] s_axi_bres
+  
+//   .s_axi_bvalid(s_axi_bvalid),    // output wire s_axi_bvalid slave
+//   .s_axi_bready(s_axi_bready),    // input wire s_axi_bready master
+//     /* ------AXI4-Lite Read Channel Interface Signals------ */
+//   .s_axi_araddr(s_axi_araddr),    // input wire [31 : 0] s_axi_araddr
+//   .s_axi_arvalid(s_axi_arvalid),  // input wire s_axi_arvalid
+//   .s_axi_arready(s_axi_arready),  // output wire s_axi_arready
+//   .s_axi_rdata(s_axi_rdata),      // output wire [31 : 0] s_axi_rdata
+//   .s_axi_rresp(s_axi_rresp),      // output wire [1 : 0] s_axi_rresp
+//   .s_axi_rvalid(s_axi_rvalid),    // output wire s_axi_rvalid
+//   .s_axi_rready(s_axi_rready)    // input wire s_axi_rready
+// ); 
+
+
+wire [31:0] douta;
+IMemory inst_rom (
+  .clka(clk),    // input wire clka
+  .ena(),      // input wire ena
+  .addra(addra),  // input wire [9 : 0] addra
+  .douta(douta)  // output wire [31 : 0] douta
+);
+
+Dmemery data_ram (
+  .clka(clk),    // input wire clka
+  .ena(ena),      // input wire ena
+  .wea(wea),      // input wire [0 : 0] wea
+  .addra(addra),  // input wire [9 : 0] addra
+  .dina(dina),    // input wire [31 : 0] dina
+  .douta(douta)  // output wire [31 : 0] douta
+);
+endmodule

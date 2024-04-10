@@ -23,28 +23,17 @@
 
 module CPU
 (
-    clk_i, 
-    DataOrReg,
-    address,
-    instr_i,
-    reset,
-    vout_addr,
-    value_o,
-    is_positive,
-    easter_egg
+    input               clk_i, 
+    input               DataOrReg,
+    input [9:0]         address,
+    input  [7:0]        instr_i,
+    input               reset,
+    input [1:0]         vout_addr,
+    output reg[7:0]value_o,
+    output is_positive,
+    output  reg[2:0]easter_egg
+
 );
-
-//------------------------- I/O Ports -------------------------------//
-
-input               clk_i;
-input               DataOrReg;
-input [4:0]         address;
-input  [7:0]        instr_i;
-input               reset;
-input [1:0]        vout_addr;//00:ouput 8,i.e. [7:0] LSB; 01: [15:8] 
-output reg[7:0]        value_o;
-output  is_positive;
-output  reg[2:0] easter_egg;
 
 //------------------------- Wire&Reg -------------------------------//
 
