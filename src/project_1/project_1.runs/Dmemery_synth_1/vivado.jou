@@ -2,8 +2,8 @@
 # Vivado v2019.2 (64-bit)
 # SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
 # IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
-# Start of session at: Sun Apr  7 18:10:09 2024
-# Process ID: 12360
+# Start of session at: Wed Apr 10 13:19:56 2024
+# Process ID: 3452
 # Current directory: C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.runs/Dmemery_synth_1
 # Command line: vivado.exe -log Dmemery.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Dmemery.tcl
 # Log file: C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.runs/Dmemery_synth_1/Dmemery.vds

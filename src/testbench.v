@@ -15,7 +15,6 @@ reg                Clk;
 reg                Start;
 reg                DataOrReg;
 reg [4:0]          address;
-reg [7:0]          instr_i;
 reg                reset;//used to initalize memorys and registers
 reg [7:0]          instr_store[0:(64*4+1)];
 reg [1:0]             vout_addr;
@@ -34,7 +33,6 @@ CPU CPU(
     .clk_i  (Clk),
     .DataOrReg(DataOrReg),
     .address(address),
-    .instr_i(instr_i),
     .reset(reset),
     .vout_addr(vout_addr),
     .value_o(value_o),
@@ -83,13 +81,13 @@ initial begin
    //$dumpvars; 
 end
 
-always@(posedge Clk) begin
+/* always@(posedge Clk) begin
     if(counter<256)begin
         #(`CYCLE_TIME/4)
         instr_i = instr_store[counter];
     end
     else instr_i = 0;
-end
+end */
 //8'b1111_1110 = start
 //8'b1111_1111 = end
 /* initial begin
@@ -151,7 +149,7 @@ $finish;
  
 end */
 
-initial begin
+/* initial begin
     j =0 ;
      $display("--------------------------- [ Simulation Starts !! ] ---------------------------");
         // #(`CYCLE_TIME*234);
@@ -181,7 +179,7 @@ always@(posedge Clk) begin
     counter = counter + 1;
     
       
-end
+end */
 
   
 endmodule

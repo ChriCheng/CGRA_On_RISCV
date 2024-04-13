@@ -24,22 +24,30 @@
 module CPU
 (
     input               clk_i, 
-    input               DataOrReg,
-    input [9:0]         address,
-    input  [7:0]        instr_i,
-    input               reset,
-    input [1:0]         vout_addr,
-    output reg[7:0]value_o,
-    output is_positive,
-    output  reg[2:0]easter_egg
-
+    input               DataOrReg, // choose value_o from reg or mem
+    input [9:0]         address, //for tb read specific reg/mem
+    // input  [7:0]        instr_i, 
+    input               reset, 
+    input [1:0]         vout_addr, // choose one of four bytes of value
+    output reg[7:0]value_o,     // for tb test
+    output is_positive,  // reg is positive or not
+    output  reg[2:0]easter_egg,
+    /* --------------INSTR MEM----------------- */
+    output wire [31:0]inst_addr,
+    input wire[31:0]instr,
+    /* --------------DATA MEM----------------- */
+    output reg data_mem_wea,
+    output wire [9:0] mem_addr,
+    output wire [31:0] mem_wdata,
+    input wire [31:0] mem_rdata
 );
 
 //------------------------- Wire&Reg -------------------------------//
 
 wire [3:0] vector_signed_bits;
 wire [31:0] op_selection;
-wire [31:0] inst_addr,inst,addPC,aluData,RSD,RTD,signExData,MUXop;
+// wire [31:0]inst;
+wire[31:0]addPC,aluData,RSD,RTD,signExData,MUXop;
 wire [9:0] ALUfunct_in;
 wire [2:0] alu_ctrl_wire;
 wire [11:0] pcIm,swIm;
@@ -127,8 +135,10 @@ assign RegEqual = (Registers_RSdata_o == Registers_RTdata_o);
 assign PC_Branch_Select = RegEqual & isBranch;
 assign isBranch = (IF_ID_inst_o[6:0]==7'b1100011)? 1'b1:1'b0;
 assign ALUfunct_in = {ID_EX_inst_o[31:25],ID_EX_inst_o[14:12]};
-assign pcIm = {inst[31],inst[7],inst[30:25],inst[11:8]};
-assign swIm = {inst[31:25],inst[11:7]};
+// assign pcIm = {inst[31],inst[7],inst[30:25],inst[11:8]};
+// assign swIm = {inst[31:25],inst[11:7]};
+assign pcIm = {instr[31],instr[7],instr[30:25],instr[11:8]};
+assign swIm = {instr[31:25],instr[11:7]};
 assign rst = reset;
 //assign op_selection = (DataOrReg)? reg_o : data_mem_o;//May28 removed.
 assign toDataMemory = (EX_MEM_instr_o[6:0] == 7'b1010111)? 1 : 0; //NEW
@@ -152,7 +162,8 @@ always@(posedge clk_i or posedge reset )begin
         egg1             <= 8'b0000_1101;//013
         egg2             <= 8'b0011_0110;//054
         egg3             <= 8'b1001_1010;//154
-       if(flag)begin
+        start_i <= 1;
+/*        if(flag)begin
             if(instr_i == 8'b1111_1111)begin
                 flag    <= 0;
                 start_i <= 1;
@@ -167,7 +178,7 @@ always@(posedge clk_i or posedge reset )begin
             else flag <= flag;
             start_i <= start_i;
             
-        end
+        end */
     end
 end
 
@@ -194,14 +205,14 @@ end
 
 
 //------------------------- Combinational Part -------------------------------//
-always@(*)begin
+/* always@(*)begin
     if(instr_i == 8'b1010_1010)easter_flag_next <= 1;
     else if(easter_counter == 3'd7)easter_flag_next <= 0;
          else                      easter_flag_next <= easter_flag;
 
     if(easter_flag)easter_counter_next = easter_counter + 3'd1;
     else easter_counter_next = easter_counter;
-end
+end */
 
 always@(*)begin
     case(vout_addr)
@@ -236,13 +247,16 @@ Adder Add_PC(
 );
 
 
-Instruction_Memory Instruction_Memory(
+/* Instruction_Memory Instruction_Memory(
     .clk        (clk_i),
     .reset      (rst),
     .addr_i     (inst_addr), 
     .instr_i    (instr_i),
     .instr_o    (inst)          //to IF_ID.inst_i
-);
+); */
+
+
+
 
 //AddSum was in EX stage initally, but moved to IF stage.
 ALU AddSum(
@@ -288,23 +302,24 @@ Control Control(
     .MemRd_o    (Control_MemRd_o),             //to ID_EX.MemRead_i
     .MemWr_o    (Control_MemWr_o),             //to ID_EX.MemWrite_i
     .MemToReg_o   (Control_MemToReg_o),              //to ID_EX.MemToReg_i
-    .immSelect_o  (Control_immSelect_o)             //to Sign_Extend.select_i
+    .immSelect_o  (Control_immSelect_o)           //to Sign_Extend.select_i
+
 );
 
 Registers Registers(
     .clk_i      (clk_i),
     .reset      (rst),
-    .op_address (address),
-    .RSaddr_i   (IF_ID_inst_o[19:15]),     
-    .RTaddr_i   (IF_ID_inst_o[24:20]),     
-    .RDaddr_i   (MEM_WB_RDaddr_o), 
+    .op_address (address), /* dbg */
+    .RSaddr_i   (IF_ID_inst_o[19:15]), /* rs1 */    
+    .RTaddr_i   (IF_ID_inst_o[24:20]), /* rs2 */
+    .RDaddr_i   (MEM_WB_RDaddr_o),  /* rd */
     .RDdata_i   (memToReg_data_o),
     .RegWrite_i (MEM_WB_RegWrite_o), 
     .is_pos_i   (vector_signed[1]),
     .RSdata_o   (Registers_RSdata_o),                  //to ID_EX.RDData0_i
     .RTdata_o   (Registers_RTdata_o),                  //to ID_EX.RDData1_i
-    .reg_o      (reg_o),
-    .pos_o      (is_positive_line)
+    .reg_o      (reg_o), /* dbg */
+    .pos_o      (is_positive_line) /* dbg */
 );
 
 
@@ -456,15 +471,26 @@ EX_MEM EX_MEM(
 Data_Memory Data_Memory(
     .clk_i      (clk_i),
     .reset      (rst),
-    .op_addr    (address),
+    .op_addr    (address),/* dbg */
     .addr_i     (aluToDM_data_o),
     .data_i     (EX_MEM_RDData_o),
     .MemWrite_i (EX_MEM_MemWrite_o),
     .MemRead_i  (EX_MEM_MemRead_o),
     .data_o     (Data_Memory_data_o),
-    .data_mem_o (data_mem_o)
+    .data_mem_o (data_mem_o) /* dbg */
 );
 
+assign mem_addr = aluToDM_data_o;
+assign mem_data = EX_MEM_RDData_o;
+
+always @(EX_MEM_MemWrite_o, EX_MEM_MemRead_o) begin
+    if ({EX_MEM_MemWrite_o, EX_MEM_MemRead_o} == 2'b10) begin
+        data_mem_wea = 1'b1;
+    end
+    else begin
+        data_mem_wea = 1'b0;
+    end
+end
 MEM_WB MEM_WB(
     .clk_i  (clk_i),
     .start_i    (start_i),
@@ -474,7 +500,7 @@ MEM_WB MEM_WB(
     .RDaddr_i   (EX_MEM_RDaddr_o),
     .RegWrite_i (EX_MEM_RegWrite_o),
     .MemToReg_i (EX_MEM_MemToReg_o),
-    .DataMemReadData_i(Data_Memory_data_o),
+    .DataMemReadData_i(mem_rdata),
     .ALUResult_o    (MEM_WB_ALUResult_o),
     .RDData_o   (),         //to memToReg.data1_i
     .RDaddr_o   (MEM_WB_RDaddr_o),         

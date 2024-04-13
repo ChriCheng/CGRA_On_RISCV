@@ -1,7 +1,7 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Sun Apr  7 18:06:30 2024
+-- Date        : Sat Apr 13 21:31:43 2024
 -- Host        : Chris running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
 --               C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.srcs/sources_1/ip/IMemory/IMemory_sim_netlist.vhdl
@@ -14,7 +14,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity IMemory_blk_mem_gen_prim_wrapper is
+entity IMemory_blk_mem_gen_prim_wrapper_init is
   port (
     douta : out STD_LOGIC_VECTOR ( 31 downto 0 );
     clka : in STD_LOGIC;
@@ -22,10 +22,10 @@ entity IMemory_blk_mem_gen_prim_wrapper is
     addra : in STD_LOGIC_VECTOR ( 9 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of IMemory_blk_mem_gen_prim_wrapper : entity is "blk_mem_gen_prim_wrapper";
-end IMemory_blk_mem_gen_prim_wrapper;
+  attribute ORIG_REF_NAME of IMemory_blk_mem_gen_prim_wrapper_init : entity is "blk_mem_gen_prim_wrapper_init";
+end IMemory_blk_mem_gen_prim_wrapper_init;
 
-architecture STRUCTURE of IMemory_blk_mem_gen_prim_wrapper is
+architecture STRUCTURE of IMemory_blk_mem_gen_prim_wrapper_init is
   signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_68\ : STD_LOGIC;
   signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_69\ : STD_LOGIC;
   signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_70\ : STD_LOGIC;
@@ -43,7 +43,7 @@ architecture STRUCTURE of IMemory_blk_mem_gen_prim_wrapper is
 begin
 \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram\: unisim.vcomponents.RAMB36E1
     generic map(
-      DOA_REG => 1,
+      DOA_REG => 0,
       DOB_REG => 0,
       EN_ECC_READ => false,
       EN_ECC_WRITE => false,
@@ -63,8 +63,8 @@ begin
       INITP_0D => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0E => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0F => X"0000000000000000000000000000000000000000000000000000000000000000",
-      INIT_00 => X"0000000000000000000000000000000000000000000000000000000000000000",
-      INIT_01 => X"0000000000000000000000000000000000000000000000000000000000000000",
+      INIT_00 => X"0000A02300B2ED3300B2E53300D29CB340B2243302629CB30030061300200513",
+      INIT_01 => X"0000000000000000000000000000000000000000000000000000000000005B03",
       INIT_02 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_03 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_04 => X"0000000000000000000000000000000000000000000000000000000000000000",
@@ -248,7 +248,7 @@ begin
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
       RDADDRECC(8 downto 0) => \NLW_DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_RDADDRECC_UNCONNECTED\(8 downto 0),
-      REGCEAREGCE => ena,
+      REGCEAREGCE => '0',
       REGCEB => '0',
       RSTRAMARSTRAM => '0',
       RSTRAMB => '0',
@@ -276,7 +276,7 @@ end IMemory_blk_mem_gen_prim_width;
 
 architecture STRUCTURE of IMemory_blk_mem_gen_prim_width is
 begin
-\prim_noinit.ram\: entity work.IMemory_blk_mem_gen_prim_wrapper
+\prim_init.ram\: entity work.IMemory_blk_mem_gen_prim_wrapper_init
      port map (
       addra(9 downto 0) => addra(9 downto 0),
       clka => clka,
@@ -488,7 +488,7 @@ entity IMemory_blk_mem_gen_v8_4_4 is
   attribute C_HAS_INJECTERR : integer;
   attribute C_HAS_INJECTERR of IMemory_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_HAS_MEM_OUTPUT_REGS_A : integer;
-  attribute C_HAS_MEM_OUTPUT_REGS_A of IMemory_blk_mem_gen_v8_4_4 : entity is 1;
+  attribute C_HAS_MEM_OUTPUT_REGS_A of IMemory_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_HAS_MEM_OUTPUT_REGS_B : integer;
   attribute C_HAS_MEM_OUTPUT_REGS_B of IMemory_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_HAS_MUX_OUTPUT_REGS_A : integer;
@@ -514,11 +514,11 @@ entity IMemory_blk_mem_gen_v8_4_4 is
   attribute C_INIT_FILE : string;
   attribute C_INIT_FILE of IMemory_blk_mem_gen_v8_4_4 : entity is "IMemory.mem";
   attribute C_INIT_FILE_NAME : string;
-  attribute C_INIT_FILE_NAME of IMemory_blk_mem_gen_v8_4_4 : entity is "no_coe_file_loaded";
+  attribute C_INIT_FILE_NAME of IMemory_blk_mem_gen_v8_4_4 : entity is "IMemory.mif";
   attribute C_INTERFACE_TYPE : integer;
   attribute C_INTERFACE_TYPE of IMemory_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_LOAD_INIT_FILE : integer;
-  attribute C_LOAD_INIT_FILE of IMemory_blk_mem_gen_v8_4_4 : entity is 0;
+  attribute C_LOAD_INIT_FILE of IMemory_blk_mem_gen_v8_4_4 : entity is 1;
   attribute C_MEM_TYPE : integer;
   attribute C_MEM_TYPE of IMemory_blk_mem_gen_v8_4_4 : entity is 3;
   attribute C_MUX_PIPELINE_STAGES : integer;
@@ -809,7 +809,7 @@ architecture STRUCTURE of IMemory is
   attribute C_HAS_INJECTERR : integer;
   attribute C_HAS_INJECTERR of U0 : label is 0;
   attribute C_HAS_MEM_OUTPUT_REGS_A : integer;
-  attribute C_HAS_MEM_OUTPUT_REGS_A of U0 : label is 1;
+  attribute C_HAS_MEM_OUTPUT_REGS_A of U0 : label is 0;
   attribute C_HAS_MEM_OUTPUT_REGS_B : integer;
   attribute C_HAS_MEM_OUTPUT_REGS_B of U0 : label is 0;
   attribute C_HAS_MUX_OUTPUT_REGS_A : integer;
@@ -835,11 +835,11 @@ architecture STRUCTURE of IMemory is
   attribute C_INIT_FILE : string;
   attribute C_INIT_FILE of U0 : label is "IMemory.mem";
   attribute C_INIT_FILE_NAME : string;
-  attribute C_INIT_FILE_NAME of U0 : label is "no_coe_file_loaded";
+  attribute C_INIT_FILE_NAME of U0 : label is "IMemory.mif";
   attribute C_INTERFACE_TYPE : integer;
   attribute C_INTERFACE_TYPE of U0 : label is 0;
   attribute C_LOAD_INIT_FILE : integer;
-  attribute C_LOAD_INIT_FILE of U0 : label is 0;
+  attribute C_LOAD_INIT_FILE of U0 : label is 1;
   attribute C_MEM_TYPE : integer;
   attribute C_MEM_TYPE of U0 : label is 3;
   attribute C_MUX_PIPELINE_STAGES : integer;

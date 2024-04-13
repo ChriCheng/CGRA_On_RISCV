@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="Dmemery_synth_1" LaunchPart="xc7vx485tffg1157-1" LaunchTime="1712484607">
+<GenRun Id="Dmemery_synth_1" LaunchPart="xc7vx485tffg1157-1" LaunchTime="1712726393">
   <File Type="PA-TCL" Name="Dmemery.tcl"/>
-  <File Type="RDS-PROPCONSTRS" Name="Dmemery_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="Dmemery_reports.tcl"/>
   <File Type="RDS-RDS" Name="Dmemery.vds"/>
   <File Type="RDS-UTIL" Name="Dmemery_utilization_synth.rpt"/>
   <File Type="RDS-UTIL-PB" Name="Dmemery_utilization_synth.pb"/>
   <File Type="RDS-DCP" Name="Dmemery.dcp"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="Dmemery_timing_summary_synth.rpt"/>
-  <File Type="VDS-TIMING-PB" Name="Dmemery_timing_summary_synth.pb"/>
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/Dmemery">
     <File Path="$PSRCDIR/sources_1/ip/Dmemery/Dmemery.xci">
       <FileInfo>

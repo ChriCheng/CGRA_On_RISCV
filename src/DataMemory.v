@@ -12,13 +12,13 @@ module Data_Memory
 );
 
 
-input clk_i;
-input reset;
+input clk_i;/*  */
+input reset;/*  */
 input [4:0] op_addr;
-input [31:0] addr_i,data_i;
+input [31:0] addr_i,data_i;/*  */
 input MemWrite_i, MemRead_i;
 integer i;
-output [31:0] data_o;
+output [31:0] data_o;/*  */
 output [31:0] data_mem_o;
 
 reg [7:0] memory [0:31];

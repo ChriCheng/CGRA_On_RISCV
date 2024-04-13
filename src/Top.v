@@ -1,28 +1,33 @@
 module Top(
     input               clk,
+    input               rst,
     input               DataOrReg,
     input [4:0]         address,
-    input  [7:0]        instr_i,
-    input               reset,
     input [1:0]        vout_addr,//00:ouput 8,i.e. [7:0] LSB; 01: [15:8] 
     output reg[7:0]        value_o,
     output  is_positive,
     output  reg[2:0] easter_egg
 );
-
+wire [31:0] douta,pc,instr,mem_rdata,mem_wdata;
+wire [9:0] mem_addr;
+wire data_mem_wea;
 CPU CPU
 (
     .clk_i(clk) ,
     .DataOrReg(),
     .address(),
-    .instr_i(),
-    .reset(),
+    .reset(rst),
     .vout_addr(),
     .value_o(),
     .is_positive(),
-    .easter_egg()
-    
-);
+    .easter_egg(),
+    .inst_addr(pc),
+    .instr(instr),
+    .data_mem_wea(data_mem_wea),
+    .mem_addr(mem_addr),
+    .mem_wdata(mem_wdata),
+    .mem_rdata(mem_rdata)
+    );
 
 // IMemory InstructionMemory (
 //   .rsta_busy(rsta_busy),          // output wire rsta_busy
@@ -53,20 +58,20 @@ CPU CPU
 // ); 
 
 
-wire [31:0] douta;
+
 IMemory inst_rom (
   .clka(clk),    // input wire clka
-  .ena(),      // input wire ena
-  .addra(addra),  // input wire [9 : 0] addra
-  .douta(douta)  // output wire [31 : 0] douta
+  .ena(1'b1),      // input wire ena
+  .addra(pc[9:0]),  // input wire [9 : 0] addra
+  .douta(instr)  // output wire [31 : 0] douta
 );
 
 Dmemery data_ram (
   .clka(clk),    // input wire clka
-  .ena(ena),      // input wire ena
-  .wea(wea),      // input wire [0 : 0] wea
-  .addra(addra),  // input wire [9 : 0] addra
-  .dina(dina),    // input wire [31 : 0] dina
-  .douta(douta)  // output wire [31 : 0] douta
+  .ena(1'b1),      // input wire ena
+  .wea(data_mem_wea),      // input wire [0 : 0] wea
+  .addra(mem_addr),  // input wire [9 : 0] addra
+  .dina(mem_wdata),    // input wire [31 : 0] dina
+  .douta(mem_rdata)  // output wire [31 : 0] douta
 );
 endmodule
