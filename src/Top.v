@@ -1,12 +1,8 @@
 module Top(
     input               clk,
     input               rst,
-    input               DataOrReg,
-    input [4:0]         address,
-    input [1:0]        vout_addr,//00:ouput 8,i.e. [7:0] LSB; 01: [15:8] 
-    output reg[7:0]        value_o,
-    output  is_positive,
-    output  reg[2:0] easter_egg
+    input [9:0]         address,
+    output wire [31:0]        value_o
 );
 wire [31:0] douta,pc,instr,mem_rdata,mem_wdata;
 wire [9:0] mem_addr;
@@ -14,13 +10,9 @@ wire data_mem_wea;
 CPU CPU
 (
     .clk_i(clk) ,
-    .DataOrReg(),
-    .address(),
+    .address(address),
     .reset(rst),
-    .vout_addr(),
-    .value_o(),
-    .is_positive(),
-    .easter_egg(),
+    .value_o(value_o),
     .inst_addr(pc),
     .instr(instr),
     .data_mem_wea(data_mem_wea),

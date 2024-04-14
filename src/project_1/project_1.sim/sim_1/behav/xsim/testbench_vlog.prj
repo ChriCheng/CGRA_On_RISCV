@@ -1,5 +1,7 @@
 # compile verilog/system verilog design source files
 verilog xil_defaultlib  \
+"../../../../project_1.srcs/sources_1/ip/Dmemery/sim/Dmemery.v" \
+"../../../../project_1.srcs/sources_1/ip/IMemory/sim/IMemory.v" \
 "../../../../../ALU.v" \
 "../../../../../ALU_Control.v" \
 "../../../../../Adder.v" \
@@ -10,13 +12,13 @@ verilog xil_defaultlib  \
 "../../../../../HazardDetect.v" \
 "../../../../../ID_EX.v" \
 "../../../../../IF_ID.v" \
-"../../../../../Instruction_Memory.v" \
 "../../../../../MEM_WB.v" \
 "../../../../../MUX32.v" \
 "../../../../../MUX_Control.v" \
 "../../../../../PC.v" \
 "../../../../../Registers.v" \
 "../../../../../Sign_Extend.v" \
+"../../../../../Top.v" \
 "../../../../../VALU.v" \
 "../../../../../VALU_ctrl.v" \
 "../../../../../VControl.v" \

@@ -11,8 +11,8 @@ module Registers
     is_pos_i, 
     RSdata_o, 
     RTdata_o,
-    reg_o,
-    pos_o
+    reg_o
+    // pos_o
 );
 integer i;
 // Ports
@@ -28,7 +28,7 @@ input   [3:0]       is_pos_i;
 output  [31:0]      RSdata_o; 
 output  [31:0]      RTdata_o;
 output  [31:0]       reg_o;
-output  [3:0]       pos_o;
+// output  [3:0]       pos_o;
 // Register File
 reg     [31:0]      register        [0:31];
 reg     [3:0]       pos             [0:31];
@@ -36,7 +36,7 @@ reg     [3:0]       pos             [0:31];
 assign  RSdata_o = register[RSaddr_i];
 assign  RTdata_o = register[RTaddr_i];
 assign  reg_o    = register[op_address];
-assign  pos_o    = pos[op_address];
+// assign  pos_o    = pos[op_address];
 // Write Data
 
 always@(negedge clk_i or posedge reset)begin

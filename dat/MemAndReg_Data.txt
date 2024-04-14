@@ -1,0 +1,205 @@
+addi t0,x0,2        t0 = x5     t0 = 2 
+cycle = 0, Start = 0, Stall = 0, Flush = 0
+PC = 0
+Instruction: addi t0, x0, 2
+Registers
+R0(r0) = 0, R8 (t0) = 2, R16(s0) = 0, R24(t8) = 0
+R1(at) = 0, R9 (t1) = 0, R17(s1) = 0, R25(t9) = 0
+R2(v0) = 0, R10(t2) = 0, R18(s2) = 0, R26(k0) = 0
+R3(v1) = 0, R11(t3) = 0, R19(s3) = 0, R27(k1) = 0
+R4(a0) = 0, R12(t4) = 0, R20(s4) = 0, R28(gp) = 0
+R5(a1) = 0, R13(t5) = 0, R21(s5) = 0, R29(sp) = 0
+R6(a2) = 0, R14(t6) = 0, R22(s6) = 0, R30(s8) = 0
+R7(a3) = 0, R15(t7) = 0, R23(s7) = 0, R31(ra) = 0
+Data Memory: 0x00 = 0
+Data Memory: 0x04 = 0
+Data Memory: 0x08 = 0
+Data Memory: 0x0c = 0
+Data Memory: 0x10 = 0
+Data Memory: 0x14 = 0
+Data Memory: 0x18 = 0
+Data Memory: 0x1c = 0
+
+
+addi t1, x0, 3	    t1 = x6	    t1 = 3
+cycle = 1, Start = 1, Stall = 0, Flush = 0
+PC = 4
+Instruction: addi t1, x0, 3
+Registers
+R0(r0) = 0, R8 (t0) = 2, R16(s0) = 0, R24(t8) = 0
+R1(at) = 0, R9 (t1) = 3, R17(s1) = 0, R25(t9) = 0
+R2(v0) = 0, R10(t2) = 0, R18(s2) = 0, R26(k0) = 0
+R3(v1) = 0, R11(t3) = 0, R19(s3) = 0, R27(k1) = 0
+R4(a0) = 0, R12(t4) = 0, R20(s4) = 0, R28(gp) = 0
+R5(a1) = 0, R13(t5) = 0, R21(s5) = 0, R29(sp) = 0
+R6(a2) = 0, R14(t6) = 0, R22(s6) = 0, R30(s8) = 0
+R7(a3) = 0, R15(t7) = 0, R23(s7) = 0, R31(ra) = 0
+Data Memory: 0x00 = 0
+Data Memory: 0x04 = 0
+Data Memory: 0x08 = 0
+Data Memory: 0x0c = 0
+Data Memory: 0x10 = 0
+Data Memory: 0x14 = 0
+Data Memory: 0x18 = 0
+Data Memory: 0x1c = 0
+
+
+mul s1,t0,t1,        s1 = x9    s1 = 6
+cycle = 2, Start = 1, Stall = 0, Flush = 0
+PC = 8
+Instruction: mul s1, t0, t1
+Registers
+R0(r0) = 0, R8 (t0) = 2, R16(s0) = 0, R24(t8) = 0
+R1(at) = 0, R9 (t1) = 3, R17(s1) = 6, R25(t9) = 0
+R2(v0) = 0, R10(t2) = 0, R18(s2) = 0, R26(k0) = 0
+R3(v1) = 0, R11(t3) = 0, R19(s3) = 0, R27(k1) = 0
+R4(a0) = 0, R12(t4) = 0, R20(s4) = 0, R28(gp) = 0
+R5(a1) = 0, R13(t5) = 0, R21(s5) = 0, R29(sp) = 0
+R6(a2) = 0, R14(t6) = 0, R22(s6) = 0, R30(s8) = 0
+R7(a3) = 0, R15(t7) = 0, R23(s7) = 0, R31(ra) = 0
+Data Memory: 0x00 = 0
+Data Memory: 0x04 = 0
+Data Memory: 0x08 = 0
+Data Memory: 0x0c = 0
+Data Memory: 0x10 = 0
+Data Memory: 0x14 = 0
+Data Memory: 0x18 = 0
+Data Memory: 0x1c = 0
+
+
+sub s2,t1, t0,	    s2 = x18    s2 = 1
+cycle = 3, Start = 1, Stall = 0, Flush = 0
+PC = 12
+Instruction: sub s2, t1, t0
+Registers
+R0(r0) = 0, R8 (t0) = 2, R16(s0) = 0, R24(t8) = 0
+R1(at) = 0, R9 (t1) = 3, R17(s1) = 6, R25(t9) = 0
+R2(v0) = 0, R10(t2) = 0, R18(s2) = 1, R26(k0) = 0
+R3(v1) = 0, R11(t3) = 0, R19(s3) = 0, R27(k1) = 0
+R4(a0) = 0, R12(t4) = 0, R20(s4) = 0, R28(gp) = 0
+R5(a1) = 0, R13(t5) = 0, R21(s5) = 0, R29(sp) = 0
+R6(a2) = 0, R14(t6) = 0, R22(s6) = 0, R30(s8) = 0
+R7(a3) = 0, R15(t7) = 0, R23(s7) = 0, R31(ra) = 0
+Data Memory: 0x00 = 0
+Data Memory: 0x04 = 0
+Data Memory: 0x08 = 0
+Data Memory: 0x0c = 0
+Data Memory: 0x10 = 0
+Data Memory: 0x14 = 0
+Data Memory: 0x18 = 0
+Data Memory: 0x1c = 0
+
+
+add s3,t0, t1, 		s3 = x19    s3 = 5
+cycle = 4, Start = 1, Stall = 0, Flush = 0
+PC = 16
+Instruction: add s3, t0, t1
+Registers
+R0(r0) = 0, R8 (t0) = 2, R16(s0) = 0, R24(t8) = 0
+R1(at) = 0, R9 (t1) = 3, R17(s1) = 6, R25(t9) = 0
+R2(v0) = 0, R10(t2) = 0, R18(s2) = 1, R26(k0) = 0
+R3(v1) = 0, R11(t3) = 0, R19(s3) = 5, R27(k1) = 0
+R4(a0) = 0, R12(t4) = 0, R20(s4) = 0, R28(gp) = 0
+R5(a1) = 0, R13(t5) = 0, R21(s5) = 0, R29(sp) = 0
+R6(a2) = 0, R14(t6) = 0, R22(s6) = 0, R30(s8) = 0
+R7(a3) = 0, R15(t7) = 0, R23(s7) = 0, R31(ra) = 0
+Data Memory: 0x00 = 0
+Data Memory: 0x04 = 0
+Data Memory: 0x08 = 0
+Data Memory: 0x0c = 0
+Data Memory: 0x10 = 0
+Data Memory: 0x14 = 0
+Data Memory: 0x18 = 0
+Data Memory: 0x1c = 0
+
+
+and s4,t1, t0, 		s4 = x20    s4 = 2
+cycle = 5, Start = 1, Stall = 0, Flush = 0
+PC = 20
+Instruction: and s4, t1, t0
+Registers
+R0(r0) = 0, R8 (t0) = 2, R16(s0) = 0, R24(t8) = 0
+R1(at) = 0, R9 (t1) = 3, R17(s1) = 6, R25(t9) = 0
+R2(v0) = 0, R10(t2) = 0, R18(s2) = 1, R26(k0) = 0
+R3(v1) = 0, R11(t3) = 0, R19(s3) = 5, R27(k1) = 0
+R4(a0) = 0, R12(t4) = 0, R20(s4) = 2, R28(gp) = 0
+R5(a1) = 0, R13(t5) = 0, R21(s5) = 0, R29(sp) = 0
+R6(a2) = 0, R14(t6) = 0, R22(s6) = 0, R30(s8) = 0
+R7(a3) = 0, R15(t7) = 0, R23(s7) = 0, R31(ra) = 0
+Data Memory: 0x00 = 0
+Data Memory: 0x04 = 0
+Data Memory: 0x08 = 0
+Data Memory: 0x0c = 0
+Data Memory: 0x10 = 0
+Data Memory: 0x14 = 0
+Data Memory: 0x18 = 0
+Data Memory: 0x1c = 0
+
+
+or s5,t1,t0,         s5 = x21   s5 = 3
+cycle = 6, Start = 1, Stall = 0, Flush = 0
+PC = 24
+Instruction: or s5, t1, t0
+Registers
+R0(r0) = 0, R8 (t0) = 2, R16(s0) = 0, R24(t8) = 0
+R1(at) = 0, R9 (t1) = 3, R17(s1) = 6, R25(t9) = 0
+R2(v0) = 0, R10(t2) = 0, R18(s2) = 1, R26(k0) = 0
+R3(v1) = 0, R11(t3) = 0, R19(s3) = 5, R27(k1) = 0
+R4(a0) = 0, R12(t4) = 0, R20(s4) = 2, R28(gp) = 0
+R5(a1) = 0, R13(t5) = 0, R21(s5) = 3, R29(sp) = 0
+R6(a2) = 0, R14(t6) = 0, R22(s6) = 0, R30(s8) = 0
+R7(a3) = 0, R15(t7) = 0, R23(s7) = 0, R31(ra) = 0
+Data Memory: 0x00 = 0
+Data Memory: 0x04 = 0
+Data Memory: 0x08 = 0
+Data Memory: 0x0c = 0
+Data Memory: 0x10 = 0
+Data Memory: 0x14 = 0
+Data Memory: 0x18 = 0
+Data Memory: 0x1c = 0
+
+
+sw t0, 0(x0)
+cycle = 7, Start = 1, Stall = 0, Flush = 0
+PC = 28
+Instruction: sw t0, 0(x0)
+Registers
+R0(r0) = 0, R8 (t0) = 2, R16(s0) = 0, R24(t8) = 0
+R1(at) = 0, R9 (t1) = 3, R17(s1) = 6, R25(t9) = 0
+R2(v0) = 0, R10(t2) = 0, R18(s2) = 1, R26(k0) = 0
+R3(v1) = 0, R11(t3) = 0, R19(s3) = 5, R27(k1) = 0
+R4(a0) = 0, R12(t4) = 0, R20(s4) = 2, R28(gp) = 0
+R5(a1) = 0, R13(t5) = 0, R21(s5) = 3, R29(sp) = 0
+R6(a2) = 0, R14(t6) = 0, R22(s6) = 0, R30(s8) = 0
+R7(a3) = 0, R15(t7) = 0, R23(s7) = 0, R31(ra) = 0
+Data Memory: 0x00 = 2
+Data Memory: 0x04 = 0
+Data Memory: 0x08 = 0
+Data Memory: 0x0c = 0
+Data Memory: 0x10 = 0
+Data Memory: 0x14 = 0
+Data Memory: 0x18 = 0
+Data Memory: 0x1c = 0
+
+
+lw s6, 0(x0)       s6 = x22
+cycle = 8, Start = 1, Stall = 0, Flush = 0
+PC = 32
+Instruction: lw s6, 0(x0)
+Registers
+R0(r0) = 0, R8 (t0) = 2, R16(s0) = 0, R24(t8) = 0
+R1(at) = 0, R9 (t1) = 3, R17(s1) = 6, R25(t9) = 0
+R2(v0) = 0, R10(t2) = 0, R18(s2) = 1, R26(k0) = 0
+R3(v1) = 0, R11(t3) = 0, R19(s3) = 5, R27(k1) = 0
+R4(a0) = 0, R12(t4) = 0, R20(s4) = 2, R28(gp) = 0
+R5(a1) = 0, R13(t5) = 0, R21(s5) = 3, R29(sp) = 0
+R6(a2) = 0, R14(t6) = 0, R22(s6) = 2, R30(s8) = 0
+R7(a3) = 0, R15(t7) = 0, R23(s7) = 0, R31(ra) = 0
+Data Memory: 0x00 = 2
+Data Memory: 0x04 = 0
+Data Memory: 0x08 = 0
+Data Memory: 0x0c = 0
+Data Memory: 0x10 = 0
+Data Memory: 0x14 = 0
+Data Memory: 0x18 = 0
+Data Memory: 0x1c = 0

@@ -8,51 +8,52 @@
 module testbench;
 
 `ifdef SDF
-	initial $sdf_annotate(`SDFFILE, CPU);
+	initial $sdf_annotate(`SDFFILE, Top);
 `endif
 
-reg                Clk;
-reg                Start;
-reg                DataOrReg;
-reg [4:0]          address;
-reg                reset;//used to initalize memorys and registers
+// reg                Clk;
+// reg                Start;
+// reg                DataOrReg;
+// reg [4:0]          address;
+// reg                reset;//used to initalize memorys and registers
 reg [7:0]          instr_store[0:(64*4+1)];
-reg [1:0]             vout_addr;
-wire[7:0]               value_o;
-wire          is_positive;
-wire [2:0]        easter_egg;
+// reg [1:0]             vout_addr;
+// wire[7:0]               value_o;
+// wire          is_positive;
+// wire [2:0]        easter_egg;
 integer            i, outfile, counter;
 integer            stall, flush,idx;
 integer j,k;
 integer err;
+integer  addr;
 reg  [7:0] golden [0:63];
 
-always #(`CYCLE_TIME/2) Clk = ~Clk;    
+reg  clk,rst;
+reg [9:0]address;
+wire [31:0] value_o;
 
-CPU CPU(
-    .clk_i  (Clk),
-    .DataOrReg(DataOrReg),
-    .address(address),
-    .reset(reset),
-    .vout_addr(vout_addr),
-    .value_o(value_o),
-    .is_positive(is_positive),
-    .easter_egg(easter_egg)
+
+always #(`CYCLE_TIME/2) clk = ~clk;    
+
+Top MyTop(
+    .clk       ( clk       ),
+    .rst       ( rst       ),
+    .address   ( address   ),
+    .value_o   ( value_o   )
 );
-  
+
+
+
 initial begin
     counter = 0;
     stall = 0;
     flush = 0;
     idx = 0;
-    DataOrReg = 1;
-    address = 5'd8;
-    vout_addr = 2'b11;
+    address = 10'd0;
     err = 0;
-    instr_i = 0;
-    for(k=0;k < (64*4+1) ;k=k+1) instr_store[k] = 0;
+    // for(k=0;k < (64*4+1) ;k=k+1) instr_store[k] = 0;
     // Load instructions into instruction memory
-    $readmemb("../dat/instruction2.txt", instr_store);
+    // $readmemb("../dat/instruction2.txt", instr_store);
     $readmemh("../dat/golden.dat",golden);
     // Open output file
     outfile = $fopen("../dat/output.txt");
@@ -63,12 +64,20 @@ initial begin
     // $finish;
 end
     
-    Clk = 1;
+    clk = 1;
 
     // reset = 0;
     // reset = 1;
     // #(`CYCLE_TIME)
-    reset = 0; 
+    rst = 0; 
+
+    #400
+    for(addr = 0; addr < 32; addr =addr +1)
+    begin
+        address = addr;
+        $display("Time: %t | Register[%0d] = %0h", $time, address, value_o);
+    end
+    $finish;
 end
 
 initial begin
@@ -81,7 +90,7 @@ initial begin
    //$dumpvars; 
 end
 
-/* always@(posedge Clk) begin
+/* always@(posedge clk) begin
     if(counter<256)begin
         #(`CYCLE_TIME/4)
         instr_i = instr_store[counter];

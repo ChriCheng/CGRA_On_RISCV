@@ -24,19 +24,19 @@
 module CPU
 (
     input               clk_i, 
-    input               DataOrReg, // choose value_o from reg or mem
+    // input               DataOrReg, // choose value_o from reg or mem
     input [9:0]         address, //for tb read specific reg/mem
     // input  [7:0]        instr_i, 
     input               reset, 
-    input [1:0]         vout_addr, // choose one of four bytes of value
-    output reg[7:0]value_o,     // for tb test
-    output is_positive,  // reg is positive or not
-    output  reg[2:0]easter_egg,
+    // input [1:0]         vout_addr, // choose one of four bytes of value
+    output reg[31:0]value_o,     // for tb test
+    // output is_positive,  // reg is positive or not
+    // output  reg[2:0]easter_egg,
     /* --------------INSTR MEM----------------- */
     output wire [31:0]inst_addr,
     input wire[31:0]instr,
     /* --------------DATA MEM----------------- */
-    output reg data_mem_wea,
+    output wire data_mem_wea,
     output wire [9:0] mem_addr,
     output wire [31:0] mem_wdata,
     input wire [31:0] mem_rdata
@@ -121,14 +121,14 @@ wire PC_Branch_Select;//in IF stage
 wire [31:0] VALU_v_o, EX_MEM_VALUResult_o, aluToDM_data_o; //NEW
 wire toDataMemory; //NEW: used in MUX32 aluToDM
 wire [2:0] VALU_Control_VALUCtrl_o;
-wire [3:0] is_positive_line;
+// wire [3:0] is_positive_line;
 
 reg               flag;
 reg               start_i;
 reg [3:0] vector_signed [0:2];
-reg easter_flag,easter_flag_next;
+// reg easter_flag,easter_flag_next;
 reg [7:0] egg1,egg2,egg3;
-reg [2:0] easter_counter,easter_counter_next;
+// reg [2:0] easter_counter,easter_counter_next;
 //------------------------- continuous assginment -------------------------------//
 
 assign RegEqual = (Registers_RSdata_o == Registers_RTdata_o);
@@ -142,7 +142,7 @@ assign swIm = {instr[31:25],instr[11:7]};
 assign rst = reset;
 //assign op_selection = (DataOrReg)? reg_o : data_mem_o;//May28 removed.
 assign toDataMemory = (EX_MEM_instr_o[6:0] == 7'b1010111)? 1 : 0; //NEW
-assign is_positive = is_positive_line[vout_addr];
+// assign is_positive = is_positive_line[vout_addr];
 
 //------------------------- Sequentail Part -------------------------------//
 
@@ -152,16 +152,16 @@ always@(posedge clk_i or posedge reset )begin
         start_i <= 0;
         vector_signed[0] <= 0;
         vector_signed[1] <= 0;
-        egg1             <= 8'b0000_1101;//013
-        egg2             <= 8'b0011_0110;//054
-        egg3             <= 8'b1001_1010;//154
+        // egg1             <= 8'b0000_1101;//013
+        // egg2             <= 8'b0011_0110;//054
+        // egg3             <= 8'b1001_1010;//154
     end
     else begin
         vector_signed[0] <= vector_signed_bits;
         vector_signed[1] <= vector_signed[0];
-        egg1             <= 8'b0000_1101;//013
-        egg2             <= 8'b0011_0110;//054
-        egg3             <= 8'b1001_1010;//154
+        // egg1             <= 8'b0000_1101;//013
+        // egg2             <= 8'b0011_0110;//054
+        // egg3             <= 8'b1001_1010;//154
         start_i <= 1;
 /*        if(flag)begin
             if(instr_i == 8'b1111_1111)begin
@@ -181,7 +181,7 @@ always@(posedge clk_i or posedge reset )begin
         end */
     end
 end
-
+/* 
 always@(posedge clk_i or posedge reset )begin
     if(reset)begin
         easter_flag    <= 0;
@@ -201,7 +201,7 @@ always@(posedge clk_i or posedge reset )begin
             easter_egg[2] <= 0;
         end
     end
-end
+end */
 
 
 //------------------------- Combinational Part -------------------------------//
@@ -215,12 +215,13 @@ end
 end */
 
 always@(*)begin
-    case(vout_addr)
+/*     case(vout_addr)
         2'b00:value_o   = (DataOrReg)? reg_o[7:0]   : data_mem_o[7:0];
         2'b01:value_o   = (DataOrReg)? reg_o[15:8]  : data_mem_o[15:8];
         2'b10:value_o   = (DataOrReg)? reg_o[23:16] : data_mem_o[23:16];
         2'b11:value_o   = (DataOrReg)? reg_o[31:24] : data_mem_o[31:24];
-    endcase
+    endcase */
+    value_o = reg_o;
 end
 
 
@@ -318,8 +319,8 @@ Registers Registers(
     .is_pos_i   (vector_signed[1]),
     .RSdata_o   (Registers_RSdata_o),                  //to ID_EX.RDData0_i
     .RTdata_o   (Registers_RTdata_o),                  //to ID_EX.RDData1_i
-    .reg_o      (reg_o), /* dbg */
-    .pos_o      (is_positive_line) /* dbg */
+    .reg_o      (reg_o) /* dbg */
+    // .pos_o      (is_positive_line) /* dbg */
 );
 
 
@@ -482,15 +483,8 @@ Data_Memory Data_Memory(
 
 assign mem_addr = aluToDM_data_o;
 assign mem_data = EX_MEM_RDData_o;
+assign data_mem_wea = ({EX_MEM_MemWrite_o, EX_MEM_MemRead_o} == 2'b10);
 
-always @(EX_MEM_MemWrite_o, EX_MEM_MemRead_o) begin
-    if ({EX_MEM_MemWrite_o, EX_MEM_MemRead_o} == 2'b10) begin
-        data_mem_wea = 1'b1;
-    end
-    else begin
-        data_mem_wea = 1'b0;
-    end
-end
 MEM_WB MEM_WB(
     .clk_i  (clk_i),
     .start_i    (start_i),
