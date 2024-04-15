@@ -7,6 +7,7 @@ verilog xil_defaultlib  \
 "../../../../../Adder.v" \
 "../../../../../CPU.v" \
 "../../../../../DataMemory.v" \
+"../../../../../EX_MEM.v" \
 "../../../../../ForwardingMUX.v" \
 "../../../../../ForwardingUnit.v" \
 "../../../../../HazardDetect.v" \
@@ -22,7 +23,6 @@ verilog xil_defaultlib  \
 "../../../../../VALU.v" \
 "../../../../../VALU_ctrl.v" \
 "../../../../../VControl.v" \
-"../../../../../VEX_MEM.v" \
 "../../../../../shift2.v" \
 "../../../../../testbench.v" \
 

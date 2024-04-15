@@ -1,7 +1,7 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Sat Apr 13 21:31:43 2024
+-- Date        : Sun Apr 14 20:58:31 2024
 -- Host        : Chris running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
 --               C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.srcs/sources_1/ip/IMemory/IMemory_sim_netlist.vhdl
@@ -554,7 +554,7 @@ entity IMemory_blk_mem_gen_v8_4_4 is
   attribute C_USE_BYTE_WEB : integer;
   attribute C_USE_BYTE_WEB of IMemory_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_USE_DEFAULT_DATA : integer;
-  attribute C_USE_DEFAULT_DATA of IMemory_blk_mem_gen_v8_4_4 : entity is 0;
+  attribute C_USE_DEFAULT_DATA of IMemory_blk_mem_gen_v8_4_4 : entity is 1;
   attribute C_USE_ECC : integer;
   attribute C_USE_ECC of IMemory_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_USE_SOFTECC : integer;
@@ -875,7 +875,7 @@ architecture STRUCTURE of IMemory is
   attribute C_USE_BYTE_WEB : integer;
   attribute C_USE_BYTE_WEB of U0 : label is 0;
   attribute C_USE_DEFAULT_DATA : integer;
-  attribute C_USE_DEFAULT_DATA of U0 : label is 0;
+  attribute C_USE_DEFAULT_DATA of U0 : label is 1;
   attribute C_USE_ECC : integer;
   attribute C_USE_ECC of U0 : label is 0;
   attribute C_USE_SOFTECC : integer;

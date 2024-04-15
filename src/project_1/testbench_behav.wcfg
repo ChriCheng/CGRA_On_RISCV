@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="testbench_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="testbench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="29722fs"></ZoomStartTime>
+      <ZoomEndTime time="47223fs"></ZoomEndTime>
+      <Cursor1Time time="55000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="229"></NameColumnWidth>
+      <ValueColumnWidth column_width="144"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="10" />
+   <wvobject fp_name="/testbench/addr" type="array">
+      <obj_property name="ElementShortName">addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/address" type="array">
+      <obj_property name="ElementShortName">address[9:0]</obj_property>
+      <obj_property name="ObjectShortName">address[9:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/value_o" type="array">
+      <obj_property name="ElementShortName">value_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">value_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/MyTop/CPU/instr" type="array">
+      <obj_property name="ElementShortName">instr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instr[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/MyTop/CPU/ALU/data_o" type="array">
+      <obj_property name="ElementShortName">data_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/MyTop/CPU/Registers/register" type="array">
+      <obj_property name="ElementShortName">register[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">register[0:31][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/MyTop/CPU/Registers/RDaddr_i" type="array">
+      <obj_property name="ElementShortName">RDaddr_i[4:0]</obj_property>
+      <obj_property name="ObjectShortName">RDaddr_i[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/MyTop/CPU/Registers/RDdata_i" type="array">
+      <obj_property name="ElementShortName">RDdata_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">RDdata_i[31:0]</obj_property>
+   </wvobject>
+</wave_config>

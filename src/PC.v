@@ -14,7 +14,7 @@ input   [31:0]      pc_i;
 output  reg [31:0]      pc_o;
 
 // Wires & Registers
-
+ 
 /* reg     [31:0]      pc_o;
 reg     flag,flag_next;
 
@@ -37,7 +37,8 @@ always@(posedge clk_i or negedge start_i) begin /*  */
 
         if(hazardpc_i)
             pc_o <= pc_o;
-        else begin
+        else 
+            begin
             pc_o <= pc_i;
         end
     end

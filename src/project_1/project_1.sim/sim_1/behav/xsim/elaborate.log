@@ -4,8 +4,7 @@ Running: C:/Xilinx/Vivado/2019.2/bin/unwrapped/win64.o/xelab.exe -wto 47d17b62c1
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 32 for port 'inst_i' [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:289]
 WARNING: [VRFC 10-3091] actual bit length 10 differs from formal bit length 5 for port 'op_addr' [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:475]
-ERROR: [VRFC 10-3180] cannot find port 'instr_i' on this module [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:458]
-ERROR: [VRFC 10-3180] cannot find port 'instr_o' on this module [C:/Code/Vivado/CGRA_On_RISCV/src/CPU.v:459]
-ERROR: [XSIM 43-3322] Static elaboration of top level Verilog design unit(s) in library work failed.
+WARNING: [VRFC 10-3091] actual bit length 12 differs from formal bit length 10 for port 'addra' [C:/Code/Vivado/CGRA_On_RISCV/src/Top.v:57]
+Completed static elaboration
+INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel

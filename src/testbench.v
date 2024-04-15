@@ -16,17 +16,17 @@ module testbench;
 // reg                DataOrReg;
 // reg [4:0]          address;
 // reg                reset;//used to initalize memorys and registers
-reg [7:0]          instr_store[0:(64*4+1)];
+// reg [7:0]          instr_store[0:(64*4+1)];
 // reg [1:0]             vout_addr;
 // wire[7:0]               value_o;
 // wire          is_positive;
 // wire [2:0]        easter_egg;
-integer            i, outfile, counter;
-integer            stall, flush,idx;
-integer j,k;
-integer err;
+// integer            i, outfile, counter;
+// integer            stall, flush,idx;
+// integer j,k;
+// integer err;
 integer  addr;
-reg  [7:0] golden [0:63];
+// reg  [7:0] golden [0:63];
 
 reg  clk,rst;
 reg [9:0]address;
@@ -45,33 +45,32 @@ Top MyTop(
 
 
 initial begin
-    counter = 0;
-    stall = 0;
-    flush = 0;
-    idx = 0;
+    // counter = 0;
+    // stall = 0;
+    // flush = 0;
+    // idx = 0;
     address = 10'd0;
-    err = 0;
+    // err = 0;
     // for(k=0;k < (64*4+1) ;k=k+1) instr_store[k] = 0;
     // Load instructions into instruction memory
     // $readmemb("../dat/instruction2.txt", instr_store);
-    $readmemh("../dat/golden.dat",golden);
+    // $readmemh("../dat/golden.dat",golden);
     // Open output file
-    outfile = $fopen("../dat/output.txt");
-    if (outfile == 0) begin
+    // outfile = $fopen("../dat/output.txt");
+    // if (outfile == 0) begin
     // Handle error, e.g., print an error message
-    $display("Error: failed to open output file.");
+    // $display("Error: failed to open output file.");
     // Optionally, set outfile to a default value or terminate the simulation
     // $finish;
-end
-    
     clk = 1;
 
     // reset = 0;
     // reset = 1;
     // #(`CYCLE_TIME)
-    rst = 0; 
-
-    #400
+    rst = 1; 
+    #10
+    rst = 0;
+    #500
     for(addr = 0; addr < 32; addr =addr +1)
     begin
         address = addr;
@@ -79,6 +78,9 @@ end
     end
     $finish;
 end
+    
+
+
 
 initial begin
     $dumpfile("CPU.vcd");

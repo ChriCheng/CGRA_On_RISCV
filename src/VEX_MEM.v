@@ -1,4 +1,4 @@
-module EX_MEM(
+module VEX_MEM(
 	clk_i,
 	start_i,
 	pc_i,

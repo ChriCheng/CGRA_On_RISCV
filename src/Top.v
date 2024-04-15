@@ -54,7 +54,7 @@ CPU CPU
 IMemory inst_rom (
   .clka(clk),    // input wire clka
   .ena(1'b1),      // input wire ena
-  .addra(pc[9:0]),  // input wire [9 : 0] addra
+  .addra({2'b0, (pc[9:0]>>2)}),  // input wire [9 : 0] addra
   .douta(instr)  // output wire [31 : 0] douta
 );
 

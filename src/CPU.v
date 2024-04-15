@@ -124,7 +124,7 @@ wire [2:0] VALU_Control_VALUCtrl_o;
 // wire [3:0] is_positive_line;
 
 reg               flag;
-reg               start_i;
+wire               start_i;
 reg [3:0] vector_signed [0:2];
 // reg easter_flag,easter_flag_next;
 reg [7:0] egg1,egg2,egg3;
@@ -145,11 +145,11 @@ assign toDataMemory = (EX_MEM_instr_o[6:0] == 7'b1010111)? 1 : 0; //NEW
 // assign is_positive = is_positive_line[vout_addr];
 
 //------------------------- Sequentail Part -------------------------------//
-
+assign start_i = ~reset;
 always@(posedge clk_i or posedge reset )begin
     if(reset)begin
         flag    <= 0;
-        start_i <= 0;
+        // start_i <= 0;
         vector_signed[0] <= 0;
         vector_signed[1] <= 0;
         // egg1             <= 8'b0000_1101;//013
@@ -162,7 +162,7 @@ always@(posedge clk_i or posedge reset )begin
         // egg1             <= 8'b0000_1101;//013
         // egg2             <= 8'b0011_0110;//054
         // egg3             <= 8'b1001_1010;//154
-        start_i <= 1;
+        // start_i <= 1;
 /*        if(flag)begin
             if(instr_i == 8'b1111_1111)begin
                 flag    <= 0;
@@ -286,7 +286,7 @@ IF_ID IF_ID(
     .clk_i  (clk_i),
     .start_i    (start_i),
     .pc_i   (inst_addr),
-    .inst_i (inst), 
+    .inst_i (instr), 
     .hazard_i   (HazradDetect_Hazard_o),
     .flush_i    (PC_Branch_Select),
     .pcIm_i (pcIm),
