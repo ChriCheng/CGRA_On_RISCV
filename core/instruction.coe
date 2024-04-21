@@ -1,11 +1,8 @@
+;PC = 0     addi t0 t0 1
+;PC = 4     addi t1 t1 1
+;PC = 8     mul t2 t1 t0
 memory_initialization_radix=16;
 memory_initialization_vector=
-00200513,
-00300613,
-02629CB3,
-40B22433,
-00D29CB3,
-00B2E533,
-00B2ED33,
-0000A023,
-00005B03;
+00128293,
+00130313,
+025303b3;

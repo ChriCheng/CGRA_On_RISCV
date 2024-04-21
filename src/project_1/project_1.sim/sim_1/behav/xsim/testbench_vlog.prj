@@ -6,14 +6,11 @@ verilog xil_defaultlib  \
 "../../../../../ALU_Control.v" \
 "../../../../../Adder.v" \
 "../../../../../CPU.v" \
+"../../../../../Control.v" \
 "../../../../../DataMemory.v" \
-"../../../../../EX_MEM.v" \
 "../../../../../ForwardingMUX.v" \
 "../../../../../ForwardingUnit.v" \
 "../../../../../HazardDetect.v" \
-"../../../../../ID_EX.v" \
-"../../../../../IF_ID.v" \
-"../../../../../MEM_WB.v" \
 "../../../../../MUX32.v" \
 "../../../../../MUX_Control.v" \
 "../../../../../PC.v" \
@@ -22,8 +19,6 @@ verilog xil_defaultlib  \
 "../../../../../Top.v" \
 "../../../../../VALU.v" \
 "../../../../../VALU_ctrl.v" \
-"../../../../../VControl.v" \
-"../../../../../shift2.v" \
 "../../../../../testbench.v" \
 
 # compile glbl module

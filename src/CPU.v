@@ -3,20 +3,21 @@
 `include "Adder.v"
 `include "Instruction_Memory.v"
 `include "ALU.v"
-`include "shift2.v"
+`include "shift1.v"
 `include "Sign_Extend.v"
-`include "IF_ID.v"
+`include "Stage_IF_ID.v"
 `include "Control.v"
 `include "Registers.v"
-`include "ID_EX.v"
+`include "Stage_ID_EX.v"
 `include "ALU_Control.v"
 `include "HazardDetect.v"
 `include "MUX_Control.v"
 `include "ForwardingUnit.v"
 `include "ForwardingMUX.v"
-`include "EX_MEM.v"
+`include "Stage_EX_MEM.v"
 `include "DataMemory.v"
-`include "MEM_WB.v"
+`include "Stage_MEM_WB.v"
+`include "BranchTaken.v"
 `include "VALU.v" //NEW
 `include "VALU_ctrl.v" //NEW
 
@@ -51,7 +52,7 @@ wire[31:0]addPC,aluData,RSD,RTD,signExData,MUXop;
 wire [9:0] ALUfunct_in;
 wire [2:0] alu_ctrl_wire;
 wire [11:0] pcIm,swIm;
-wire isBranch;
+// wire isBranch;
 wire rst;
 wire [31:0] AddSum_data_o;
 wire [31:0] pcSelect_data_o;
@@ -64,6 +65,7 @@ wire [4:0]  MEM_WB_RDaddr_o;
 wire [31:0] memToReg_data_o;
 wire        MEM_WB_RegWrite_o;
 wire        Control_immSelect_o;
+wire        Control_isBranch_o;
 wire [31:0] PCImmExtend_data_o;
 wire [31:0] Registers_RSdata_o;
 wire [31:0] Registers_RTdata_o;
@@ -103,7 +105,7 @@ wire [31:0] ID_EX_RDData1_o;
 wire [31:0] ID_EX_pc_o;
 wire        ALU_Zero_o;
 wire [31:0] ALU_data_o;
-wire [4:0]  ID_EX_RegDst_o;
+wire [4:0]  ID_EX_RDaddr_o;
 wire        ID_EX_RegWrite_o;
 wire        ID_EX_MemToReg_o;
 wire        ID_EX_MemWrite_o;
@@ -122,6 +124,8 @@ wire [31:0] VALU_v_o, EX_MEM_VALUResult_o, aluToDM_data_o; //NEW
 wire toDataMemory; //NEW: used in MUX32 aluToDM
 wire [2:0] VALU_Control_VALUCtrl_o;
 // wire [3:0] is_positive_line;
+wire [31:0] Branch_RS,Branch_RT;
+wire [1:0] Forward_Branch_RS,Forward_Branch_RT;
 
 reg               flag;
 wire               start_i;
@@ -131,104 +135,35 @@ reg [7:0] egg1,egg2,egg3;
 // reg [2:0] easter_counter,easter_counter_next;
 //------------------------- continuous assginment -------------------------------//
 
-assign RegEqual = (Registers_RSdata_o == Registers_RTdata_o);
-assign PC_Branch_Select = RegEqual & isBranch;
-assign isBranch = (IF_ID_inst_o[6:0]==7'b1100011)? 1'b1:1'b0;
 assign ALUfunct_in = {ID_EX_inst_o[31:25],ID_EX_inst_o[14:12]};
-// assign pcIm = {inst[31],inst[7],inst[30:25],inst[11:8]};
-// assign swIm = {inst[31:25],inst[11:7]};
 assign pcIm = {instr[31],instr[7],instr[30:25],instr[11:8]};
 assign swIm = {instr[31:25],instr[11:7]};
 assign rst = reset;
-//assign op_selection = (DataOrReg)? reg_o : data_mem_o;//May28 removed.
 assign toDataMemory = (EX_MEM_instr_o[6:0] == 7'b1010111)? 1 : 0; //NEW
-// assign is_positive = is_positive_line[vout_addr];
 
 //------------------------- Sequentail Part -------------------------------//
 assign start_i = ~reset;
 always@(posedge clk_i or posedge reset )begin
     if(reset)begin
         flag    <= 0;
-        // start_i <= 0;
         vector_signed[0] <= 0;
         vector_signed[1] <= 0;
-        // egg1             <= 8'b0000_1101;//013
-        // egg2             <= 8'b0011_0110;//054
-        // egg3             <= 8'b1001_1010;//154
     end
     else begin
         vector_signed[0] <= vector_signed_bits;
         vector_signed[1] <= vector_signed[0];
-        // egg1             <= 8'b0000_1101;//013
-        // egg2             <= 8'b0011_0110;//054
-        // egg3             <= 8'b1001_1010;//154
-        // start_i <= 1;
-/*        if(flag)begin
-            if(instr_i == 8'b1111_1111)begin
-                flag    <= 0;
-                start_i <= 1;
-            end
-            else begin
-                flag    <= flag;
-                start_i <= start_i;
-            end
-        end
-        else begin
-            if(instr_i == 8'b1111_1110)flag <= 1;//start reading in instr
-            else flag <= flag;
-            start_i <= start_i;
-            
-        end */
     end
 end
-/* 
-always@(posedge clk_i or posedge reset )begin
-    if(reset)begin
-        easter_flag    <= 0;
-        easter_counter <= 0;
-    end
-    else begin
-        easter_flag <= easter_flag_next;
-        easter_counter <= easter_counter_next;
-        if(easter_flag)begin
-            easter_egg[0] <= egg1[(3'd7 - easter_counter)];
-            easter_egg[1] <= egg2[(3'd7 - easter_counter)];
-            easter_egg[2] <= egg3[(3'd7 - easter_counter)];
-        end
-        else begin
-            easter_egg[0] <= 0;
-            easter_egg[1] <= 0;
-            easter_egg[2] <= 0;
-        end
-    end
-end */
-
-
-//------------------------- Combinational Part -------------------------------//
-/* always@(*)begin
-    if(instr_i == 8'b1010_1010)easter_flag_next <= 1;
-    else if(easter_counter == 3'd7)easter_flag_next <= 0;
-         else                      easter_flag_next <= easter_flag;
-
-    if(easter_flag)easter_counter_next = easter_counter + 3'd1;
-    else easter_counter_next = easter_counter;
-end */
 
 always@(*)begin
-/*     case(vout_addr)
-        2'b00:value_o   = (DataOrReg)? reg_o[7:0]   : data_mem_o[7:0];
-        2'b01:value_o   = (DataOrReg)? reg_o[15:8]  : data_mem_o[15:8];
-        2'b10:value_o   = (DataOrReg)? reg_o[23:16] : data_mem_o[23:16];
-        2'b11:value_o   = (DataOrReg)? reg_o[31:24] : data_mem_o[31:24];
-    endcase */
-    value_o = reg_o;
+    value_o = reg_o;        // testbench需要完善
 end
 
 
 MUX32 pcSelect(
     .data1_i    (addPC),
     .data2_i    (AddSum_data_o),//branch value
-    .select_i   (isBranch),
+    .select_i   (PC_Branch_Select),
     .data_o     (pcSelect_data_o)
 );
 
@@ -244,20 +179,8 @@ PC  PC(
 Adder Add_PC(
     .data1_in   (inst_addr),
     .data2_in   (32'd4),
-    .data_o     (addPC)              //to IF_ID.pc_i
+    .data_o     (addPC)              //to Stage_IF_ID.v.pc_i
 );
-
-
-/* Instruction_Memory Instruction_Memory(
-    .clk        (clk_i),
-    .reset      (rst),
-    .addr_i     (inst_addr), 
-    .instr_i    (instr_i),
-    .instr_o    (inst)          //to IF_ID.inst_i
-); */
-
-
-
 
 //AddSum was in EX stage initally, but moved to IF stage.
 ALU AddSum(
@@ -303,9 +226,12 @@ Control Control(
     .MemRd_o    (Control_MemRd_o),             //to ID_EX.MemRead_i
     .MemWr_o    (Control_MemWr_o),             //to ID_EX.MemWrite_i
     .MemToReg_o   (Control_MemToReg_o),              //to ID_EX.MemToReg_i
-    .immSelect_o  (Control_immSelect_o)           //to Sign_Extend.select_i
-
+    .immSelect_o  (Control_immSelect_o),           //to Sign_Extend.select_i
+    .isBranch (Control_isBranch_o)
 );
+
+
+
 
 Registers Registers(
     .clk_i      (clk_i),
@@ -323,6 +249,14 @@ Registers Registers(
     // .pos_o      (is_positive_line) /* dbg */
 );
 
+Branch Branch(
+    .clk       ( clk       ),
+    .start_i   ( start_i   ),
+    .is_Branch ( Control_isBranch_o ),
+    .Branch_RS ( Branch_RS ),
+    .Branch_RT ( Branch_RT ),
+    .PC_Branch_Select  ( PC_Branch_Select  )
+);
 
 Sign_Extend Sign_Extend(
     .select_i   (Control_immSelect_o), //select=1 for sw,0 for others
@@ -347,16 +281,16 @@ ID_EX ID_EX(
     .MemToReg_i (MUX_Control_MemToReg_o),
     .MemRead_i  (MUX_Control_MemRead_o),
     .MemWrite_i  (MUX_Control_MemWrite_o),
-    .PC_branch_select_i (PC_Branch_Select),//useless
+    // .PC_branch_select_i (PC_Branch_Select),
     .RSaddr_i   (IF_ID_inst_o[19:15]),     
     .RTaddr_i   (IF_ID_inst_o[24:20]),
     .inst_o (ID_EX_inst_o),     
     .pc_o   (ID_EX_pc_o),             //to EX_MEM.pc_i
     .pcEx_o (),             //to shiftLeft.data_i
-    .RDData0_o  (ID_EX_RDData0_o),         //to ALU.data1_i
-    .RDData1_o  (ID_EX_RDData1_o),         //to EX_MEM.RDData_i
+    .RDData0_o  (ID_EX_RDData0_o),         //to RS Forwarding
+    .RDData1_o  (ID_EX_RDData1_o),         //to RT Forwarding
     .SignExtended_o (ID_EX_SignExtended_o),     //to MEX_ALUSrc.data2_i
-    .RegDst_o   (ID_EX_RegDst_o),         //to EX_MEM.RDaddr_i
+    .RegDst_o   (ID_EX_RDaddr_o),         //to EX_MEM.RDaddr_i
     .ALUOp_o    (ID_EX_ALUOp_o),         //to ALU_Control.ALUOp_i
     .ALUSrc_o   (ID_EX_ALUSrc_o),         //to ALUSrc.select_i
     .RegWrite_o (ID_EX_RegWrite_o),         //to EX_MEM.RegWrite_i
@@ -417,13 +351,21 @@ MUX_Control MUX_Control(
 
 ForwardingUnit ForwardingUnit(
     .EX_MEM_RegWrite_i (EX_MEM_RegWrite_o),
-    .EX_MEM_RD_i       (EX_MEM_RDaddr_o),
     .ID_EX_RS_i        (ID_EX_RSaddr_o),
     .ID_EX_RT_i        (ID_EX_RTaddr_o),
     .MEM_WB_RegWrite_i (MEM_WB_RegWrite_o),
+    .ID_EX_RegWrite_i  (ID_EX_RegWrite_o),
+    .EX_MEM_RD_i       (EX_MEM_RDaddr_o),
     .MEM_WB_RD_i       (MEM_WB_RDaddr_o),
     .ForwardA_o        (ForwardingUnit_ForwardA_o),
-    .ForwardB_o        (ForwardingUnit_ForwardB_o)
+    .ForwardB_o        (ForwardingUnit_ForwardB_o),
+    .ID_EX_RD_i (ID_EX_RDaddr_o),
+    /* -------------Branch Forward-------------- */
+    .Branch_RSaddr     (IF_ID_inst_o[19:15]),
+    .Branch_RTaddr     (IF_ID_inst_o[24:20]),
+    .Forward_Branch_RS (Forward_Branch_RS),
+    .Forward_Branch_RT (Forward_Branch_RT)
+
 );
 
 ForwardingMUX ForwardToData1(
@@ -442,6 +384,28 @@ ForwardingMUX ForwardToData2(
     .data_o   (ForwardToData2_data_o)
 );
 
+/* ---------------------Branch ForwardMux--------------------- */
+ForwardingMUX BranchForWardRS(
+    .select_i (Forward_Branch_RS),
+    .data_i   (Registers_RSdata_o),
+    // .EX_MEM_i (EX_MEM_ALUResult_o),
+    .ID_EX_i(ALU_data_o),
+    .EX_MEM_i (EX_MEM_ALUResult_o),
+    .MEM_WB_i (memToReg_data_o),
+    .data_o   (Branch_RS)
+);
+ForwardingMUX BranchForWardRT(
+    .select_i (Forward_Branch_RT),
+    .data_i   (Registers_RTdata_o),
+    // .EX_MEM_i (EX_MEM_ALUResult_o),
+    .ID_EX_i(ALU_data_o),
+    .EX_MEM_i (EX_MEM_ALUResult_o),
+    .MEM_WB_i (memToReg_data_o),
+    .data_o   (Branch_RT)
+);
+
+
+
 EX_MEM EX_MEM(
     .clk_i  (clk_i),
     .start_i    (start_i),
@@ -450,7 +414,7 @@ EX_MEM EX_MEM(
     .ALUResult_i    (ALU_data_o),
     .VALUResult_i (VALU_v_o), //NEW
     .RDData_i   (ForwardToData2_data_o),//Reg read data2
-    .RDaddr_i   (ID_EX_RegDst_o),//from IF_ID.inst_o[11:7]
+    .RDaddr_i   (ID_EX_RDaddr_o),//from IF_ID.inst_o[11:7]
     .RegWrite_i (ID_EX_RegWrite_o),
     .MemToReg_i (ID_EX_MemToReg_o),
     .MemRead_i  (ID_EX_MemRead_o),
@@ -482,7 +446,7 @@ Data_Memory Data_Memory(
 );
 
 assign mem_addr = aluToDM_data_o;
-assign mem_data = EX_MEM_RDData_o;
+assign mem_wdata = EX_MEM_RDData_o;
 assign data_mem_wea = ({EX_MEM_MemWrite_o, EX_MEM_MemRead_o} == 2'b10);
 
 MEM_WB MEM_WB(
@@ -494,18 +458,18 @@ MEM_WB MEM_WB(
     .RDaddr_i   (EX_MEM_RDaddr_o),
     .RegWrite_i (EX_MEM_RegWrite_o),
     .MemToReg_i (EX_MEM_MemToReg_o),
-    .DataMemReadData_i(mem_rdata),
+    // .DataMemReadData_i(mem_rdata),
     .ALUResult_o    (MEM_WB_ALUResult_o),
     .RDData_o   (),         //to memToReg.data1_i
     .RDaddr_o   (MEM_WB_RDaddr_o),         
     .RegWrite_o (MEM_WB_RegWrite_o),         //to Registera.RegWrite_i
-    .MemToReg_o (MEM_WB_MemToReg_o),          //to memToReg.select_i
-    .DataMemReadData_o(MEM_WB_DataMemReadData_o)
+    .MemToReg_o (MEM_WB_MemToReg_o)          //to memToReg.select_i
+    // .DataMemReadData_o(MEM_WB_DataMemReadData_o)
 );
 
 MUX32 memToReg(
     .data1_i    (MEM_WB_ALUResult_o),
-    .data2_i    (MEM_WB_DataMemReadData_o),
+    .data2_i    (mem_rdata),
     .select_i   (MEM_WB_MemToReg_o),//MemToReg control
     .data_o     (memToReg_data_o)
 );

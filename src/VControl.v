@@ -1,4 +1,4 @@
-module Control(
+module VControl(
     Op_i       ,
     RegDst_o   ,
     ALUOp_o    ,

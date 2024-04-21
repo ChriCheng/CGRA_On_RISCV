@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="IMemory_synth_1" LaunchPart="xc7vx485tffg1157-1" LaunchTime="1713099464">
+<GenRun Id="IMemory_synth_1" LaunchPart="xc7vx485tffg1157-1" LaunchTime="1713667492">
   <File Type="PA-TCL" Name="IMemory.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="IMemory_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="IMemory_reports.tcl"/>
   <File Type="RDS-RDS" Name="IMemory.vds"/>
   <File Type="RDS-UTIL" Name="IMemory_utilization_synth.rpt"/>
   <File Type="RDS-UTIL-PB" Name="IMemory_utilization_synth.pb"/>
   <File Type="RDS-DCP" Name="IMemory.dcp"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="IMemory_timing_summary_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="IMemory_timing_summary_synth.pb"/>
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/IMemory">
     <File Path="$PSRCDIR/sources_1/ip/IMemory/IMemory.xci">
       <FileInfo>

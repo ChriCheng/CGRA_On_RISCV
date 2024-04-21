@@ -11,19 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="29722fs"></ZoomStartTime>
-      <ZoomEndTime time="47223fs"></ZoomEndTime>
-      <Cursor1Time time="55000fs"></Cursor1Time>
+      <ZoomStartTime time="20000fs"></ZoomStartTime>
+      <ZoomEndTime time="133832fs"></ZoomEndTime>
+      <Cursor1Time time="90227fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="229"></NameColumnWidth>
-      <ValueColumnWidth column_width="144"></ValueColumnWidth>
+      <NameColumnWidth column_width="310"></NameColumnWidth>
+      <ValueColumnWidth column_width="123"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="10" />
-   <wvobject fp_name="/testbench/addr" type="array">
-      <obj_property name="ElementShortName">addr[31:0]</obj_property>
-      <obj_property name="ObjectShortName">addr[31:0]</obj_property>
-   </wvobject>
+   <WVObjectSize size="4" />
    <wvobject fp_name="/testbench/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -32,32 +28,78 @@
       <obj_property name="ElementShortName">rst</obj_property>
       <obj_property name="ObjectShortName">rst</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/address" type="array">
-      <obj_property name="ElementShortName">address[9:0]</obj_property>
-      <obj_property name="ObjectShortName">address[9:0]</obj_property>
+   <wvobject fp_name="group103" type="group">
+      <obj_property name="label">Beq Bug</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/testbench/MyTop/instr" type="array">
+         <obj_property name="ElementShortName">instr[31:0]</obj_property>
+         <obj_property name="ObjectShortName">instr[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/Registers/register" type="array">
+         <obj_property name="ElementShortName">register[0:31][31:0]</obj_property>
+         <obj_property name="ObjectShortName">register[0:31][31:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/EX_MEM_RDaddr_o" type="array">
+         <obj_property name="ElementShortName">EX_MEM_RDaddr_o[4:0]</obj_property>
+         <obj_property name="ObjectShortName">EX_MEM_RDaddr_o[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/MEM_WB_RDaddr_o" type="array">
+         <obj_property name="ElementShortName">MEM_WB_RDaddr_o[4:0]</obj_property>
+         <obj_property name="ObjectShortName">MEM_WB_RDaddr_o[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/ALU/data_o" type="array">
+         <obj_property name="ElementShortName">data_o[31:0]</obj_property>
+         <obj_property name="ObjectShortName">data_o[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/EX_MEM_VALUResult_o" type="array">
+         <obj_property name="ElementShortName">EX_MEM_VALUResult_o[31:0]</obj_property>
+         <obj_property name="ObjectShortName">EX_MEM_VALUResult_o[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/Registers/RDdata_i" type="array">
+         <obj_property name="ElementShortName">RDdata_i[31:0]</obj_property>
+         <obj_property name="ObjectShortName">RDdata_i[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/Branch_RT" type="array">
+         <obj_property name="ElementShortName">Branch_RT[31:0]</obj_property>
+         <obj_property name="ObjectShortName">Branch_RT[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/Branch_RS" type="array">
+         <obj_property name="ElementShortName">Branch_RS[31:0]</obj_property>
+         <obj_property name="ObjectShortName">Branch_RS[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/Control_isBranch_o" type="logic">
+         <obj_property name="ElementShortName">Control_isBranch_o</obj_property>
+         <obj_property name="ObjectShortName">Control_isBranch_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/PC_Branch_Select" type="logic">
+         <obj_property name="ElementShortName">PC_Branch_Select</obj_property>
+         <obj_property name="ObjectShortName">PC_Branch_Select</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/testbench/value_o" type="array">
-      <obj_property name="ElementShortName">value_o[31:0]</obj_property>
-      <obj_property name="ObjectShortName">value_o[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testbench/MyTop/CPU/instr" type="array">
-      <obj_property name="ElementShortName">instr[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instr[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testbench/MyTop/CPU/ALU/data_o" type="array">
-      <obj_property name="ElementShortName">data_o[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_o[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testbench/MyTop/CPU/Registers/register" type="array">
-      <obj_property name="ElementShortName">register[0:31][31:0]</obj_property>
-      <obj_property name="ObjectShortName">register[0:31][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testbench/MyTop/CPU/Registers/RDaddr_i" type="array">
-      <obj_property name="ElementShortName">RDaddr_i[4:0]</obj_property>
-      <obj_property name="ObjectShortName">RDaddr_i[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testbench/MyTop/CPU/Registers/RDdata_i" type="array">
-      <obj_property name="ElementShortName">RDdata_i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">RDdata_i[31:0]</obj_property>
+   <wvobject fp_name="group108" type="group">
+      <obj_property name="label">PC</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/testbench/MyTop/CPU/inst_addr" type="array">
+         <obj_property name="ElementShortName">inst_addr[31:0]</obj_property>
+         <obj_property name="ObjectShortName">inst_addr[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/addPC" type="array">
+         <obj_property name="ElementShortName">addPC[31:0]</obj_property>
+         <obj_property name="ObjectShortName">addPC[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/AddSum_data_o" type="array">
+         <obj_property name="ElementShortName">AddSum_data_o[31:0]</obj_property>
+         <obj_property name="ObjectShortName">AddSum_data_o[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/PC_Branch_Select" type="logic">
+         <obj_property name="ElementShortName">PC_Branch_Select</obj_property>
+         <obj_property name="ObjectShortName">PC_Branch_Select</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/MyTop/CPU/pcSelect_data_o" type="array">
+         <obj_property name="ElementShortName">pcSelect_data_o[31:0]</obj_property>
+         <obj_property name="ObjectShortName">pcSelect_data_o[31:0]</obj_property>
+      </wvobject>
    </wvobject>
 </wave_config>
