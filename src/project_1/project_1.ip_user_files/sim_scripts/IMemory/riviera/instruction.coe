@@ -1,8 +1,29 @@
-;PC = 0     addi t0 t0 2
-;PC = 4     addi t1 t1 1
-;PC = 8     bltu t1 t0 -8
+;初始化斐波那契额数列前两个值
+;PC = 0     addi t0, x0, 0    F(0) = 0
+;PC = 4     addi t1, x0, 1    F(1) = 1
+;PC = 8     addi t2, x0, 10    设置循环次数
+;PC = 12     addi t3, x0, 0     使用t3来计数 t3 = x28
+;开始进行斐波那契数列计算
+;PC = 16    add s0, t0, t1      计算下一个斐波那契数 s0 = x8
+;PC = 20    add t0, x0, t1      mv t0 , t1
+;PC = 24    add t1, x0, s0      mv t1 , s0
+;PC = 28    addi t3, t3 , 1     更新t3
+;PC = 32    blt t3, t2, -20     判断条件
+;最终结果存贮及展示
+;PC = 36    sw t0 0(x0)    00502023,
+;PC = 40    lw s2 0(x0)    00002903;
+;[注]：斐波那契数列前10项为：0, 1, 1, 2, 3, 5, 8, 13, 21, 34
 memory_initialization_radix=16;
 memory_initialization_vector=
-00228293,
-00130313,
-fe536ce3;
+00000293,
+00100313,
+00a00393,
+00000e13,
+00628433,
+006002b3,
+00800333,
+001e0e13,
+fe7e46e3,
+00502023,
+00002903;
+
