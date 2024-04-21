@@ -253,6 +253,7 @@ Branch Branch(
     .clk       ( clk       ),
     .start_i   ( start_i   ),
     .is_Branch ( Control_isBranch_o ),
+    .Branch_Op ( IF_ID_inst_o[14:12]),
     .Branch_RS ( Branch_RS ),
     .Branch_RT ( Branch_RT ),
     .PC_Branch_Select  ( PC_Branch_Select  )
