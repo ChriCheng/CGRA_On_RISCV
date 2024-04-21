@@ -10,9 +10,9 @@
 ;PC = 28    addi t3, t3 , 1     更新t3
 ;PC = 32    blt t3, t2, -20     判断条件
 ;最终结果存贮及展示
-;PC = 36    sw t0 0(x0)    00502023,
-;PC = 40    lw s2 0(x0)    00002903;
-;[注]：斐波那契数列前10项为：0, 1, 1, 2, 3, 5, 8, 13, 21, 34
+;PC = 36    sw t0 0(x0)    00502023
+;PC = 40    lw s1 0(x0)    00002903     s1 = x9  
+;[注]：斐波那契数列前10项为： 1, 1, 2, 3, 5, 8, 13, 21, 34, 55
 memory_initialization_radix=16;
 memory_initialization_vector=
 00000293,
@@ -25,5 +25,5 @@ memory_initialization_vector=
 001e0e13,
 fe7e46e3,
 00502023,
-00002903;
+00002483;
 

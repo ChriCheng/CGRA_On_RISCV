@@ -70,7 +70,7 @@ initial begin
     rst = 1; 
     #10
     rst = 0;
-    #500
+    #5000
     for(addr = 0; addr < 32; addr =addr +1)
     begin
         address = addr;

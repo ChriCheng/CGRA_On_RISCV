@@ -1,6 +1,6 @@
 webtalk_init -webtalk_dir C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/testbench_behav/webtalk/
 webtalk_register_client -client project
-webtalk_add_data -client project -key date_generated -value "Sun Apr 21 16:50:55 2024" -context "software_version_and_target_device"
+webtalk_add_data -client project -key date_generated -value "Sun Apr 21 17:23:43 2024" -context "software_version_and_target_device"
 webtalk_add_data -client project -key product_version -value "XSIM v2019.2 (64-bit)" -context "software_version_and_target_device"
 webtalk_add_data -client project -key build_version -value "2708876" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_platform -value "WIN64" -context "software_version_and_target_device"
@@ -14,7 +14,7 @@ webtalk_add_data -client project -key target_package -value "not_applicable" -co
 webtalk_add_data -client project -key target_speed -value "not_applicable" -context "software_version_and_target_device"
 webtalk_add_data -client project -key random_id -value "7189cfa6-ce08-4b57-b593-312f4810f155" -context "software_version_and_target_device"
 webtalk_add_data -client project -key project_id -value "47d17b62c1ac4735a2b1cd4cf1ed4d36" -context "software_version_and_target_device"
-webtalk_add_data -client project -key project_iteration -value "207" -context "software_version_and_target_device"
+webtalk_add_data -client project -key project_iteration -value "215" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_name -value "Windows Server 2016 or Windows 10" -context "user_environment"
 webtalk_add_data -client project -key os_release -value "major release  (build 9200)" -context "user_environment"
 webtalk_add_data -client project -key cpu_name -value "13th Gen Intel(R) Core(TM) i9-13900H" -context "user_environment"
@@ -36,7 +36,7 @@ webtalk_add_data -client xsim -key Total_Nets -value "0" -context "xsim\\usage"
 webtalk_add_data -client xsim -key Total_Processes -value "508" -context "xsim\\usage"
 webtalk_add_data -client xsim -key Total_Instances -value "45" -context "xsim\\usage"
 webtalk_add_data -client xsim -key Xilinx_HDL_Libraries_Used -value "secureip unimacro_ver unisims_ver " -context "xsim\\usage"
-webtalk_add_data -client xsim -key Compiler_Time -value "0.23_sec" -context "xsim\\usage"
-webtalk_add_data -client xsim -key Compiler_Memory -value "92196_KB" -context "xsim\\usage"
-webtalk_transmit -clientid 3235724865 -regid "" -xml C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/testbench_behav/webtalk/usage_statistics_ext_xsim.xml -html C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/testbench_behav/webtalk/usage_statistics_ext_xsim.html -wdm C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/testbench_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
+webtalk_add_data -client xsim -key Compiler_Time -value "0.51_sec" -context "xsim\\usage"
+webtalk_add_data -client xsim -key Compiler_Memory -value "92168_KB" -context "xsim\\usage"
+webtalk_transmit -clientid 523084811 -regid "" -xml C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/testbench_behav/webtalk/usage_statistics_ext_xsim.xml -html C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/testbench_behav/webtalk/usage_statistics_ext_xsim.html -wdm C:/Code/Vivado/CGRA_On_RISCV/src/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/testbench_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
 webtalk_terminate
