@@ -1,5 +1,5 @@
 module MUX_Control(
-    Hazard_i, 
+    Stall, 
     RegDst_i,  
     ALUOp_i, 
     ALUSrc_i,  
@@ -17,22 +17,22 @@ module MUX_Control(
 );
 input	[1:0]	ALUOp_i;
 input 	[4:0]	RegDst_i;
-input	Hazard_i, ALUSrc_i, RegWrite_i, MemToReg_i, MemRead_i, MemWrite_i; 
+input	Stall, ALUSrc_i, RegWrite_i, MemToReg_i, MemRead_i, MemWrite_i; 
 
 output	reg [1:0]	ALUOp_o;
 output 	reg [4:0]	RegDst_o;
 output	reg ALUSrc_o, RegWrite_o, MemToReg_o, MemRead_o, MemWrite_o; 
 
 always@(*)begin
-    case(Hazard_i)
+    case(Stall)
     1'b1 : begin
-    RegDst_o <= 5'b0000;  
-    ALUOp_o <= 2'b00;
-    ALUSrc_o <= 1'b0; 
-    RegWrite_o <= 1'b0;
-    MemToReg_o <= 1'b0;
-    MemRead_o <= 1'b0;
-    MemWrite_o <= 1'b0;
+    RegDst_o <= RegDst_o;
+    ALUOp_o <= ALUOp_o;
+    ALUSrc_o <= ALUSrc_o ;
+    RegWrite_o <= RegWrite_o;
+    MemToReg_o <= MemToReg_o;
+    MemRead_o <= MemRead_o;
+    MemWrite_o <= MemWrite_o;
     end
 
     1'b0 : begin

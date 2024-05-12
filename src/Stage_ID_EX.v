@@ -15,6 +15,7 @@ module ID_EX(
 	MemRead_i,
 	MemWrite_i,
 	inst_o,
+    Stall,
 	// PC_branch_select_i,
 	RSaddr_i,     
     RTaddr_i,
@@ -35,7 +36,7 @@ module ID_EX(
 	RTaddr_o
 );
 
-input	clk_i, ALUSrc_i, RegWrite_i, MemToReg_i, MemRead_i, MemWrite_i, start_i; 
+input	clk_i, ALUSrc_i, RegWrite_i, MemToReg_i, MemRead_i, MemWrite_i, start_i,Stall; 
 input	[31:0]	inst_i, pc_i, RDData0_i, RDData1_i, SignExtended_i;
 input	[1:0]	ALUOp_i;
 input 	[4:0]	RegDst_i,RSaddr_i,RTaddr_i;
@@ -71,7 +72,7 @@ always@(posedge clk_i or negedge start_i) begin
 		RSaddr_o <= 0;
 		RTaddr_o <= 0;
 	end
-	else begin
+	else if(~Stall) begin
 		inst_o <= inst_i;
 		pc_o <= pc_i ;
 		RDData0_o <= RDData0_i;

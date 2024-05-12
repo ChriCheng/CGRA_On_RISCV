@@ -22,10 +22,11 @@ module EX_MEM(
 	RegWrite_o,
 	MemToReg_o,
 	MemRead_o,
-	MemWrite_o
+	MemWrite_o,
+    Stall
 );
 
-input	clk_i, zero_i, RegWrite_i, MemToReg_i, MemRead_i, MemWrite_i, start_i;
+input	clk_i, zero_i, RegWrite_i, MemToReg_i, MemRead_i, MemWrite_i, start_i,Stall;
 input	[31:0]	pc_i, ALUResult_i, RDData_i, VALUResult_i; //NEW
 input	[4:0] RDaddr_i;
 input 	[31:0] instr_i;
@@ -50,7 +51,7 @@ always@(posedge clk_i or negedge start_i) begin
 		MemWrite_o <= 0;
 		instr_o	<= 0;
 	end
-	else begin
+	else if(~Stall)begin
 		pc_o <= pc_i;
 		zero_o <= zero_i;
 		ALUResult_o <= ALUResult_i;

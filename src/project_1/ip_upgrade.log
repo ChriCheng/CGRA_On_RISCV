@@ -1,0 +1,37 @@
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
+| Date         : Sun May 12 16:13:59 2024
+| Host         : Chris running 64-bit major release  (build 9200)
+| Command      : upgrade_ip
+| Device       : xc7vx485tffg1157-1
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'axi_bram'
+
+1. Summary
+----------
+
+SUCCESS in the conversion of axi_bram (xilinx.com:ip:blk_mem_gen:8.4 (Rev. 4)) to Vivado generation flows.
+
+
+
+
+
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
+| Date         : Sun May 12 16:11:21 2024
+| Host         : Chris running 64-bit major release  (build 9200)
+| Command      : upgrade_ip
+| Device       : xc7vx485tffg1157-1
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'axi_crossbar_32'
+
+1. Summary
+----------
+
+SUCCESS in the conversion of axi_crossbar_32 (xilinx.com:ip:axi_crossbar:2.1 (Rev. 21)) to Vivado generation flows.
+

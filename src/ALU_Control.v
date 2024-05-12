@@ -52,5 +52,4 @@ endcase
 end
 
 endmodule
-//not sure how to deal w/ ALUOp to o/p the corresponing code,
-//stop by here
+/* I believe JasonLin use ALUOP_i to distinguish different Instruction Types, But it look a little bit weird */

@@ -1,13 +1,15 @@
 # compile verilog/system verilog design source files
-verilog xil_defaultlib  \
-"../../../../project_1.srcs/sources_1/ip/Dmemery/sim/Dmemery.v" \
+verilog xil_defaultlib  --include "../../../../project_1.ip_user_files/ipstatic/hdl" \
+"../../../../../../../ddr4_ex/ddr4_ex.srcs/sources_1/ip/axi_bram/sim/axi_bram.v" \
+"../../../../../../../ddr4_ex/ddr4_ex.srcs/sources_1/ip/axi_crossbar_32/sim/axi_crossbar_32.v" \
 "../../../../project_1.srcs/sources_1/ip/IMemory/sim/IMemory.v" \
 "../../../../../ALU.v" \
 "../../../../../ALU_Control.v" \
+"../../../../../AXI_Connector.v" \
 "../../../../../Adder.v" \
+"../../../../../BranchTaken.v" \
 "../../../../../CPU.v" \
 "../../../../../Control.v" \
-"../../../../../DataMemory.v" \
 "../../../../../ForwardingMUX.v" \
 "../../../../../ForwardingUnit.v" \
 "../../../../../HazardDetect.v" \
@@ -16,10 +18,17 @@ verilog xil_defaultlib  \
 "../../../../../PC.v" \
 "../../../../../Registers.v" \
 "../../../../../Sign_Extend.v" \
+"../../../../../Stage_EX_MEM.v" \
+"../../../../../Stage_ID_EX.v" \
+"../../../../../Stage_IF_ID.v" \
+"../../../../../Stage_MEM_WB.v" \
 "../../../../../Top.v" \
 "../../../../../VALU.v" \
 "../../../../../VALU_ctrl.v" \
-"../../../../../testbench.v" \
+"../../../../../shift1.v" \
+
+sv xil_defaultlib  --include "../../../../project_1.ip_user_files/ipstatic/hdl" \
+"../../../../../testbench.sv" \
 
 # compile glbl module
 verilog xil_defaultlib "glbl.v"

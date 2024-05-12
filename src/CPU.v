@@ -18,6 +18,7 @@
 `include "DataMemory.v"
 `include "Stage_MEM_WB.v"
 `include "BranchTaken.v"
+`include "AXI_Connector.v"
 `include "VALU.v" //NEW
 `include "VALU_ctrl.v" //NEW
 
@@ -26,27 +27,69 @@ module CPU
 (
     input               clk_i, 
     // input               DataOrReg, // choose value_o from reg or mem
-    input [9:0]         address, //for tb read specific reg/mem
+    // input [9:0]         address, //for tb read specific reg/mem
     // input  [7:0]        instr_i, 
     input               reset, 
     // input [1:0]         vout_addr, // choose one of four bytes of value
-    output reg[31:0]value_o,     // for tb test
+    // output reg[31:0]value_o,     // for tb test
     // output is_positive,  // reg is positive or not
     // output  reg[2:0]easter_egg,
     /* --------------INSTR MEM----------------- */
     output wire [31:0]inst_addr,
     input wire[31:0]instr,
     /* --------------DATA MEM----------------- */
-    output wire data_mem_wea,
-    output wire [9:0] mem_addr,
-    output wire [31:0] mem_wdata,
-    input wire [31:0] mem_rdata
+    // output wire data_mem_wea,
+    // output wire [9:0] mem_addr,
+    // output wire [31:0] mem_wdata,
+    // input wire [31:0] mem_rdata,
+    // input wire init_calib_complete,
+    /* ---------------AXI INTERFACE------------ */
+    /* Write Address Channel */
+    output wire [3 : 0] axi_awid,
+    output wire [31 : 0] axi_awaddr,
+    output wire [7 : 0] axi_awlen,
+    output wire [2 : 0] axi_awsize,
+    output wire [1 : 0] axi_awburst,
+    output wire  axi_awlock,
+    output wire [3 : 0] axi_awcache,
+    output wire [2 : 0] axi_awprot,
+    output wire [3 : 0] axi_awregion,
+    output wire [3 : 0] axi_awqos,
+    output wire  axi_awvalid,
+    input wire  axi_awready,
+    /* Write Data Channel */
+    output wire [31 : 0] axi_wdata,
+    output wire [3 : 0] axi_wstrb,
+    output wire  axi_wlast,
+    output wire  axi_wvalid,
+    input wire  axi_wready,
+    /* Write Response Channel */
+    input wire [3 : 0] axi_bid,
+    input wire [1 : 0] axi_bresp,
+    input wire  axi_bvalid,
+    output wire  axi_bready,
+        /* Read Address Channel */
+    output wire [3 : 0] axi_arid,
+    output wire [31 : 0] axi_araddr,
+    output wire [7 : 0] axi_arlen,
+    output wire [2 : 0] axi_arsize,
+    output wire [1 : 0] axi_arburst,
+    output wire  axi_arvalid,
+    input wire  axi_arready,
+
+    /* Read Data Channel */
+    input wire [3 : 0] axi_rid,
+    input wire [32 : 0] axi_rdata,
+    input wire [1 : 0] axi_rresp,
+    input wire  axi_rlast,
+    input wire  axi_rvalid,
+    output wire  axi_rready 
 );
 
 //------------------------- Wire&Reg -------------------------------//
-
+wire atestn;
 wire [3:0] vector_signed_bits;
-wire [31:0] op_selection;
+wire [31:0] op_selection,mem_rdata;
 // wire [31:0]inst;
 wire[31:0]addPC,aluData,RSD,RTD,signExData,MUXop;
 wire [9:0] ALUfunct_in;
@@ -56,7 +99,7 @@ wire [11:0] pcIm,swIm;
 wire rst;
 wire [31:0] AddSum_data_o;
 wire [31:0] pcSelect_data_o;
-wire        HazradDetect_Hazard_o;
+// wire        HazradDetect_Hazard_o;
 wire [31:0] IF_ID_pc_o;
 wire [31:0] shiftLeft_data_o;
 wire [11:0] IF_ID_pcIm_o;
@@ -126,12 +169,15 @@ wire [2:0] VALU_Control_VALUCtrl_o;
 // wire [3:0] is_positive_line;
 wire [31:0] Branch_RS,Branch_RT;
 wire [1:0] Forward_Branch_RS,Forward_Branch_RT;
+wire axi_stall;
+wire stallF, stallD, stallE, stallM, stallW;
+
+
 
 reg               flag;
 wire               start_i;
 reg [3:0] vector_signed [0:2];
 // reg easter_flag,easter_flag_next;
-reg [7:0] egg1,egg2,egg3;
 // reg [2:0] easter_counter,easter_counter_next;
 //------------------------- continuous assginment -------------------------------//
 
@@ -155,9 +201,9 @@ always@(posedge clk_i or posedge reset )begin
     end
 end
 
-always@(*)begin
-    value_o = reg_o;        // testbench需要完善
-end
+// always@(*)begin
+//     value_o = reg_o;        // testbench需要完善
+// end
 
 
 MUX32 pcSelect(
@@ -166,13 +212,21 @@ MUX32 pcSelect(
     .select_i   (PC_Branch_Select),
     .data_o     (pcSelect_data_o)
 );
-
+wire [31:0]PcSelf,PcIn;
+assign PcSelf = pcSelect_data_o - 4;
+MUX32 pcInput
+(
+    .data1_i    (pcSelect_data_o),
+    .data2_i    (PcSelf),
+    .select_i   ((rst||stallF)),
+    .data_o     (PcIn)
+);
 
 PC  PC(
     .clk_i      (clk_i),
     .start_i    (start_i),
-    .pc_i       (pcSelect_data_o),
-    .hazardpc_i (HazradDetect_Hazard_o),
+    .pc_i       (PcIn),
+    .hazardpc_i (stallF),
     .pc_o       (inst_addr)
 );
 
@@ -210,7 +264,7 @@ IF_ID IF_ID(
     .start_i    (start_i),
     .pc_i   (inst_addr),
     .inst_i (instr), 
-    .hazard_i   (HazradDetect_Hazard_o),
+    .Stall   (stallF),
     .flush_i    (PC_Branch_Select),
     .pcIm_i (pcIm),
     .pcIm_o (IF_ID_pcIm_o),
@@ -236,7 +290,7 @@ Control Control(
 Registers Registers(
     .clk_i      (clk_i),
     .reset      (rst),
-    .op_address (address), /* dbg */
+    // .op_address (address), /* dbg */
     .RSaddr_i   (IF_ID_inst_o[19:15]), /* rs1 */    
     .RTaddr_i   (IF_ID_inst_o[24:20]), /* rs2 */
     .RDaddr_i   (MEM_WB_RDaddr_o),  /* rd */
@@ -300,7 +354,8 @@ ID_EX ID_EX(
     .MemWrite_o (ID_EX_MemWrite_o),         //to EX_MEM.MemWrite_i
     .PC_branch_select_o (),
     .RSaddr_o(ID_EX_RSaddr_o),
-    .RTaddr_o(ID_EX_RTaddr_o)
+    .RTaddr_o(ID_EX_RTaddr_o),
+    .Stall(stallD)
 );
 
 MUX32 MUX_ALUSrc(
@@ -311,29 +366,36 @@ MUX32 MUX_ALUSrc(
 );
 
 ALU_Control ALU_Control(
-    .funct_i    (ALUfunct_in),
+    .funct_i    (ALUfunct_in), //For R-type
     .ALUOp_i    (ID_EX_ALUOp_o),
-    .ALUCtrl_o  (ALU_Control_ALUCtrl_o)
+    .ALUCtrl_o  (ALU_Control_ALUCtrl_o) //For controling ALU
 );
 
 ALU ALU(
-    .data1_i    (ForwardToData1_data_o),
-    .data2_i    (MUX_ALUSrc_data_o),
+    .data1_i    (ForwardToData1_data_o),/* rs1 */
+    .data2_i    (MUX_ALUSrc_data_o),/* rs2 */
     .ALUCtrl_i  (ALU_Control_ALUCtrl_o),
     .data_o     (ALU_data_o),         //to EX_MEM.ALUResult_i    &    EX_MEM.RDaddr_i
     .Zero_o     (ALU_Zero_o)          //to EX_MEM.zero_i
 );
 
-HazradDetect HazradDetect(
+HazardDetect HazardDetect(
     .IF_IDrs1_i  (IF_ID_inst_o[24:20]),
     .IF_IDrs2_i  (IF_ID_inst_o[19:15]),
     .ID_EXrd_i  (IF_ID_inst_o[19:15]),
     .ID_EX_MemRead_i    (ID_EX_MemRead_o),
-    .Hazard_o   (HazradDetect_Hazard_o)
+    // .Hazard_o   (HazradDetect_Hazard_o),
+/* ------------------AXI----------------- */
+    .axi_stall(axi_stall),
+    .stallF(stallF),
+    .stallD(stallD),
+    .stallE(stallE),
+    .stallM(stallM),
+    .arestn(arestn)
 );
 
 MUX_Control MUX_Control(
-    .Hazard_i   (HazradDetect_Hazard_o), 
+    .Stall   (stallD), 
     .RegDst_i   (IF_ID_inst_o[11:7]),  
     .ALUOp_i    (Control_ALUOp_o), 
     .ALUSrc_i   (Control_ALUSrc_o),  
@@ -341,13 +403,13 @@ MUX_Control MUX_Control(
     .MemToReg_i     (Control_MemToReg_o), 
     .MemRead_i  (Control_MemRd_o),
     .MemWrite_i     (Control_MemWr_o),
-    .RegDst_o   (MUX_Control_RegDst_o),  
-    .ALUOp_o    (MUX_Control_ALUOp_o), 
-    .ALUSrc_o   (MUX_Control_ALUSrc_o),  
-    .RegWrite_o     (MUX_Control_RegWrite_o), 
-    .MemToReg_o     (MUX_Control_MemToReg_o),  
-    .MemRead_o  (MUX_Control_MemRead_o),
-    .MemWrite_o     (MUX_Control_MemWrite_o)  
+    .RegDst_o   (MUX_Control_RegDst_o),  // RD addr
+    .ALUOp_o    (MUX_Control_ALUOp_o),   // distinguish different Instruction Types
+    .ALUSrc_o   (MUX_Control_ALUSrc_o),  // select rs2 for alu
+    .RegWrite_o     (MUX_Control_RegWrite_o), //write back to regfile or not  
+    .MemToReg_o     (MUX_Control_MemToReg_o), //select a forwarddata from MEM_WE regfile
+    .MemRead_o  (MUX_Control_MemRead_o), // read data from mem
+    .MemWrite_o     (MUX_Control_MemWrite_o)  // write data into mem
 );
 
 ForwardingUnit ForwardingUnit(
@@ -431,24 +493,68 @@ EX_MEM EX_MEM(
     .RegWrite_o (EX_MEM_RegWrite_o),             //to MEM_WB.RegWrite_i
     .MemToReg_o (EX_MEM_MemToReg_o),             //to MEM_WB.MemToReg_i
     .MemRead_o  (EX_MEM_MemRead_o),             //to Data_Memory.MemRead_i
-    .MemWrite_o (EX_MEM_MemWrite_o)              //to Data_Memory.MemWrite_i
-);
+    .MemWrite_o (EX_MEM_MemWrite_o),              //to Data_Memory.MemWrite_i
+    .Stall(stallE)
+    );
 
-Data_Memory Data_Memory(
-    .clk_i      (clk_i),
-    .reset      (rst),
-    .op_addr    (address),/* dbg */
-    .addr_i     (aluToDM_data_o),
-    .data_i     (EX_MEM_RDData_o),
-    .MemWrite_i (EX_MEM_MemWrite_o),
-    .MemRead_i  (EX_MEM_MemRead_o),
-    .data_o     (Data_Memory_data_o),
-    .data_mem_o (data_mem_o) /* dbg */
-);
 
-assign mem_addr = aluToDM_data_o;
-assign mem_wdata = EX_MEM_RDData_o;
-assign data_mem_wea = ({EX_MEM_MemWrite_o, EX_MEM_MemRead_o} == 2'b10);
+
+// assign mem_addr = aluToDM_data_o;
+// assign mem_wdata = EX_MEM_RDData_o;
+// assign data_mem_wea = ({EX_MEM_MemWrite_o, EX_MEM_MemRead_o} == 2'b10);
+
+    /* 按照框架来说会有instr/data MEM
+    目前用这个测试（接入instr/data MEM） */
+AXI_Connector AXI_Connector(
+    .clk(clk_i),
+    // .arestn(arestn),
+    .rst(rst),
+    .MemWrite(EX_MEM_MemWrite_o),
+    .MemRead(EX_MEM_MemRead_o),                                                                               
+    .MemData(EX_MEM_RDData_o),                                                                                
+    .MemAddr(aluToDM_data_o),
+    .mem_rdata(mem_rdata),                                                                                
+    .axi_stall(axi_stall),                                                                              
+    // .init_calib_complete(init_calib_complete),
+    /* ---------------AXI INTERFACE------------ */ 
+    /* Write Address Channel */
+    .axi_awid(axi_awid),    
+    .axi_awaddr(axi_awaddr),
+    .axi_awlen(axi_awlen),
+    .axi_awsize(axi_awsize),
+    .axi_awburst(axi_awburst),                                             
+    .axi_awvalid(axi_awvalid),                                                                
+    .axi_awready(axi_awready),                                                                
+    /* Write Data Channel */     
+    .axi_wdata(axi_wdata),                                               
+    .axi_wstrb(axi_wstrb),                                                                
+    .axi_wlast(axi_wlast),                                                                
+    .axi_wvalid(axi_wvalid),                                                               
+    .axi_wready(axi_wready),                                                               
+    /* Write Response Channel */                                              
+    .axi_bid(axi_bid),    
+    .axi_bresp(axi_bresp),                                                                 
+    .axi_bvalid(axi_bvalid),                                                                
+    .axi_bready(axi_bready),
+        /* Read Address Channel */
+    .axi_arid(axi_arid),
+    .axi_araddr(axi_araddr),
+    .axi_arlen(axi_arlen),
+    .axi_arsize(axi_arsize),
+    .axi_arburst(axi_arburst),
+
+    .axi_arvalid(axi_arvalid),
+    .axi_arready(axi_arready),
+
+    /* Read Data Channel */
+    .axi_rid(axi_rid),
+    .axi_rdata(axi_rdata),
+    .axi_rresp(axi_rresp),
+    .axi_rlast(axi_rlast),
+    .axi_rvalid(axi_rvalid),
+    .axi_rready(axi_rready) 
+                                                                               
+);
 
 MEM_WB MEM_WB(
     .clk_i  (clk_i),
@@ -464,8 +570,9 @@ MEM_WB MEM_WB(
     .RDData_o   (),         //to memToReg.data1_i
     .RDaddr_o   (MEM_WB_RDaddr_o),         
     .RegWrite_o (MEM_WB_RegWrite_o),         //to Registera.RegWrite_i
-    .MemToReg_o (MEM_WB_MemToReg_o)          //to memToReg.select_i
-    // .DataMemReadData_o(MEM_WB_DataMemReadData_o)
+    .MemToReg_o (MEM_WB_MemToReg_o),          //to memToReg.select_i
+    // .DataMemReadData_o(MEM_WB_DataMemReadData_o),
+    .Stall(stallM)
 );
 
 MUX32 memToReg(

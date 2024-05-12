@@ -3,7 +3,7 @@ module IF_ID(
 	start_i,
 	pc_i,
 	inst_i,
-	hazard_i,
+	Stall,
 	flush_i,
 	pcIm_i,
 	pcIm_o,
@@ -11,7 +11,7 @@ module IF_ID(
 	inst_o
 );
 
-input	clk_i, hazard_i, flush_i, start_i;
+input	clk_i, Stall, flush_i, start_i;
 input	[31:0]	inst_i, pc_i;
 input 	[11:0]	pcIm_i;
 output 	[11:0]	pcIm_o;
@@ -42,10 +42,10 @@ always@(posedge clk_i) begin
 			flush_state <= 1'b0;
 		end
 	end
-	else if(hazard_i) begin
-		pc_o <= pc_i;
+	else if(Stall) begin
+		pc_o <= pc_o;
 		inst_o <= inst_o;
-		pcIm_o <= pcIm_i;
+		pcIm_o <= pcIm_o;
 		flush_state <= 1'b0;
 	end
 	else begin
