@@ -46,8 +46,8 @@ WARNING: [VRFC 10-3609] overwriting previous definition of module 'AXI_Connector
 INFO: [VRFC 10-311] analyzing module VALU
 INFO: [VRFC 10-311] analyzing module VALU_ctrl
 INFO: [VRFC 10-311] analyzing module CPU
-INFO: [VRFC 10-2458] undeclared symbol clk, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/CPU.v:307]
-INFO: [VRFC 10-2458] undeclared symbol arestn, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/CPU.v:394]
+INFO: [VRFC 10-2458] undeclared symbol clk, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/CPU.v:308]
+INFO: [VRFC 10-2458] undeclared symbol arestn, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/CPU.v:395]
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/76296/Desktop/CGRA_On_RISCV/src/Control.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module Control
 WARNING: [VRFC 10-3609] overwriting previous definition of module 'Control' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Control.v:1]
@@ -89,9 +89,9 @@ INFO: [VRFC 10-311] analyzing module MEM_WB
 WARNING: [VRFC 10-3609] overwriting previous definition of module 'MEM_WB' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Stage_MEM_WB.v:1]
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module Top
-INFO: [VRFC 10-2458] undeclared symbol axi_awregion_cpu, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:58]
-INFO: [VRFC 10-2458] undeclared symbol rsta_busy, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:254]
-INFO: [VRFC 10-2458] undeclared symbol rstb_busy, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:255]
+INFO: [VRFC 10-2458] undeclared symbol axi_awregion_cpu, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:60]
+INFO: [VRFC 10-2458] undeclared symbol rsta_busy, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:338]
+INFO: [VRFC 10-2458] undeclared symbol rstb_busy, assumed default net type wire [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:339]
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/76296/Desktop/CGRA_On_RISCV/src/VALU.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module VALU
 WARNING: [VRFC 10-3609] overwriting previous definition of module 'VALU' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/VALU.v:1]

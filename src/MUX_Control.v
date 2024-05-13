@@ -24,38 +24,15 @@ output 	reg [4:0]	RegDst_o;
 output	reg ALUSrc_o, RegWrite_o, MemToReg_o, MemRead_o, MemWrite_o; 
 
 always@(*)begin
-    case(Stall)
-    1'b1 : begin
-    RegDst_o <= RegDst_o;
-    ALUOp_o <= ALUOp_o;
-    ALUSrc_o <= ALUSrc_o ;
-    RegWrite_o <= RegWrite_o;
-    MemToReg_o <= MemToReg_o;
-    MemRead_o <= MemRead_o;
-    MemWrite_o <= MemWrite_o;
+    if(~Stall) begin
+        RegDst_o <= RegDst_i;  
+        ALUOp_o <= ALUOp_i;
+        ALUSrc_o <= ALUSrc_i; 
+        RegWrite_o <= RegWrite_i;
+        MemToReg_o <= MemToReg_i;
+        MemRead_o <= MemRead_i;
+        MemWrite_o <= MemWrite_i;
     end
-
-    1'b0 : begin
-    RegDst_o <= RegDst_i;  
-    ALUOp_o <= ALUOp_i;
-    ALUSrc_o <= ALUSrc_i; 
-    RegWrite_o <= RegWrite_i;
-    MemToReg_o <= MemToReg_i;
-    MemRead_o <= MemRead_i;
-    MemWrite_o <= MemWrite_i;
-    end
-
-    default : begin
-    RegDst_o <= RegDst_i;  
-    ALUOp_o <= ALUOp_i;
-    ALUSrc_o <= ALUSrc_i; 
-    RegWrite_o <= RegWrite_i;
-    MemToReg_o <= MemToReg_i;
-    MemRead_o <= MemRead_i;
-    MemWrite_o <= MemWrite_i;
-    end
-
-    endcase
 
 end
 endmodule

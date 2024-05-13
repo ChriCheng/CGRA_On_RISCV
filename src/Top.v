@@ -36,12 +36,14 @@ wire [7:0] axi_awlen_cpu, axi_arlen_cpu;
 wire [31:0] axi_awaddr_cpu, axi_araddr_cpu;
 wire [3:0] axi_wstrb_cpu;
 wire [31:0] axi_wdata_cpu, axi_rdata_cpu;
+wire Imem_enable;
 
 CPU CPU(
     .clk_i        ( clk        ),
     .reset        ( rst        ),
     .inst_addr    ( pc    ),
     .instr    ( instr    ),
+    .axi_stall (Imem_enable),
     // .init_calib_complete (init_calib_complete),
     // .data_mem_wea ( data_mem_wea ),
     // .mem_addr     ( mem_addr     ),
@@ -98,7 +100,7 @@ wire locked,clk_out;
 
 IMemory inst_rom (
   .clka(clk),    // input wire clka
-  .ena(~rst),      // input wire ena
+  .ena(~Imem_enable),      // input wire ena 
   .addra({2'b0, (pc[9:0]>>2)}),  // input wire [9 : 0] addra
   .douta(instr)  // output wire [31 : 0] douta
 );
@@ -111,6 +113,7 @@ IMemory inst_rom (
 //   .dina(mem_wdata),    // input wire [31 : 0] dina
 //   .douta(mem_rdata)  // output wire [31 : 0] douta
 // );
+/* -------------------------DDR------------------------- */
 wire axi_awlock_ddr,axi_awvalid_ddr,axi_awready_ddr,axi_wlast_ddr,axi_wvalid_ddr,axi_wready_ddr;
 wire axi_bready_ddr,axi_bvalid_ddr,axi_arlock_ddr,axi_arvalid_ddr,axi_arready_ddr;
 wire axi_rready_ddr,axi_rlast_ddr,axi_rvalid_ddr;
@@ -118,10 +121,22 @@ wire [1:0] axi_awburst_ddr,axi_bresp_ddr,axi_arburst_ddr,axi_rresp_ddr;
 wire [2:0] axi_awsize_ddr,axi_awprot_ddr,axi_arsize_ddr,axi_arprot_ddr;
 wire [3:0] axi_awid_ddr,axi_awcache_ddr,axi_awqos_ddr,axi_bid_ddr,axi_arid_ddr,axi_arcache_ddr,axi_arqos_ddr,axi_rid_ddr;
 wire [7:0] axi_awlen_ddr,axi_arlen_ddr;
-wire [63:0]axi_awaddr_ddr,axi_araddr_ddr;
-wire [63 : 0] axi_wstrb_ddr;     
+wire [31:0]axi_awaddr_ddr,axi_araddr_ddr;
+wire [3 : 0] axi_wstrb_ddr;     
 wire [31 : 0] axi_wdata_ddr,axi_rdata_ddr;    
-/* -------------------------MASTER------------------------- */
+/* -------------------------CGRA------------------------- */
+wire axi_awlock_CGRA,axi_awvalid_CGRA,axi_awready_CGRA,axi_wlast_CGRA,axi_wvalid_CGRA,axi_wready_CGRA;
+wire axi_bready_CGRA,axi_bvalid_CGRA,axi_arlock_CGRA,axi_arvalid_CGRA,axi_arready_CGRA;
+wire axi_rready_CGRA,axi_rlast_CGRA,axi_rvalid_CGRA;
+wire [1:0] axi_awburst_CGRA,axi_bresp_CGRA,axi_arburst_CGRA,axi_rresp_CGRA;
+wire [2:0] axi_awsize_CGRA,axi_awprot_CGRA,axi_arsize_CGRA,axi_arprot_CGRA;
+wire [3:0] axi_awid_CGRA,axi_awcache_CGRA,axi_awqos_CGRA,axi_bid_CGRA,axi_arid_CGRA,axi_arcache_CGRA,axi_arqos_CGRA,axi_rid_CGRA;
+wire [7:0] axi_awlen_CGRA,axi_arlen_CGRA;
+wire [31:0]axi_awaddr_CGRA,axi_araddr_CGRA;
+wire [3 : 0] axi_wstrb_CGRA;     
+wire [31 : 0] axi_wdata_CGRA,axi_rdata_CGRA;    
+
+/* -------------------------DDR------------------------- */
 wire [63 : 0] Oc_axi_awaddr;
 wire [15 : 0] Oc_axi_awlen;
 wire [5 : 0] Oc_axi_awsize;
@@ -133,6 +148,14 @@ wire [1 : 0] Oc_axi_wlast;
 wire [1 : 0] Oc_axi_wvalid;
 wire [1 : 0] Oc_axi_bready;
 wire [7 : 0] Oc_axi_awid;
+wire [7 : 0] Oc_axi_arid;
+wire [63 : 0] Oc_axi_araddr;
+wire [15 : 0] Oc_axi_arlen;
+wire [5 : 0] Oc_axi_arsize;
+wire [3 : 0] Oc_axi_arburst;
+wire [1 : 0] Oc_axi_arvalid;
+wire [1 : 0] Oc_axi_rready;
+
 assign axi_awid_ddr = Oc_axi_awid[3:0];
 assign axi_awaddr_ddr = Oc_axi_awaddr[31:0];
 assign axi_awlen_ddr = Oc_axi_awlen[7:0];
@@ -149,15 +172,6 @@ assign axi_wvalid_ddr = Oc_axi_wvalid[0:0];
 
 assign axi_bready_ddr = Oc_axi_bready[0:0];
 
-wire [7 : 0] Oc_axi_arid;
-wire [63 : 0] Oc_axi_araddr;
-wire [15 : 0] Oc_axi_arlen;
-wire [5 : 0] Oc_axi_arsize;
-wire [3 : 0] Oc_axi_arburst;
-wire [1 : 0] Oc_axi_arvalid;
-
-wire [1 : 0] Oc_axi_rready;
-
 assign axi_arid_ddr  =Oc_axi_arid [3 : 0] ;
 assign axi_araddr_ddr =Oc_axi_araddr [31 : 0] ;
 assign axi_arlen_ddr =Oc_axi_arlen [7 : 0] ;
@@ -166,6 +180,39 @@ assign axi_arburst_ddr  =Oc_axi_arburst [1 : 0] ;
 assign axi_arvalid_ddr  =Oc_axi_arvalid [0 : 0] ;
 
 assign axi_rready_ddr  =Oc_axi_rready [0 : 0] ;
+/* -------------------------CGRA------------------------- */
+assign axi_awid_CGRA = Oc_axi_awid[7:4];
+assign axi_awaddr_CGRA = Oc_axi_awaddr[63:32];
+assign axi_awlen_CGRA = Oc_axi_awlen[15:8];
+assign axi_awsize_CGRA = Oc_axi_awsize[5:3];
+assign axi_awburst_CGRA = Oc_axi_awburst[3:2];
+
+assign axi_awvalid_CGRA = Oc_axi_awvalid[1:1];
+
+
+assign axi_wdata_CGRA = Oc_axi_wdata[63:32];
+assign axi_wstrb_CGRA = Oc_axi_wstrb[7:4];
+assign axi_wlast_CGRA = Oc_axi_wlast[1:1];
+assign axi_wvalid_CGRA = Oc_axi_wvalid[1:1];
+
+assign axi_bready_CGRA = Oc_axi_bready[1:1];
+assign axi_arid_CGRA  =Oc_axi_arid[ 7: 4];
+assign axi_araddr_CGRA =Oc_axi_araddr[ 63: 32];
+assign axi_arlen_CGRA =Oc_axi_arlen[ 15: 8];
+assign axi_arsize_CGRA  =Oc_axi_arsize[ 5: 3];
+assign axi_arburst_CGRA  =Oc_axi_arburst[ 3: 2];
+assign axi_arvalid_CGRA  =Oc_axi_arvalid[ 1: 1];
+assign axi_rready_CGRA  =Oc_axi_rready[ 1: 1];
+
+
+
+
+
+
+
+
+
+
 
 axi_crossbar_32 axi_crossbar_32 (
   .aclk(clk),                      // input wire aclk
@@ -219,17 +266,17 @@ axi_crossbar_32 axi_crossbar_32 (
 //   .m_axi_awregion(m_axi_awregion),  // output wire [7 : 0] m_axi_awregion
 //   .m_axi_awqos(m_axi_awqos),        // output wire [7 : 0] m_axi_awqos
   .m_axi_awvalid(Oc_axi_awvalid),    // output wire [1 : 0] m_axi_awvalid
-  .m_axi_awready({1'b0,axi_awready_ddr}),    // input wire [1 : 0] m_axi_awready
+  .m_axi_awready({axi_awready_CGRA,axi_awready_ddr}),    // input wire [1 : 0] m_axi_awready
 
   .m_axi_wdata(Oc_axi_wdata),        // output wire [63 : 0] m_axi_wdata
   .m_axi_wstrb(Oc_axi_wstrb),        // output wire [7 : 0] m_axi_wstrb
   .m_axi_wlast(Oc_axi_wlast),        // output wire [1 : 0] m_axi_wlast
   .m_axi_wvalid(Oc_axi_wvalid),      // output wire [1 : 0] m_axi_wvalid
-  .m_axi_wready({1'b0,axi_wready_ddr}),      // input wire [1 : 0] m_axi_wready
+  .m_axi_wready({axi_wready_CGRA,axi_wready_ddr}),      // input wire [1 : 0] m_axi_wready
 
-  .m_axi_bid({4'b0001,axi_bid_ddr}),            // input wire [7 : 0] m_axi_bid
-  .m_axi_bresp({2'b0,axi_bresp_ddr}),        // input wire [3 : 0] m_axi_bresp
-  .m_axi_bvalid({1'b0,axi_bvalid_ddr}),      // input wire [1 : 0] m_axi_bvalid
+  .m_axi_bid({axi_bid_CGRA,axi_bid_ddr}),            // input wire [7 : 0] m_axi_bid
+  .m_axi_bresp({axi_bresp_CGRA,axi_bresp_ddr}),        // input wire [3 : 0] m_axi_bresp
+  .m_axi_bvalid({axi_bvalid_CGRA,axi_bvalid_ddr}),      // input wire [1 : 0] m_axi_bvalid
   .m_axi_bready(Oc_axi_bready),      // output wire [1 : 0] m_axi_bready
 
   .m_axi_arid(Oc_axi_arid),          // output wire [7 : 0] m_axi_arid
@@ -238,16 +285,53 @@ axi_crossbar_32 axi_crossbar_32 (
   .m_axi_arsize(Oc_axi_arsize),      // output wire [5 : 0] m_axi_arsize
   .m_axi_arburst(Oc_axi_arburst),    // output wire [3 : 0] m_axi_arburst
   .m_axi_arvalid(Oc_axi_arvalid),    // output wire [1 : 0] m_axi_arvalid
-  .m_axi_arready({1'b0,axi_arready_ddr}),    // input wire [1 : 0] m_axi_arready
+  .m_axi_arready({axi_arready_CGRA,axi_arready_ddr}),    // input wire [1 : 0] m_axi_arready
 
-  .m_axi_rid({4'b0,axi_rid_ddr}),            // input wire [7 : 0] m_axi_rid
-  .m_axi_rdata({32'b0,axi_rdata_ddr}),        // input wire [63 : 0] m_axi_rdata
-  .m_axi_rresp({2'b0,axi_rresp_ddr}),        // input wire [3 : 0] m_axi_rresp
-  .m_axi_rlast({1'b0,axi_rlast_ddr}),        // input wire [1 : 0] m_axi_rlast
-  .m_axi_rvalid({1'b0,axi_rvalid_ddr}),      // input wire [1 : 0] m_axi_rvalid
+  .m_axi_rid({axi_rid_CGRA,axi_rid_ddr}),            // input wire [7 : 0] m_axi_rid
+  .m_axi_rdata({axi_rdata_CGRA,axi_rdata_ddr}),        // input wire [63 : 0] m_axi_rdata
+  .m_axi_rresp({axi_rresp_CGRA,axi_rresp_ddr}),        // input wire [3 : 0] m_axi_rresp
+  .m_axi_rlast({axi_rlast_CGRA,axi_rlast_ddr}),        // input wire [1 : 0] m_axi_rlast
+  .m_axi_rvalid({axi_rvalid_CGRA,axi_rvalid_ddr}),      // input wire [1 : 0] m_axi_rvalid
   .m_axi_rready(Oc_axi_rready)      // output wire [1 : 0] m_axi_rready
 );
 
+
+
+axi_bram CGRA_bram (
+//   .rsta_busy(rsta_busy),          // output wire rsta_busy
+//   .rstb_busy(rstb_busy),          // output wire rstb_busy
+  .s_aclk(clk),                // input wire s_aclk
+  .s_aresetn(clk),          // input wire s_aresetn
+  .s_axi_awid(axi_awid_CGRA),        // input wire [3 : 0] s_axi_awid
+  .s_axi_awaddr(axi_awaddr_CGRA),    // input wire [31 : 0] s_axi_awaddr
+  .s_axi_awlen(axi_awlen_CGRA),      // input wire [7 : 0] s_axi_awlen
+  .s_axi_awsize(axi_awsize_CGRA),    // input wire [2 : 0] s_axi_awsize
+  .s_axi_awburst(axi_awburst_CGRA),  // input wire [1 : 0] s_axi_awburst
+  .s_axi_awvalid(axi_awvalid_CGRA),  // input wire s_axi_awvalid
+  .s_axi_awready(axi_awready_CGRA),  // output wire s_axi_awready
+  .s_axi_wdata(axi_wdata_CGRA),      // input wire [31 : 0] s_axi_wdata
+  .s_axi_wstrb(axi_wstrb_CGRA),      // input wire [3 : 0] s_axi_wstrb
+  .s_axi_wlast(axi_wlast_CGRA),      // input wire s_axi_wlast
+  .s_axi_wvalid(axi_wvalid_CGRA),    // input wire s_axi_wvalid
+  .s_axi_wready(axi_wready_CGRA),    // output wire s_axi_wready
+  .s_axi_bid(axi_bid_CGRA),          // output wire [3 : 0] s_axi_bid
+  .s_axi_bresp(axi_bresp_CGRA),      // output wire [1 : 0] s_axi_bresp
+  .s_axi_bvalid(axi_bvalid_CGRA),    // output wire s_axi_bvalid
+  .s_axi_bready(axi_bready_CGRA),    // input wire s_axi_bready
+  .s_axi_arid(axi_arid_CGRA),        // input wire [3 : 0] s_axi_arid
+  .s_axi_araddr(axi_araddr_CGRA),    // input wire [31 : 0] s_axi_araddr
+  .s_axi_arlen(axi_arlen_CGRA),      // input wire [7 : 0] s_axi_arlen
+  .s_axi_arsize(axi_arsize_CGRA),    // input wire [2 : 0] s_axi_arsize
+  .s_axi_arburst(axi_arburst_CGRA),  // input wire [1 : 0] s_axi_arburst
+  .s_axi_arvalid(axi_arvalid_CGRA),  // input wire s_axi_arvalid
+  .s_axi_arready(axi_arready_CGRA),  // output wire s_axi_arready
+  .s_axi_rid(axi_rid_CGRA),          // output wire [3 : 0] s_axi_rid
+  .s_axi_rdata(axi_rdata_CGRA),      // output wire [31 : 0] s_axi_rdata
+  .s_axi_rresp(axi_rresp_CGRA),      // output wire [1 : 0] s_axi_rresp
+  .s_axi_rlast(axi_rlast_CGRA),      // output wire s_axi_rlast
+  .s_axi_rvalid(axi_rvalid_CGRA),    // output wire s_axi_rvalid
+  .s_axi_rready(axi_rready_CGRA)    // input wire s_axi_rready
+);
 
 
 axi_bram axi_bram (
@@ -263,8 +347,8 @@ axi_bram axi_bram (
   .s_axi_awvalid(axi_awvalid_ddr),  // input wire s_axi_awvalid
   .s_axi_awready(axi_awready_ddr),  // output wire s_axi_awready
 
-  .s_axi_wdata(axi_wdata_ddr[31:0]),      // input wire [31 : 0] s_axi_wdata
-  .s_axi_wstrb(4'b1111),      // input wire [3 : 0] s_axi_wstrb
+  .s_axi_wdata(axi_wdata_ddr),      // input wire [31 : 0] s_axi_wdata
+  .s_axi_wstrb(axi_wstrb_ddr),      // input wire [3 : 0] s_axi_wstrb
   .s_axi_wlast(axi_wlast_ddr),      // input wire s_axi_wlast
   .s_axi_wvalid(axi_wvalid_ddr),    // input wire s_axi_wvalid
   .s_axi_wready(axi_wready_ddr),    // output wire s_axi_wready

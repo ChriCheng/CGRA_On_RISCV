@@ -57,6 +57,7 @@ module CPU
     output wire [3 : 0] axi_awqos,
     output wire  axi_awvalid,
     input wire  axi_awready,
+    output wire axi_stall,
     /* Write Data Channel */
     output wire [31 : 0] axi_wdata,
     output wire [3 : 0] axi_wstrb,
@@ -169,7 +170,7 @@ wire [2:0] VALU_Control_VALUCtrl_o;
 // wire [3:0] is_positive_line;
 wire [31:0] Branch_RS,Branch_RT;
 wire [1:0] Forward_Branch_RS,Forward_Branch_RT;
-wire axi_stall;
+// wire axi_stall;
 wire stallF, stallD, stallE, stallM, stallW;
 
 
@@ -212,20 +213,20 @@ MUX32 pcSelect(
     .select_i   (PC_Branch_Select),
     .data_o     (pcSelect_data_o)
 );
-wire [31:0]PcSelf,PcIn;
-assign PcSelf = pcSelect_data_o - 4;
-MUX32 pcInput
-(
-    .data1_i    (pcSelect_data_o),
-    .data2_i    (PcSelf),
-    .select_i   ((rst||stallF)),
-    .data_o     (PcIn)
-);
+// wire [31:0]PcSelf,PcIn;
+// assign PcSelf = pcSelect_data_o - 4;
+// MUX32 pcInput
+// (
+//     .data1_i    (pcSelect_data_o),
+//     .data2_i    (PcSelf),
+//     .select_i   (stallF),
+//     .data_o     (PcIn)
+// );
 
 PC  PC(
     .clk_i      (clk_i),
     .start_i    (start_i),
-    .pc_i       (PcIn),
+    .pc_i       (pcSelect_data_o),
     .hazardpc_i (stallF),
     .pc_o       (inst_addr)
 );
@@ -514,7 +515,8 @@ AXI_Connector AXI_Connector(
     .MemData(EX_MEM_RDData_o),                                                                                
     .MemAddr(aluToDM_data_o),
     .mem_rdata(mem_rdata),                                                                                
-    .axi_stall(axi_stall),                                                                              
+    .axi_stall(axi_stall),
+    .Length(5'b00101),                                                                              
     // .init_calib_complete(init_calib_complete),
     /* ---------------AXI INTERFACE------------ */ 
     /* Write Address Channel */

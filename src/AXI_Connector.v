@@ -6,6 +6,7 @@ module AXI_Connector(
     input wire MemRead, 
     input wire[31:0] MemData,
     input wire[31:0] MemAddr,
+    input wire [4:0] Length,
     output reg axi_stall,
     output reg [31:0]mem_rdata,
     // input wire init_calib_complete,
@@ -46,8 +47,13 @@ module AXI_Connector(
     input wire  axi_rlast,
     input wire  axi_rvalid,
     output reg  axi_rready 
+
+
 );
- 
+
+reg [159:0] WriteTest = 160'b0000000000000000000000000000010100000000000000000000000000000100000000000000000000000000000000110000000000000000000000000000001000000000000000000000000000000001;
+reg [159:0] ReadTest = {160{1'b0}};
+
 reg axi_stall_read,axi_stall_write;
 // Wstate definitions
 parameter WRITE_IDLE = 2'b000;
@@ -65,7 +71,7 @@ parameter RESET_READ_COMPLETE = 2'b11;
 
 reg [2:0] Wstate, next_Wstate;
 reg [2:0] Rstate, next_Rstate;
-
+integer   WriteCount;
 always @(posedge clk or negedge rst) begin
     if (rst) begin
         Wstate <= WRITE_IDLE;
@@ -76,152 +82,163 @@ always @(posedge clk or negedge rst) begin
         axi_stall <= 0;
         axi_arvalid <= 0;
         axi_rready <= 0;
+        WriteCount <= 0;
 
     end else begin
-        Wstate <= next_Wstate;
-        Rstate <= next_Rstate;
-
-        // if (Wstate == RESET_WRITE_COMPLETE && Rstate == RESET_READ_COMPLETE) begin
-        //     axi_stall = 1'b0;
-        // end else begin
-        //     axi_stall = (axi_stall_write || axi_stall_read);
-        // end
-        
+        // Wstate <= next_Wstate;
+        // Rstate <= next_Rstate;        
     end
 end
 
 
 
-reg write_complete = 0;
-always @(*) begin
+always @(posedge clk) begin
     // 默认值
-    next_Wstate = Wstate;
-    axi_wlast = 1'b0;
-    axi_wvalid = 0;
-    axi_bready = 0;
-    axi_awid = 4'b0000;
+    // next_Wstate <= Wstate;
+    axi_wlast <= 1'b0;
+    axi_wvalid <= 0;
+    axi_bready <= 0;
+    axi_awid <= 4'b0000;
     case (Wstate)
     WRITE_IDLE: begin
-            axi_awvalid = 0;
+            axi_awvalid <= 0;
            
-            write_complete <= 1'b0;
             if (MemWrite) begin                
-                axi_stall = 1'b1; 
-                axi_wdata =  MemData;
+                axi_stall <= 1'b1; 
+                axi_wdata <=  MemData;
                 // if (init_calib_complete == 1'b1) begin
-                    next_Wstate = WRITE_ADDRESS;
-                    axi_awlen = 8'b0;  // 单次传输
-                    axi_awsize = 3'b100;  // 4 bytes = 64 bits
-                    axi_awburst = 2'b01;  // 增量突发
-                    axi_awvalid = 1'b1;
-                    
-                    axi_awaddr = MemAddr;
+                Wstate <= WRITE_ADDRESS;
+                axi_awlen <= (Length-1);  // 单次传输
+                axi_awsize <= 3'b100;  // 4 bytes = 32 bits
+                axi_awburst <= 2'b01;  // 增量突发
+                axi_awvalid <= 1'b1;
+                axi_awaddr <= WRITE_ADDRESS;
                 // end
             end
         end
         WRITE_ADDRESS: begin
-
             if (axi_awready) begin
-                next_Wstate = WRITE_DATA;
+                axi_awvalid <= 0;
+                Wstate <= WRITE_DATA;
             end
 
         end
         WRITE_DATA: begin
-            axi_bready = 1'b1;
-            axi_awvalid = 0;
-            axi_wvalid = 1'b1;  // 当awready_detected为高时才激活wvalid
-              // 假设MemData对齐到最低的32位
-            axi_wstrb =  4'b1111;  // 只写最低的32位
-            axi_wlast = 1'b1; 
-            axi_bready = 1'b1;
-            if (axi_wready) begin
-                next_Wstate = WAIT_RESPONSE;
+            axi_bready <= 1'b1;
+            
+            axi_wstrb <= 4'b1111;
+            if(WriteCount < Length)begin
+                if (axi_wready&&axi_wvalid) begin 
+                    WriteCount <= WriteCount; 
+                    axi_wvalid <= 0;
+                    axi_wdata <= 0;
+                    // WriteCount <= 0;
+                    Wstate <= WRITE_DATA;
+                end 
+                else begin /* 突发传输循环 */
+                    axi_wvalid <= 1;
+                    WriteCount <= WriteCount +1;
+                    axi_wdata <= (WriteTest >> (WriteCount * 32)) & 32'hFFFFFFFF;
+                    Wstate <= WRITE_DATA;
+                end
             end
+            else begin
+                if (axi_wready&&axi_wvalid) begin
+                    axi_wvalid <= 0;
+                    axi_wlast <= 0;
+                    axi_wdata <= 0;
+                    Wstate <= WAIT_RESPONSE;
+                end
+                else begin
+                    axi_wvalid <= 1;
+                    axi_wlast <= 1;
+                    WriteCount <= WriteCount +1;
+                    axi_wdata <= (WriteTest >> (WriteCount * 32)) & 32'hFFFFFFFF;
+                    Wstate <= WRITE_DATA;
+                end
+            end
+            
+            // next_Wstate <= WAIT_RESPONSE;
+            // axi_wvalid <= 1'b1;  // 当awready_detected为高时才激活wvalid
+            // axi_wstrb <=  4'b1111;  // 只写最低的32位
+            // axi_wlast <= 1'b1; 
+            // axi_bready <= 1'b1;
+            
         end
 
         WAIT_RESPONSE: begin
-            axi_bready <= 1'b1;
+            
             if (axi_bvalid) begin
-                write_complete <= 1'b1;
-                next_Wstate = RESET_WRITE_COMPLETE;
+                axi_bready <= 1'b0;
+                Wstate <= RESET_WRITE_COMPLETE;
             end
         end
 
         RESET_WRITE_COMPLETE: begin
-            axi_stall = 1'b0;
+            axi_stall <= 1'b0;
             if (~MemWrite) begin
-                
-                next_Wstate = WRITE_IDLE;
+                Wstate <= WRITE_IDLE;
             end
 
             
         end
     endcase
-    // write_complete = 1'b0;
 end
 
 
 
-// parameter RESET_WRITE_COMPLETE = 3'b100;
 
-reg read_complete = 0;
-always @(*) begin
+always @(posedge clk) begin
     // 默认值
-    next_Rstate = Rstate;
-    axi_arvalid = 0;
+    // next_Rstate <= Rstate;
+    axi_arvalid <= 0;
     
    
-    axi_arid = 4'b0000;
+    axi_arid <= 4'b0000;
     case (Rstate)
     READ_IDLE: begin
-        axi_rready = 0;
+        axi_rready <= 0;
             if (MemRead && (next_Wstate == WRITE_IDLE)) begin
-                axi_stall = 1'b1; 
+                axi_stall <= 1'b1; 
                 // if (init_calib_complete == 1'b1) begin
-                    next_Rstate = WRITE_ADDRESS;
-                    axi_arlen = 8'b0;  // 单次传输
-                    axi_arsize = 3'b100;  // 4 bytes = 32 bits
-                    axi_arburst = 2'b01;  // 增量突发
-                    axi_arvalid = 1'b1;
-                    axi_rready = 1'b1; 
-                    axi_araddr = MemAddr;
+                Rstate <= WRITE_ADDRESS;
+                    axi_arlen <= 8'b0;  // 单次传输
+                    axi_arsize <= 3'b100;  // 4 bytes = 32 bits
+                    axi_arburst <= 2'b01;  // 增量突发
+                    axi_arvalid <= 1'b1;
+                    axi_rready <= 1'b1; 
+                    axi_araddr <= MemAddr;
                 // end
             end
     end
     READ_ADDRESS: begin
         
             if (axi_arready) begin
-                next_Rstate = READ_DATA;
-                 // 准备好接收数据
-                axi_arvalid = 1'b0;
+                Rstate <= READ_DATA;
+                axi_arvalid <= 1'b0;
             end
 
-            axi_stall = 1'b1;  // 暂停处理器
      end
      READ_DATA: begin
-        axi_awvalid = 0;
+        axi_awvalid <= 0;
         
         if (axi_rvalid && axi_rready) begin
             if (axi_rlast) begin
                 
                 mem_rdata <= axi_rdata;
-                next_Rstate = RESET_READ_COMPLETE;
+                Rstate <= RESET_READ_COMPLETE;
             end
         end
-        axi_stall = 1'b1;  // 暂停处理器
     end
     
 
         RESET_READ_COMPLETE: begin
-            axi_rready = 1'b0;  // 接收好数据
-            axi_stall = 1'b0;
+            axi_rready <= 1'b0;  // 接收好数据
+            axi_stall <= 1'b0;
             if (~MemRead) begin
-                next_Rstate = READ_IDLE;
+                Rstate <= READ_IDLE;
             end
-            else begin
-                
-                
-            end
+
             
         end
     endcase

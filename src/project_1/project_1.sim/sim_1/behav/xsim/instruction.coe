@@ -1,13 +1,17 @@
 ;PC = 0     addi t0, t0, 1    
 ;PC = 4     sw t0 0(x0) 
 ;PC = 8     lw t1 0(x0) 
+;PC = 12    addi x7, x7, 1
+;PC = 16    bubble
+;PC = 20    addi t0, t0, 1
+
 memory_initialization_radix=16;
 memory_initialization_vector=
-00128293,
+00000000,
 00502023,
-00002303,
-00138393,
 00128293,
 00138393,
-00128293;
+00128293,
+00128293,
+00138393;
 

@@ -83,6 +83,18 @@ always@(*)begin
 
   end
 
+7'b0001011:begin/* STC */
+    ALUOp_o = 2'b11;  //  make ALU add
+    ALUSrc_o = 1'b1;  // choose rs2 rather than SignExtend
+    RegWrite_o = 1'b0; // don't write to regfiles
+    MemRd_o = 1'b0; // don't read mem
+    MemWr_o = 1'b0; // don't lw mem
+    MemToReg_o = 1'b0; // don't lw data from mem to regfiles
+    immSelect_o = 1'b0; // don't select imm
+    isBranch = 1'b0; // is not a branch instruction
+
+end
+
   //---------NEW-----------
   7'b1010111: begin //vector
   ALUOp_o = 2'b00; //useless
@@ -98,14 +110,14 @@ always@(*)begin
   //---------NEW-----------
 
   default : begin
-  ALUOp_o = 2'b11;
-  ALUSrc_o = 1'b1;
-  RegWrite_o = 1'b0;
-  MemRd_o = 1'b0;
-  MemWr_o = 1'b0;
-  MemToReg_o = 1'b0;
-  immSelect_o = 1'b0;
-  isBranch = 1'b0;
+  ALUOp_o = 2'b11;  //  make ALU add
+  ALUSrc_o = 1'b1;  // choose rs2 rather than SignExtend
+  RegWrite_o = 1'b0; // don't write to regfiles
+  MemRd_o = 1'b0; // don't read mem
+  MemWr_o = 1'b0; // don't lw mem
+  MemToReg_o = 1'b0; // don't lw data from mem to regfiles
+  immSelect_o = 1'b0; // don't select imm
+  isBranch = 1'b0; // is not a branch instruction
   end
   endcase
 end

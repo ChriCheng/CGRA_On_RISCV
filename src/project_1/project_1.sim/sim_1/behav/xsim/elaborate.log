@@ -4,15 +4,13 @@ Running: C:/Xilinx/Vivado/2019.2/bin/unwrapped/win64.o/xelab.exe -wto 47d17b62c1
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-3091] actual bit length 2 differs from formal bit length 4 for port 'axi_awid' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:50]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 4 for port 'axi_awregion' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:58]
-WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 33 for port 'axi_rdata' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:79]
-WARNING: [VRFC 10-3091] actual bit length 33 differs from formal bit length 32 for port 'axi_rdata' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/CPU.v:551]
-WARNING: [VRFC 10-3091] actual bit length 12 differs from formal bit length 10 for port 'addra' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:102]
-WARNING: [VRFC 10-3091] actual bit length 2 differs from formal bit length 4 for port 's_axi_awid' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:174]
-WARNING: [VRFC 10-3091] actual bit length 64 differs from formal bit length 32 for port 's_axi_awaddr' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:259]
-WARNING: [VRFC 10-3091] actual bit length 64 differs from formal bit length 32 for port 's_axi_araddr' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:278]
-WARNING: [VRFC 10-5021] port 's_axi_awlock' is not connected on this instance [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:170]
+WARNING: [VRFC 10-3091] actual bit length 2 differs from formal bit length 4 for port 'axi_awid' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:52]
+WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 4 for port 'axi_awregion' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:60]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 33 for port 'axi_rdata' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:81]
+WARNING: [VRFC 10-3091] actual bit length 33 differs from formal bit length 32 for port 'axi_rdata' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/CPU.v:553]
+WARNING: [VRFC 10-3091] actual bit length 12 differs from formal bit length 10 for port 'addra' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:104]
+WARNING: [VRFC 10-3091] actual bit length 2 differs from formal bit length 4 for port 's_axi_awid' [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:221]
+WARNING: [VRFC 10-5021] port 's_axi_awlock' is not connected on this instance [C:/Users/76296/Desktop/CGRA_On_RISCV/src/Top.v:217]
 WARNING: [VRFC 10-5021] port 'aclk2x' is not connected on this instance [/wrk/2019.2/continuous/2019_11_06_2708876/packages/customer/vivado/data/ip/xilinx/axi_crossbar_v2_1/hdl/axi_crossbar_v2_1_vl_rfs.v:3103]
 Completed static elaboration
 Starting simulation data flow analysis
