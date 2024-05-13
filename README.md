@@ -8,9 +8,9 @@ This project is based on [RISC-V-CPU](https://github.com/jasonlin316/RISC-V-CPU)
 ### STC
 Store Data/Context to CGRA
 
-| funct7  |  rs2  |  rs1  | funct3 |  rd   | opcode  |
-| :-----: | :---: | :---: | :----: | :---: | :-----: |
-| 0000000 | xxxxx | xxxxx |  000   | xxxxx | 0001011 |
+| funct7[31:25] | rs2[24:20] | rs1[19:15] | funct3[14:12] | rd[11:7] | opcode[6:0] |
+| :-----------: | :--------: | :--------: | :-----------: | :------: | :---------: |
+|    0000000    |   xxxxx    |   xxxxx    |      001      |  xxxxx   |   0001011   |
 
 **Rs1**:Address in RSIC-V CPU  
 **Rs2**:Storing data size in bytes  
@@ -22,9 +22,9 @@ Store Data/Context to CGRA
 ### LFC
 Load Data from CGRA
 
-| funct7  |  rs2  |  rs1  | funct3 |  rd   | opcode  |
-| :-----: | :---: | :---: | :----: | :---: | :-----: |
-| 0000000 | xxxx  | xxxx  |  000   | xxxx  | 0001011 |
+| funct7[31:25] | rs2[24:20] | rs1[19:15] | funct3[14:12] | rd[11:7] | opcode[6:0] |
+| :-----------: | :--------: | :--------: | :-----------: | :------: | :---------: |
+|    0000000    |    xxxx    |    xxxx    |      010      |   xxxx   |   0001011   |
 
 **Rs1**:Address in CGRA SPM
 **Rs2**:Loading data size in bytes
@@ -33,8 +33,8 @@ Load Data from CGRA
 ### SCA 
 Start CGRA Acceleration
 
-| funct7  |  rs2  |  rs1  | funct3 |  rd   | opcode  |
-| :-----: | :---: | :---: | :----: | :---: | :-----: |
-| 0000000 | xxxx  | xxxx  |  000   | xxxx  | 0001011 |
+| funct7[31:25] | rs2[24:20] | rs1[19:15] | funct3[14:12] | rd[11:7] | opcode[6:0] |
+| :-----------: | :--------: | :--------: | :-----------: | :------: | :---------: |
+|    0000000    |    xxxx    |    xxxx    |      011      |   xxxx   |   0001011   |
 
 **Rd**:Error code after acceleration

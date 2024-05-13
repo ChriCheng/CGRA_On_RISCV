@@ -18,7 +18,8 @@
 `include "DataMemory.v"
 `include "Stage_MEM_WB.v"
 `include "BranchTaken.v"
-`include "AXI_Connector.v"
+`include "DMA_Control.v"
+`include "DMA.v"
 `include "VALU.v" //NEW
 `include "VALU_ctrl.v" //NEW
 
@@ -84,7 +85,12 @@ module CPU
     input wire [1 : 0] axi_rresp,
     input wire  axi_rlast,
     input wire  axi_rvalid,
-    output wire  axi_rready 
+    output wire  axi_rready,
+    
+    /* -----CGRA----- */
+    output  wire Start,
+    input   wire Done,
+    input   wire [1:0] Error
 );
 
 //------------------------- Wire&Reg -------------------------------//
@@ -98,6 +104,7 @@ wire [2:0] alu_ctrl_wire;
 wire [11:0] pcIm,swIm;
 // wire isBranch;
 wire rst;
+wire [4:0] RS1_out,RS2_out;
 wire [31:0] AddSum_data_o;
 wire [31:0] pcSelect_data_o;
 // wire        HazradDetect_Hazard_o;
@@ -485,6 +492,10 @@ EX_MEM EX_MEM(
     .MemWrite_i (ID_EX_MemWrite_o),
     .instr_i(ID_EX_inst_o),
     .instr_o(EX_MEM_instr_o),
+    .RS1_in(IF_ID_inst_o[19:15]),
+    .RS2_in(IF_ID_inst_o[24:20]),
+    .RS1_out(RS1_out),
+    .RS2_out(RS2_out),
     .pc_o   (),
     .zero_o (),
     .ALUResult_o    (EX_MEM_ALUResult_o),
@@ -504,9 +515,14 @@ EX_MEM EX_MEM(
 // assign mem_wdata = EX_MEM_RDData_o;
 // assign data_mem_wea = ({EX_MEM_MemWrite_o, EX_MEM_MemRead_o} == 2'b10);
 
-    /* 按照框架来说会有instr/data MEM
-    目前用这个测试（接入instr/data MEM） */
-AXI_Connector AXI_Connector(
+DMA_Control DMA_Control(
+    .funct_i  ( ALUfunct_in  ),
+    .DMACtrl_o  ( DMACtrl_o  )
+);
+
+
+
+DMA DMA(
     .clk(clk_i),
     // .arestn(arestn),
     .rst(rst),
@@ -516,8 +532,14 @@ AXI_Connector AXI_Connector(
     .MemAddr(aluToDM_data_o),
     .mem_rdata(mem_rdata),                                                                                
     .axi_stall(axi_stall),
-    .Length(5'b00101),                                                                              
+    .Length(RS2_out),                                                                              
+    .DMACtrl(DMACtrl_o),
     // .init_calib_complete(init_calib_complete),
+    .Start(Start),
+    .Done(Done),
+    .Error(Error),
+    .RS(RS1_out),
+    .RD(EX_MEM_RDaddr_o),
     /* ---------------AXI INTERFACE------------ */ 
     /* Write Address Channel */
     .axi_awid(axi_awid),    

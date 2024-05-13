@@ -1,4 +1,4 @@
-module AXI_Connector(
+module DMA(
     input wire clk,
     input wire rst,
     // input wire arestn,
@@ -7,8 +7,14 @@ module AXI_Connector(
     input wire[31:0] MemData,
     input wire[31:0] MemAddr,
     input wire [4:0] Length,
-    output reg axi_stall,
+    output  axi_stall,
     output reg [31:0]mem_rdata,
+    input wire [1:0] DMACtrl, 
+    /* -----signal for CGRA----- */
+    output  wire Start,
+    input   wire Done,
+    input   wire [1:0] Error,
+    input   wire [4:0]RS,RD,
     // input wire init_calib_complete,
     // AXI Interface
     output reg [3:0] axi_awid,
@@ -51,8 +57,8 @@ module AXI_Connector(
 
 );
 
-reg [159:0] WriteTest = 160'b0000000000000000000000000000010100000000000000000000000000000100000000000000000000000000000000110000000000000000000000000000001000000000000000000000000000000001;
-reg [159:0] ReadTest = {160{1'b0}};
+reg [991:0] WriteTemp = {992{1'b0}};
+reg [991:0] ReadFromCGRA = {992{1'b0}};
 
 reg axi_stall_read,axi_stall_write;
 // Wstate definitions
@@ -69,9 +75,9 @@ parameter RESET_READ_COMPLETE = 2'b11;
 
 
 
-reg [2:0] Wstate, next_Wstate;
-reg [2:0] Rstate, next_Rstate;
-integer   WriteCount;
+reg [2:0] Wstate;
+reg [2:0] Rstate;
+integer   WriteCount,ReadCount;
 always @(posedge clk or negedge rst) begin
     if (rst) begin
         Wstate <= WRITE_IDLE;
@@ -79,7 +85,7 @@ always @(posedge clk or negedge rst) begin
         axi_awvalid <= 0;
         axi_wvalid <= 0;
         axi_bready <= 0;
-        axi_stall <= 0;
+        // axi_stall <= 0;
         axi_arvalid <= 0;
         axi_rready <= 0;
         WriteCount <= 0;
@@ -90,7 +96,13 @@ always @(posedge clk or negedge rst) begin
     end
 end
 
-
+assign axi_stall = rst? 1'b0:
+                    
+                // (MemWrite&&(Wstate == WRITE_IDLE))? 1'b1:   //Whether there is a write request and write idle
+                // (Wstate == RESET_WRITE_COMPLETE) ? 1'b0:    //Whether it has been written
+                // (MemRead && (Rstate == READ_IDLE)) ? 1'b1:     //Whether there is a read request without write request(reading wait writing)
+                // (Rstate == RESET_READ_COMPLETE) ? 1'b0:     // Whether it has been read
+                // ((Rstate ==READ_IDLE)&&(Wstate == WRITE_IDLE))? 1'b0: 1'b1;  //Whether there are no requests  and other situations keep active
 
 always @(posedge clk) begin
     // 默认值
@@ -104,8 +116,9 @@ always @(posedge clk) begin
             axi_awvalid <= 0;
            
             if (MemWrite) begin                
-                axi_stall <= 1'b1; 
+                // axi_stall <= 1'b1; 
                 axi_wdata <=  MemData;
+                WriteCount <= 0;
                 // if (init_calib_complete == 1'b1) begin
                 Wstate <= WRITE_ADDRESS;
                 axi_awlen <= (Length-1);  // 单次传输
@@ -138,7 +151,7 @@ always @(posedge clk) begin
                 else begin /* 突发传输循环 */
                     axi_wvalid <= 1;
                     WriteCount <= WriteCount +1;
-                    axi_wdata <= (WriteTest >> (WriteCount * 32)) & 32'hFFFFFFFF;
+                    axi_wdata <= (WriteTemp >> (WriteCount * 32)) & 32'hFFFFFFFF;
                     Wstate <= WRITE_DATA;
                 end
             end
@@ -153,7 +166,7 @@ always @(posedge clk) begin
                     axi_wvalid <= 1;
                     axi_wlast <= 1;
                     WriteCount <= WriteCount +1;
-                    axi_wdata <= (WriteTest >> (WriteCount * 32)) & 32'hFFFFFFFF;
+                    axi_wdata <= (WriteTemp >> (WriteCount * 32)) & 32'hFFFFFFFF;
                     Wstate <= WRITE_DATA;
                 end
             end
@@ -175,10 +188,10 @@ always @(posedge clk) begin
         end
 
         RESET_WRITE_COMPLETE: begin
-            axi_stall <= 1'b0;
-            if (~MemWrite) begin
+            // axi_stall <= 1'b0;
+            // if (~MemWrite) begin
                 Wstate <= WRITE_IDLE;
-            end
+            // end
 
             
         end
@@ -198,11 +211,12 @@ always @(posedge clk) begin
     case (Rstate)
     READ_IDLE: begin
         axi_rready <= 0;
-            if (MemRead && (next_Wstate == WRITE_IDLE)) begin
-                axi_stall <= 1'b1; 
+            if (MemRead && (Wstate == WRITE_IDLE)) begin
+                ReadCount <= 0;
+                // axi_stall <= 1'b1; 
                 // if (init_calib_complete == 1'b1) begin
                 Rstate <= WRITE_ADDRESS;
-                    axi_arlen <= 8'b0;  // 单次传输
+                    axi_arlen <= (Length-1);  // 单次传输
                     axi_arsize <= 3'b100;  // 4 bytes = 32 bits
                     axi_arburst <= 2'b01;  // 增量突发
                     axi_arvalid <= 1'b1;
@@ -220,24 +234,32 @@ always @(posedge clk) begin
 
      end
      READ_DATA: begin
-        axi_awvalid <= 0;
         
         if (axi_rvalid && axi_rready) begin
             if (axi_rlast) begin
-                
-                mem_rdata <= axi_rdata;
+                ReadFromCGRA <= (ReadFromCGRA >> 32) | (axi_rdata << (160-32));
                 Rstate <= RESET_READ_COMPLETE;
             end
+            else begin
+                ReadFromCGRA <= (ReadFromCGRA >> 32) | (axi_rdata << (160-32));
+                ReadCount <= ReadCount + 1;
+                Rstate <= READ_DATA;
+            end
+            axi_rready <= 1'b0;
+        end
+        else begin
+            axi_rready <= 1'b1;
+            Rstate <= READ_DATA;
         end
     end
     
 
         RESET_READ_COMPLETE: begin
-            axi_rready <= 1'b0;  // 接收好数据
-            axi_stall <= 1'b0;
-            if (~MemRead) begin
+            // axi_rready <= 1'b0;  // 接收好数据
+            // axi_stall <= 1'b0;
+            // if (~MemRead) begin
                 Rstate <= READ_IDLE;
-            end
+            // end
 
             
         end

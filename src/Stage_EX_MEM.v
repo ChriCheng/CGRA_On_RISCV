@@ -11,6 +11,10 @@ module EX_MEM(
 	MemToReg_i,
 	MemRead_i,
 	MemWrite_i,
+    RS1_in,
+    RS2_in,
+    RS1_out,
+    RS2_out,
 	instr_i,
 	instr_o,
 	pc_o,
@@ -28,12 +32,12 @@ module EX_MEM(
 
 input	clk_i, zero_i, RegWrite_i, MemToReg_i, MemRead_i, MemWrite_i, start_i,Stall;
 input	[31:0]	pc_i, ALUResult_i, RDData_i, VALUResult_i; //NEW
-input	[4:0] RDaddr_i;
+input	[4:0] RS1_in,RS2_in,RDaddr_i;
 input 	[31:0] instr_i;
 output reg [31:0] instr_o;
 output	zero_o, RegWrite_o, MemToReg_o, MemRead_o, MemWrite_o;
 output	[31:0]	pc_o, ALUResult_o, RDData_o, VALUResult_o; //NEW
-output reg[4:0] RDaddr_o;
+output reg[4:0] RDaddr_o,RS1_out,RS2_out;
 reg	 zero_o, RegWrite_o, MemToReg_o, MemRead_o, MemWrite_o;
 reg	[31:0]	pc_o, ALUResult_o, RDData_o, VALUResult_o;//NEW
 
@@ -50,6 +54,8 @@ always@(posedge clk_i or negedge start_i) begin
 		MemRead_o <= 0;
 		MemWrite_o <= 0;
 		instr_o	<= 0;
+        RS1_out <= 0;
+        RS2_out <= 0;
 	end
 	else if(~Stall)begin
 		pc_o <= pc_i;
@@ -63,6 +69,8 @@ always@(posedge clk_i or negedge start_i) begin
 		MemRead_o <= MemRead_i;
 		MemWrite_o <= MemWrite_i;
 		instr_o    <= instr_i;
+        RS1_out <= RS1_in;
+        RS2_out <= RS2_in;
 	end
 end
 
