@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="impl_1" LaunchPart="xc7vx485tffg1157-1" LaunchTime="1710921140">
-  <File Type="BITSTR-BMM" Name="CPU_bd.bmm"/>
   <File Type="PA-TCL" Name="CPU.tcl"/>
-  <File Type="OPT-DCP" Name="CPU_opt.dcp"/>
+  <File Type="BITSTR-BMM" Name="CPU_bd.bmm"/>
   <File Type="REPORTS-TCL" Name="CPU_reports.tcl"/>
+  <File Type="OPT-DCP" Name="CPU_opt.dcp"/>
   <File Type="OPT-HWDEF" Name="CPU.hwdef"/>
   <File Type="PWROPT-DCP" Name="CPU_pwropt.dcp"/>
   <File Type="PLACE-DCP" Name="CPU_placed.dcp"/>
@@ -27,8 +27,8 @@
   <File Type="BITSTR-NKY" Name="CPU.nky"/>
   <File Type="PDI-FILE" Name="CPU.pdi"/>
   <File Type="RCFI_FILE" Name="CPU.rcfi"/>
-  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <File Type="CFI_FILE" Name="CPU.cfi"/>
+  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <File Type="RNPI_FILE" Name="CPU.rnpi"/>
   <File Type="NPI_FILE" Name="CPU.npi"/>
   <File Type="RBD_FILE" Name="CPU.rbd"/>

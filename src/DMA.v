@@ -11,7 +11,7 @@ module DMA(
     output reg [31:0]mem_rdata,
     input wire [1:0] DMACtrl, 
     /* -----signal for CGRA----- */
-    output  wire Start,
+    output  reg Start,
     input   wire Done,
     input   wire [1:0] Error,
     input   wire [4:0]RS,RD,
@@ -57,9 +57,9 @@ module DMA(
 
 );
 
-reg [991:0] WriteTemp = {992{1'b0}};
-reg [991:0] ReadFromCGRA = {992{1'b0}};
-
+// reg [991:0] WriteTemp = {992{1'b0}};
+// reg [991:0] ReadFromCGRA = {992{1'b0}};
+reg [1:0]ErrorReg;
 reg axi_stall_read,axi_stall_write;
 // Wstate definitions
 parameter WRITE_IDLE = 2'b000;
@@ -75,13 +75,41 @@ parameter RESET_READ_COMPLETE = 2'b11;
 
 
 
+
+parameter DM_IDLE = 3'b000;
+parameter DM_ADDRESS = 3'b001;
+parameter DM_READ_WRITE = 3'b010;
+parameter DM_WAIT_RESPONSE = 3'b011;
+parameter DM_COMPLETE = 3'b100;
+
+parameter SCA_BEGIN = 3'b000;
+parameter SCA_WAIT = 3'b001;
+parameter SCA_ADDRESS = 3'b010;
+parameter SCA_WRITE_DATA = 3'b011;
+parameter SCA_WAIT_RESPONSE = 3'b100;
+parameter SCA_COMPLETE = 3'b101;
+
+
+
+parameter IDLE = 2'b00;
+parameter DATA_MOVE = 2'b01;
+parameter SCA = 2'b10;
+
+
+reg [2:0] DM_state,LFC_state;
+reg [1:0] Main_state;
+reg [2:0] SCA_state;
 reg [2:0] Wstate;
 reg [2:0] Rstate;
+
 integer   WriteCount,ReadCount;
 always @(posedge clk or negedge rst) begin
     if (rst) begin
-        Wstate <= WRITE_IDLE;
-        Rstate <= READ_IDLE;
+        // Wstate <= WRITE_IDLE;
+        // Rstate <= READ_IDLE;
+        DM_state <= DM_IDLE;
+        Main_state <= IDLE;
+        SCA_state <= SCA_BEGIN;
         axi_awvalid <= 0;
         axi_wvalid <= 0;
         axi_bready <= 0;
@@ -90,14 +118,18 @@ always @(posedge clk or negedge rst) begin
         axi_rready <= 0;
         WriteCount <= 0;
 
-    end else begin
-        // Wstate <= next_Wstate;
-        // Rstate <= next_Rstate;        
+    // end else begin
+    //     // Wstate <= next_Wstate;
+    //     // Rstate <= next_Rstate;        
     end
 end
 
 assign axi_stall = rst? 1'b0:
-                    
+                ((DMACtrl!= 2'b00)&&(Main_state==IDLE))? 1'b1:
+                (DM_state == DM_COMPLETE)? 1'b0:
+                (SCA_state == SCA_COMPLETE)? 1'b0:
+                ((DM_state == DM_IDLE)&&(Main_state == IDLE)&&(SCA_state ==SCA_BEGIN))? 1'b0:1'b1;
+
                 // (MemWrite&&(Wstate == WRITE_IDLE))? 1'b1:   //Whether there is a write request and write idle
                 // (Wstate == RESET_WRITE_COMPLETE) ? 1'b0:    //Whether it has been written
                 // (MemRead && (Rstate == READ_IDLE)) ? 1'b1:     //Whether there is a read request without write request(reading wait writing)
@@ -105,167 +137,357 @@ assign axi_stall = rst? 1'b0:
                 // ((Rstate ==READ_IDLE)&&(Wstate == WRITE_IDLE))? 1'b0: 1'b1;  //Whether there are no requests  and other situations keep active
 
 always @(posedge clk) begin
-    // 默认值
-    // next_Wstate <= Wstate;
-    axi_wlast <= 1'b0;
-    axi_wvalid <= 0;
-    axi_bready <= 0;
-    axi_awid <= 4'b0000;
-    case (Wstate)
-    WRITE_IDLE: begin
+    case (Main_state)
+        IDLE: begin
             axi_awvalid <= 0;
-           
-            if (MemWrite) begin                
-                // axi_stall <= 1'b1; 
-                axi_wdata <=  MemData;
-                WriteCount <= 0;
-                // if (init_calib_complete == 1'b1) begin
-                Wstate <= WRITE_ADDRESS;
-                axi_awlen <= (Length-1);  // 单次传输
-                axi_awsize <= 3'b100;  // 4 bytes = 32 bits
+            axi_wvalid <= 0;
+            axi_bready <= 0;
+            axi_arvalid <= 0;
+            axi_wlast <= 0;
+            axi_wstrb <= 4'b1111;
+            Start <= 0;
+            if ((DMACtrl == 2'b01)||(DMACtrl == 2'b10)) begin
+                Main_state <= DATA_MOVE;
+            end
+            else if (DMACtrl == 2'b11) begin
+                Main_state <= SCA;
+            end
+        end
+        DATA_MOVE: begin
+            case (DM_state)
+                DM_IDLE:begin          
+                if(DMACtrl == 2'b01)begin //STC
+                axi_awid <= 4'b0001; // Write to CGRA
+                axi_arid <= 4'b0000; // Read from Memory
+                axi_awaddr <= {19'b0,1'b1,7'b0,RD};
+                axi_araddr <= {27'b0,RS};
+                end     
+                else begin
+                axi_awid <= 4'b0000; // Write to BRAM
+                axi_arid <= 4'b0001; // Read from CGRA
+                axi_awaddr <= {27'b0,RD};
+                axi_araddr <= {19'b0,1'b1,7'b0,RS};
+                end
+
+                axi_awlen <= (Length-1);  
+                axi_awsize <= 3'b010;  // 4 bytes = 32 bits
                 axi_awburst <= 2'b01;  // 增量突发
                 axi_awvalid <= 1'b1;
-                axi_awaddr <= WRITE_ADDRESS;
-                // end
-            end
-        end
-        WRITE_ADDRESS: begin
-            if (axi_awready) begin
-                axi_awvalid <= 0;
-                Wstate <= WRITE_DATA;
-            end
+                
+
+                axi_arlen <= (Length-1);  
+                axi_arsize <= 3'b010;  // 2^arsize字节  4 bytes = 32 bits
+                axi_arburst <= 2'b01;  // 增量突发
+                axi_arvalid <= 1'b1;
+                axi_rready <= 1'b1;
+                
+
+
+                DM_state <= DM_ADDRESS;
+
+                end
+
+                DM_ADDRESS:begin
+                    if (axi_arready) begin
+                        axi_arvalid <= 1'b0;
+                    end
+            
+                    if (axi_awready) begin
+                        axi_awvalid <= 1'b0;
+                    end
+                    
+                    if(~axi_awvalid && ~axi_arvalid)begin
+                        DM_state <= DM_READ_WRITE;
+                        axi_bready <= 1'b1;
+                        // axi_wstrb <= 4'b1111;
+                    end
+                   
+                end
+
+
+
+                DM_READ_WRITE: begin
+                    
+                
+                    if (axi_rvalid && axi_rready) begin
+                        axi_wdata <= axi_rdata; // 将读到的数据赋给写数据
+                        axi_rready <= 1'b0;
+                    end else begin
+                        axi_rready <= 1'b1;
+                    end
+                
+                    if (axi_wready && axi_wvalid) begin
+                        axi_wvalid <= 1'b0;
+                        DM_state <= DM_READ_WRITE;
+                        if (axi_wlast) begin
+                            axi_wlast <= 1'b0;
+                            DM_state <= DM_WAIT_RESPONSE;
+                        end
+                    end else begin
+                        axi_wvalid <= (axi_rvalid && axi_rready); // 确保继续传输
+                        if(axi_rlast)begin
+                            axi_wlast <= 1'b1;
+                        end
+                        DM_state <= DM_READ_WRITE;
+                    end
+                end
+                    
+                
+                DM_WAIT_RESPONSE: begin
+                    if (axi_bvalid) begin
+                        axi_bready <= 1'b0;
+                        DM_state <= DM_COMPLETE;
+                    end
+
+                end
+
+                DM_COMPLETE: begin
+                    DM_state <= DM_IDLE;
+                    Main_state <= IDLE;
+                end
+                
+                
+            endcase
 
         end
-        WRITE_DATA: begin
-            axi_bready <= 1'b1;
-            
-            axi_wstrb <= 4'b1111;
-            if(WriteCount < Length)begin
-                if (axi_wready&&axi_wvalid) begin 
-                    WriteCount <= WriteCount; 
-                    axi_wvalid <= 0;
-                    axi_wdata <= 0;
-                    // WriteCount <= 0;
-                    Wstate <= WRITE_DATA;
-                end 
-                else begin /* 突发传输循环 */
-                    axi_wvalid <= 1;
-                    WriteCount <= WriteCount +1;
-                    axi_wdata <= (WriteTemp >> (WriteCount * 32)) & 32'hFFFFFFFF;
-                    Wstate <= WRITE_DATA;
-                end
+        
+        SCA:begin
+            case (SCA_state)
+            SCA_BEGIN:begin
+                Start <= 1'b1;
+                SCA_state <= SCA_WAIT;
             end
-            else begin
+        
+            SCA_WAIT:begin
+                if(Done)begin
+                    Start <= 1'b0;
+                    ErrorReg <= Error;
+                    axi_awid <= 4'b0000;
+                    axi_awvalid <= 1'b1;
+                    SCA_state <=SCA_ADDRESS;
+                    axi_awaddr <= {27'b0,RS};
+                    axi_awlen <= 0;
+                end
+                else begin
+                    SCA_state <= SCA_WAIT;
+                end
+                
+            end
+            SCA_ADDRESS:begin
+                if(axi_awready)begin
+                    axi_awvalid <= 1'b0;
+                    SCA_state <= SCA_WRITE_DATA;
+                end
+
+            end
+            SCA_WRITE_DATA:begin
                 if (axi_wready&&axi_wvalid) begin
                     axi_wvalid <= 0;
                     axi_wlast <= 0;
-                    axi_wdata <= 0;
-                    Wstate <= WAIT_RESPONSE;
+                    SCA_state <= SCA_WAIT_RESPONSE;
                 end
                 else begin
-                    axi_wvalid <= 1;
-                    axi_wlast <= 1;
-                    WriteCount <= WriteCount +1;
-                    axi_wdata <= (WriteTemp >> (WriteCount * 32)) & 32'hFFFFFFFF;
-                    Wstate <= WRITE_DATA;
+                axi_bready <= 1'b1;
+                axi_wlast <= 1;
+                // axi_wstrb <= 4'b1111;
+                axi_wdata <= {30'b0,ErrorReg};
+                axi_wvalid <= 1;
                 end
             end
-            
-            // next_Wstate <= WAIT_RESPONSE;
-            // axi_wvalid <= 1'b1;  // 当awready_detected为高时才激活wvalid
-            // axi_wstrb <=  4'b1111;  // 只写最低的32位
-            // axi_wlast <= 1'b1; 
-            // axi_bready <= 1'b1;
-            
-        end
-
-        WAIT_RESPONSE: begin
-            
-            if (axi_bvalid) begin
-                axi_bready <= 1'b0;
-                Wstate <= RESET_WRITE_COMPLETE;
+            SCA_WAIT_RESPONSE:begin
+                if(axi_bvalid)begin
+                    axi_bready<=1'b0;
+                    SCA_state <= SCA_COMPLETE;
+                end
             end
+            SCA_COMPLETE:begin
+                SCA_state <= SCA_BEGIN;
+                Main_state <= IDLE;
+            end
+
+
+
+            endcase
         end
 
-        RESET_WRITE_COMPLETE: begin
-            // axi_stall <= 1'b0;
-            // if (~MemWrite) begin
-                Wstate <= WRITE_IDLE;
-            // end
-
-            
-        end
     endcase
 end
 
 
 
 
-always @(posedge clk) begin
-    // 默认值
-    // next_Rstate <= Rstate;
-    axi_arvalid <= 0;
+
+
+
+
+
+
+
+
+
+
+// always @(posedge clk) begin
+//     // 默认值
+//     // next_Wstate <= Wstate;
+//     axi_wlast <= 1'b0;
+//     axi_wvalid <= 0;
+//     axi_bready <= 0;
+//     axi_awid <= 4'b0000;
+//     case (Wstate)
+//     WRITE_IDLE: begin
+//             axi_awvalid <= 0;
+           
+//             if (MemWrite) begin                
+//                 // axi_stall <= 1'b1; 
+//                 axi_wdata <=  MemData;
+//                 WriteCount <= 0;
+//                 // if (init_calib_complete == 1'b1) begin
+//                 Wstate <= WRITE_ADDRESS;
+//                 axi_awlen <= (Length-1);  // 单次传输
+//                 axi_awsize <= 3'b100;  // 4 bytes = 32 bits
+//                 axi_awburst <= 2'b01;  // 增量突发
+//                 axi_awvalid <= 1'b1;
+//                 axi_awaddr <= WRITE_ADDRESS;
+//                 // end
+//             end
+//         end
+//         WRITE_ADDRESS: begin
+//             if (axi_awready) begin
+//                 axi_awvalid <= 0;
+//                 Wstate <= WRITE_DATA;
+//             end
+
+//         end
+//         WRITE_DATA: begin
+//             axi_bready <= 1'b1;
+            
+//             axi_wstrb <= 4'b1111;
+//             if(WriteCount < Length)begin
+//                 if (axi_wready&&axi_wvalid) begin 
+//                     WriteCount <= WriteCount; 
+//                     axi_wvalid <= 0;
+//                     axi_wdata <= 0;
+//                     // WriteCount <= 0;
+//                     Wstate <= WRITE_DATA;
+//                 end 
+//                 else begin /* 突发传输循环 */
+//                     axi_wvalid <= 1;
+//                     WriteCount <= WriteCount +1;
+//                     axi_wdata <= (WriteTemp >> (WriteCount * 32)) & 32'hFFFFFFFF;
+//                     Wstate <= WRITE_DATA;
+//                 end
+//             end
+//             else begin
+//                 if (axi_wready&&axi_wvalid) begin
+                    // axi_wvalid <= 0;
+                    // axi_wlast <= 0;
+                    // axi_wdata <= 0;
+//                     Wstate <= WAIT_RESPONSE;
+//                 end
+//                 else begin
+//                     axi_wvalid <= 1;
+//                     axi_wlast <= 1;
+//                     WriteCount <= WriteCount +1;
+//                     axi_wdata <= (WriteTemp >> (WriteCount * 32)) & 32'hFFFFFFFF;
+//                     Wstate <= WRITE_DATA;
+//                 end
+//             end
+            
+//             // next_Wstate <= WAIT_RESPONSE;
+//             // axi_wvalid <= 1'b1;  // 当awready_detected为高时才激活wvalid
+//             // axi_wstrb <=  4'b1111;  // 只写最低的32位
+//             // axi_wlast <= 1'b1; 
+//             // axi_bready <= 1'b1;
+            
+//         end
+
+//         WAIT_RESPONSE: begin
+            
+//             if (axi_bvalid) begin
+//                 axi_bready <= 1'b0;
+//                 Wstate <= RESET_WRITE_COMPLETE;
+//             end
+//         end
+
+//         RESET_WRITE_COMPLETE: begin
+//             // axi_stall <= 1'b0;
+//             // if (~MemWrite) begin
+//                 Wstate <= WRITE_IDLE;
+//             // end
+
+            
+//         end
+//     endcase
+// end
+
+
+
+
+// always @(posedge clk) begin
+//     // 默认值
+//     // next_Rstate <= Rstate;
+//     axi_arvalid <= 0;
     
    
-    axi_arid <= 4'b0000;
-    case (Rstate)
-    READ_IDLE: begin
-        axi_rready <= 0;
-            if (MemRead && (Wstate == WRITE_IDLE)) begin
-                ReadCount <= 0;
-                // axi_stall <= 1'b1; 
-                // if (init_calib_complete == 1'b1) begin
-                Rstate <= WRITE_ADDRESS;
-                    axi_arlen <= (Length-1);  // 单次传输
-                    axi_arsize <= 3'b100;  // 4 bytes = 32 bits
-                    axi_arburst <= 2'b01;  // 增量突发
-                    axi_arvalid <= 1'b1;
-                    axi_rready <= 1'b1; 
-                    axi_araddr <= MemAddr;
-                // end
-            end
-    end
-    READ_ADDRESS: begin
+//     axi_arid <= 4'b0000;
+//     case (Rstate)
+//     READ_IDLE: begin
+//         axi_rready <= 0;
+//             if (MemRead && (Wstate == WRITE_IDLE)) begin
+//                 ReadCount <= 0;
+//                 // axi_stall <= 1'b1; 
+//                 // if (init_calib_complete == 1'b1) begin
+//                 Rstate <= WRITE_ADDRESS;
+//                     axi_arlen <= (Length-1);  // 单次传输
+//                     axi_arsize <= 3'b100;  // 4 bytes = 32 bits
+//                     axi_arburst <= 2'b01;  // 增量突发
+//                     axi_arvalid <= 1'b1;
+//                     axi_rready <= 1'b1; 
+//                     axi_araddr <= MemAddr;
+//                 // end
+//             end
+//     end
+//     READ_ADDRESS: begin
         
-            if (axi_arready) begin
-                Rstate <= READ_DATA;
-                axi_arvalid <= 1'b0;
-            end
+//             if (axi_arready) begin
+//                 Rstate <= READ_DATA;
+//                 axi_arvalid <= 1'b0;
+//             end
 
-     end
-     READ_DATA: begin
+//      end
+//      READ_DATA: begin
         
-        if (axi_rvalid && axi_rready) begin
-            if (axi_rlast) begin
-                ReadFromCGRA <= (ReadFromCGRA >> 32) | (axi_rdata << (160-32));
-                Rstate <= RESET_READ_COMPLETE;
-            end
-            else begin
-                ReadFromCGRA <= (ReadFromCGRA >> 32) | (axi_rdata << (160-32));
-                ReadCount <= ReadCount + 1;
-                Rstate <= READ_DATA;
-            end
-            axi_rready <= 1'b0;
-        end
-        else begin
-            axi_rready <= 1'b1;
-            Rstate <= READ_DATA;
-        end
-    end
+//         if (axi_rvalid && axi_rready) begin
+//             if (axi_rlast) begin
+//                 ReadFromCGRA <= (ReadFromCGRA >> 32) | (axi_rdata << (160-32));
+//                 Rstate <= RESET_READ_COMPLETE;
+//             end
+//             else begin
+//                 ReadFromCGRA <= (ReadFromCGRA >> 32) | (axi_rdata << (160-32));
+//                 ReadCount <= ReadCount + 1;
+//                 Rstate <= READ_DATA;
+//             end
+//             axi_rready <= 1'b0;
+//         end
+//         else begin
+//             axi_rready <= 1'b1;
+//             Rstate <= READ_DATA;
+//         end
+//     end
     
 
-        RESET_READ_COMPLETE: begin
-            // axi_rready <= 1'b0;  // 接收好数据
-            // axi_stall <= 1'b0;
-            // if (~MemRead) begin
-                Rstate <= READ_IDLE;
-            // end
+//         RESET_READ_COMPLETE: begin
+//             // axi_rready <= 1'b0;  // 接收好数据
+//             // axi_stall <= 1'b0;
+//             // if (~MemRead) begin
+//                 Rstate <= READ_IDLE;
+//             // end
 
             
-        end
-    endcase
+//         end
+//     endcase
     
-end
+// end
 endmodule
 
 

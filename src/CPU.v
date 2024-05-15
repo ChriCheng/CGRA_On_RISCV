@@ -81,7 +81,7 @@ module CPU
 
     /* Read Data Channel */
     input wire [3 : 0] axi_rid,
-    input wire [32 : 0] axi_rdata,
+    input wire [31 : 0] axi_rdata,
     input wire [1 : 0] axi_rresp,
     input wire  axi_rlast,
     input wire  axi_rvalid,
@@ -94,9 +94,11 @@ module CPU
 );
 
 //------------------------- Wire&Reg -------------------------------//
+
 wire atestn;
+wire [1:0]DMACtrl_o;
 wire [3:0] vector_signed_bits;
-wire [31:0] op_selection,mem_rdata;
+wire [31:0] op_selection,mem_rdata,RD_out;
 // wire [31:0]inst;
 wire[31:0]addPC,aluData,RSD,RTD,signExData,MUXop;
 wire [9:0] ALUfunct_in;
@@ -494,8 +496,10 @@ EX_MEM EX_MEM(
     .instr_o(EX_MEM_instr_o),
     .RS1_in(IF_ID_inst_o[19:15]),
     .RS2_in(IF_ID_inst_o[24:20]),
+    .RD_in(IF_ID_inst_o[11:7]),
     .RS1_out(RS1_out),
     .RS2_out(RS2_out),
+    .RD_out(RD_out),
     .pc_o   (),
     .zero_o (),
     .ALUResult_o    (EX_MEM_ALUResult_o),
@@ -539,7 +543,7 @@ DMA DMA(
     .Done(Done),
     .Error(Error),
     .RS(RS1_out),
-    .RD(EX_MEM_RDaddr_o),
+    .RD(RD_out),
     /* ---------------AXI INTERFACE------------ */ 
     /* Write Address Channel */
     .axi_awid(axi_awid),    

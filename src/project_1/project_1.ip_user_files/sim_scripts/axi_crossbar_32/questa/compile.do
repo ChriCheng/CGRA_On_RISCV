@@ -20,7 +20,6 @@ vmap axi_crossbar_v2_1_21 questa_lib/msim/axi_crossbar_v2_1_21
 vmap xil_defaultlib questa_lib/msim/xil_defaultlib
 
 vlog -work xpm -64 -sv "+incdir+../../../ipstatic/hdl" \
-"C:/Xilinx/Vivado/2019.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
 "C:/Xilinx/Vivado/2019.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 
 vcom -work xpm -64 -93 \
@@ -52,6 +51,7 @@ vlog -work axi_crossbar_v2_1_21 -64 "+incdir+../../../ipstatic/hdl" \
 
 vlog -work xil_defaultlib -64 "+incdir+../../../ipstatic/hdl" \
 "../../../../../../../ddr4_ex/ddr4_ex.srcs/sources_1/ip/axi_crossbar_32/sim/axi_crossbar_32.v" \
+
 
 vlog -work xil_defaultlib \
 "glbl.v"

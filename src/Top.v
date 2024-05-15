@@ -1,3 +1,4 @@
+`include "CGRA_sim.v"
 module Top(
     input               clk,
     input               rst,
@@ -29,14 +30,17 @@ wire ddr4_ui_clk;
 wire axi_awlock_cpu, axi_awvalid_cpu, axi_awready_cpu, axi_wlast_cpu, axi_wvalid_cpu, axi_wready_cpu;
 wire axi_bready_cpu, axi_bvalid_cpu, axi_arlock_cpu, axi_arvalid_cpu, axi_arready_cpu;
 wire axi_rready_cpu, axi_rlast_cpu, axi_rvalid_cpu;
-wire [1:0] axi_awid_cpu, axi_awburst_cpu, axi_bresp_cpu, axi_arburst_cpu, axi_rresp_cpu;
+wire [1:0]axi_awburst_cpu, axi_bresp_cpu, axi_arburst_cpu, axi_rresp_cpu;
 wire [2:0] axi_awsize_cpu, axi_awprot_cpu, axi_arsize_cpu, axi_arprot_cpu;
-wire [3:0] axi_arid_cpu,axi_awcache_cpu, axi_awqos_cpu, axi_bid_cpu, axi_arcache_cpu, axi_arqos_cpu, axi_rid_cpu;
+wire [3:0] axi_arid_cpu,axi_awcache_cpu, axi_awqos_cpu, axi_bid_cpu, axi_arcache_cpu, axi_arqos_cpu, axi_rid_cpu,axi_awid_cpu;
 wire [7:0] axi_awlen_cpu, axi_arlen_cpu;
 wire [31:0] axi_awaddr_cpu, axi_araddr_cpu;
 wire [3:0] axi_wstrb_cpu;
 wire [31:0] axi_wdata_cpu, axi_rdata_cpu;
 wire Imem_enable;
+
+wire Start,Done;
+wire [1:0] Error;
 
 CPU CPU(
     .clk_i        ( clk        ),
@@ -82,7 +86,10 @@ CPU CPU(
     .axi_rresp(axi_rresp_cpu),
     .axi_rlast(axi_rlast_cpu),
     .axi_rvalid(axi_rvalid_cpu),
-    .axi_rready(axi_rready_cpu) 
+    .axi_rready(axi_rready_cpu),
+    .Start(Start),
+    .Done(Done),
+    .Error(Error) 
 );
 
 wire locked,clk_out;
@@ -296,20 +303,56 @@ axi_crossbar_32 axi_crossbar_32 (
 );
 
 
-
-axi_bram CGRA_bram (
+CGRA_sim CGRA_sim(
+    .clk              ( clk              ),
+//     .rst              ( rst              ),
+//     .axi_awid_CGRA    ( axi_awid_CGRA    ),
+//     .axi_awaddr_CGRA  ( axi_awaddr_CGRA  ),
+//     .axi_awlen_CGRA   ( axi_awlen_CGRA   ),
+//     .axi_awsize_CGRA  ( axi_awsize_CGRA  ),
+//     .axi_awburst_CGRA ( axi_awburst_CGRA ),
+//     .axi_awvalid_CGRA ( axi_awvalid_CGRA ),
+//     .axi_awready_CGRA ( axi_awready_CGRA ),
+//     .axi_wdata_CGRA   ( axi_wdata_CGRA   ),
+//     .axi_wstrb_CGRA   ( axi_wstrb_CGRA   ),
+//     .axi_wlast_CGRA   ( axi_wlast_CGRA   ),
+//     .axi_wvalid_CGRA  ( axi_wvalid_CGRA  ),
+//     .axi_wready_CGRA  ( axi_wready_CGRA  ),
+//     .axi_bid_CGRA     ( axi_bid_CGRA     ),
+//     .axi_bresp_CGRA   ( axi_bresp_CGRA   ),
+//     .axi_bvalid_CGRA  ( axi_bvalid_CGRA  ),
+//     .axi_bready_CGRA  ( axi_bready_CGRA  ),
+//     .axi_arid_CGRA    ( axi_arid_CGRA    ),
+//     .axi_araddr_CGRA  ( axi_araddr_CGRA  ),
+//     .axi_arlen_CGRA   ( axi_arlen_CGRA   ),
+//     .axi_arsize_CGRA  ( axi_arsize_CGRA  ),
+//     .axi_arburst_CGRA ( axi_arburst_CGRA ),
+//     .axi_arvalid_CGRA ( axi_arvalid_CGRA ),
+//     .axi_arready_CGRA ( axi_arready_CGRA ),
+//     .axi_rid_CGRA     ( axi_rid_CGRA     ),
+//     .axi_rdata_CGRA   ( axi_rdata_CGRA   ),
+//     .axi_rresp_CGRA   ( axi_rresp_CGRA   ),
+//     .axi_rlast_CGRA   ( axi_rlast_CGRA   ),
+//     .axi_rvalid_CGRA  ( axi_rvalid_CGRA  ),
+//     .axi_rready_CGRAy ( axi_rready_CGRAy ),
+    .Start            ( Start            ),
+    .Done             ( Done             ),
+    .Error            ( Error            )
+);
+wire [31:0]axi_wdata;
+CGRA_bram CGRA_bram (
 //   .rsta_busy(rsta_busy),          // output wire rsta_busy
 //   .rstb_busy(rstb_busy),          // output wire rstb_busy
   .s_aclk(clk),                // input wire s_aclk
-  .s_aresetn(clk),          // input wire s_aresetn
+  .s_aresetn(~rst),          // input wire s_aresetn
   .s_axi_awid(axi_awid_CGRA),        // input wire [3 : 0] s_axi_awid
-  .s_axi_awaddr(axi_awaddr_CGRA),    // input wire [31 : 0] s_axi_awaddr
+  .s_axi_awaddr({25'b0,axi_awaddr_CGRA[4:0],2'b0}),    // input wire [31 : 0] s_axi_awaddr
   .s_axi_awlen(axi_awlen_CGRA),      // input wire [7 : 0] s_axi_awlen
   .s_axi_awsize(axi_awsize_CGRA),    // input wire [2 : 0] s_axi_awsize
   .s_axi_awburst(axi_awburst_CGRA),  // input wire [1 : 0] s_axi_awburst
   .s_axi_awvalid(axi_awvalid_CGRA),  // input wire s_axi_awvalid
   .s_axi_awready(axi_awready_CGRA),  // output wire s_axi_awready
-  .s_axi_wdata(axi_wdata_CGRA),      // input wire [31 : 0] s_axi_wdata
+  .s_axi_wdata(axi_wdata),      // input wire [31 : 0] s_axi_wdata
   .s_axi_wstrb(axi_wstrb_CGRA),      // input wire [3 : 0] s_axi_wstrb
   .s_axi_wlast(axi_wlast_CGRA),      // input wire s_axi_wlast
   .s_axi_wvalid(axi_wvalid_CGRA),    // input wire s_axi_wvalid
@@ -319,7 +362,7 @@ axi_bram CGRA_bram (
   .s_axi_bvalid(axi_bvalid_CGRA),    // output wire s_axi_bvalid
   .s_axi_bready(axi_bready_CGRA),    // input wire s_axi_bready
   .s_axi_arid(axi_arid_CGRA),        // input wire [3 : 0] s_axi_arid
-  .s_axi_araddr(axi_araddr_CGRA),    // input wire [31 : 0] s_axi_araddr
+  .s_axi_araddr({25'b0,axi_araddr_CGRA[4:0],2'b0}),    // input wire [31 : 0] s_axi_araddr
   .s_axi_arlen(axi_arlen_CGRA),      // input wire [7 : 0] s_axi_arlen
   .s_axi_arsize(axi_arsize_CGRA),    // input wire [2 : 0] s_axi_arsize
   .s_axi_arburst(axi_arburst_CGRA),  // input wire [1 : 0] s_axi_arburst
@@ -334,13 +377,18 @@ axi_bram CGRA_bram (
 );
 
 
+assign axi_wdata = axi_wdata_CGRA+1;
+
+
+
+
 axi_bram axi_bram (
-  .rsta_busy(rsta_busy),          // output wire rsta_busy
-  .rstb_busy(rstb_busy),          // output wire rstb_busy
+//   .rsta_busy(rsta_busy),          // output wire rsta_busy
+//   .rstb_busy(rstb_busy),          // output wire rstb_busy
   .s_aclk(clk),                // input wire s_aclk
   .s_aresetn(~rst),          // input wire s_aresetn
   .s_axi_awid(axi_awid_ddr),        // input wire [3 : 0] s_axi_awid
-  .s_axi_awaddr(axi_awaddr_ddr),    // input wire [31 : 0] s_axi_awaddr
+  .s_axi_awaddr({axi_awaddr_ddr[29:0],2'b0}),    // input wire [31 : 0] s_axi_awaddr
   .s_axi_awlen(axi_awlen_ddr),      // input wire [7 : 0] s_axi_awlen
   .s_axi_awsize(axi_awsize_ddr),    // input wire [2 : 0] s_axi_awsize
   .s_axi_awburst(axi_awburst_ddr),  // input wire [1 : 0] s_axi_awburst
@@ -359,7 +407,7 @@ axi_bram axi_bram (
   .s_axi_bready(axi_bready_ddr),    // input wire s_axi_bready
 
   .s_axi_arid(axi_arid_ddr),        // input wire [3 : 0] s_axi_arid
-  .s_axi_araddr(axi_araddr_ddr),    // input wire [31 : 0] s_axi_araddr
+  .s_axi_araddr({axi_araddr_ddr[29:0],2'b0}),    // input wire [31 : 0] s_axi_araddr
   .s_axi_arlen(axi_arlen_ddr),      // input wire [7 : 0] s_axi_arlen
   .s_axi_arsize(axi_arsize_ddr),    // input wire [2 : 0] s_axi_arsize
   .s_axi_arburst(axi_arburst_ddr),  // input wire [1 : 0] s_axi_arburst

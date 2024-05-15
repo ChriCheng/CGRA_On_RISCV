@@ -1,10 +1,10 @@
 // Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
-// Date        : Mon May 13 20:37:09 2024
+// Date        : Tue May 14 22:07:25 2024
 // Host        : Chris running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode funcsim
-//               C:/Users/76296/Desktop/CGRA_On_RISCV/src/project_1/project_1.srcs/sources_1/ip/IMemory/IMemory_sim_netlist.v
+// Command     : write_verilog -force -mode funcsim -rename_top IMemory -prefix
+//               IMemory_ IMemory_sim_netlist.v
 // Design      : IMemory
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -191,7 +191,6 @@ module IMemory
         .web(1'b0));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_generic_cstr" *) 
 module IMemory_blk_mem_gen_generic_cstr
    (douta,
     clka,
@@ -214,7 +213,6 @@ module IMemory_blk_mem_gen_generic_cstr
         .ena(ena));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_prim_width" *) 
 module IMemory_blk_mem_gen_prim_width
    (douta,
     clka,
@@ -237,7 +235,6 @@ module IMemory_blk_mem_gen_prim_width
         .ena(ena));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_prim_wrapper_init" *) 
 module IMemory_blk_mem_gen_prim_wrapper_init
    (douta,
     clka,
@@ -287,8 +284,8 @@ module IMemory_blk_mem_gen_prim_wrapper_init
     .INITP_0D(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INITP_0E(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INITP_0F(256'h0000000000000000000000000000000000000000000000000000000000000000),
-    .INIT_00(256'h0013839300128293001282930013839300128293000022830050202300000000),
-    .INIT_01(256'h0000000000000000000000000000000000000000000000000000000000000000),
+    .INIT_00(256'h00128293001383930012829300A0200B0000358B0052928B0050100B00000000),
+    .INIT_01(256'h0000000000000000000000000000000000000000000000000013839300128293),
     .INIT_02(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INIT_03(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INIT_04(256'h0000000000000000000000000000000000000000000000000000000000000000),
@@ -477,7 +474,6 @@ module IMemory_blk_mem_gen_prim_wrapper_init
         .WEBWE({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_top" *) 
 module IMemory_blk_mem_gen_top
    (douta,
     clka,
@@ -525,7 +521,7 @@ endmodule
 (* C_WEA_WIDTH = "1" *) (* C_WEB_WIDTH = "1" *) (* C_WRITE_DEPTH_A = "1024" *) 
 (* C_WRITE_DEPTH_B = "1024" *) (* C_WRITE_MODE_A = "WRITE_FIRST" *) (* C_WRITE_MODE_B = "WRITE_FIRST" *) 
 (* C_WRITE_WIDTH_A = "32" *) (* C_WRITE_WIDTH_B = "32" *) (* C_XDEVICEFAMILY = "virtex7" *) 
-(* ORIG_REF_NAME = "blk_mem_gen_v8_4_4" *) (* downgradeipidentifiedwarnings = "yes" *) 
+(* downgradeipidentifiedwarnings = "yes" *) 
 module IMemory_blk_mem_gen_v8_4_4
    (clka,
     rsta,
@@ -777,7 +773,6 @@ module IMemory_blk_mem_gen_v8_4_4
         .ena(ena));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_v8_4_4_synth" *) 
 module IMemory_blk_mem_gen_v8_4_4_synth
    (douta,
     clka,

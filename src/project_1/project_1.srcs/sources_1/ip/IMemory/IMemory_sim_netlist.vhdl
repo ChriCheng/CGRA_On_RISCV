@@ -1,10 +1,10 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Mon May 13 20:37:09 2024
+-- Date        : Tue May 14 22:07:25 2024
 -- Host        : Chris running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode funcsim
---               C:/Users/76296/Desktop/CGRA_On_RISCV/src/project_1/project_1.srcs/sources_1/ip/IMemory/IMemory_sim_netlist.vhdl
+-- Command     : write_vhdl -force -mode funcsim -rename_top IMemory -prefix
+--               IMemory_ IMemory_sim_netlist.vhdl
 -- Design      : IMemory
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -21,8 +21,6 @@ entity IMemory_blk_mem_gen_prim_wrapper_init is
     ena : in STD_LOGIC;
     addra : in STD_LOGIC_VECTOR ( 9 downto 0 )
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of IMemory_blk_mem_gen_prim_wrapper_init : entity is "blk_mem_gen_prim_wrapper_init";
 end IMemory_blk_mem_gen_prim_wrapper_init;
 
 architecture STRUCTURE of IMemory_blk_mem_gen_prim_wrapper_init is
@@ -63,8 +61,8 @@ begin
       INITP_0D => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0E => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0F => X"0000000000000000000000000000000000000000000000000000000000000000",
-      INIT_00 => X"0013839300128293001282930013839300128293000022830050202300000000",
-      INIT_01 => X"0000000000000000000000000000000000000000000000000000000000000000",
+      INIT_00 => X"00128293001383930012829300A0200B0000358B0052928B0050100B00000000",
+      INIT_01 => X"0000000000000000000000000000000000000000000000000013839300128293",
       INIT_02 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_03 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_04 => X"0000000000000000000000000000000000000000000000000000000000000000",
@@ -270,8 +268,6 @@ entity IMemory_blk_mem_gen_prim_width is
     ena : in STD_LOGIC;
     addra : in STD_LOGIC_VECTOR ( 9 downto 0 )
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of IMemory_blk_mem_gen_prim_width : entity is "blk_mem_gen_prim_width";
 end IMemory_blk_mem_gen_prim_width;
 
 architecture STRUCTURE of IMemory_blk_mem_gen_prim_width is
@@ -295,8 +291,6 @@ entity IMemory_blk_mem_gen_generic_cstr is
     ena : in STD_LOGIC;
     addra : in STD_LOGIC_VECTOR ( 9 downto 0 )
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of IMemory_blk_mem_gen_generic_cstr : entity is "blk_mem_gen_generic_cstr";
 end IMemory_blk_mem_gen_generic_cstr;
 
 architecture STRUCTURE of IMemory_blk_mem_gen_generic_cstr is
@@ -320,8 +314,6 @@ entity IMemory_blk_mem_gen_top is
     ena : in STD_LOGIC;
     addra : in STD_LOGIC_VECTOR ( 9 downto 0 )
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of IMemory_blk_mem_gen_top : entity is "blk_mem_gen_top";
 end IMemory_blk_mem_gen_top;
 
 architecture STRUCTURE of IMemory_blk_mem_gen_top is
@@ -345,8 +337,6 @@ entity IMemory_blk_mem_gen_v8_4_4_synth is
     ena : in STD_LOGIC;
     addra : in STD_LOGIC_VECTOR ( 9 downto 0 )
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of IMemory_blk_mem_gen_v8_4_4_synth : entity is "blk_mem_gen_v8_4_4_synth";
 end IMemory_blk_mem_gen_v8_4_4_synth;
 
 architecture STRUCTURE of IMemory_blk_mem_gen_v8_4_4_synth is
@@ -579,8 +569,6 @@ entity IMemory_blk_mem_gen_v8_4_4 is
   attribute C_WRITE_WIDTH_B of IMemory_blk_mem_gen_v8_4_4 : entity is 32;
   attribute C_XDEVICEFAMILY : string;
   attribute C_XDEVICEFAMILY of IMemory_blk_mem_gen_v8_4_4 : entity is "virtex7";
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of IMemory_blk_mem_gen_v8_4_4 : entity is "blk_mem_gen_v8_4_4";
   attribute downgradeipidentifiedwarnings : string;
   attribute downgradeipidentifiedwarnings of IMemory_blk_mem_gen_v8_4_4 : entity is "yes";
 end IMemory_blk_mem_gen_v8_4_4;

@@ -16,7 +16,7 @@ always @(*) begin
         end
 
         default: begin
-            DMACtrl_o = 3'b00; 
+            DMACtrl_o = 2'b00; 
         end
     endcase
 end
